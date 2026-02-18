@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class BeneficiaryAddress extends Model
+{
+    //
+    protected $fillable = [
+        'house_num',
+        'street_id',
+        'municipality',
+        'province',
+        'zip_code'
+    ];
+
+
+    public function street()
+    {
+        return $this->belongsTo(Street::class);
+    }
+
+    public function beneficiaries()
+    {
+        return $this->hasMany(Beneficiary::class);
+    }
+}
