@@ -24,7 +24,7 @@ class LoginController extends Controller
 
             $remember = $request->has('remember');
 
-            if(!Auth::attempt($user)){
+            if(!Auth::attempt($user, $remember)){
                 // dd("Error username or password");
                 return redirect()->back()->with('error', 'Incorrect username or password');
             }
@@ -48,7 +48,7 @@ class LoginController extends Controller
             case 'super_admin':
                 return redirect()->route('super_admin.dashboard')->with(['success' => 'Welcome super admin!']);
             case 'barangay_admin':
-                return redirect()->route('admin.dashboard')->with(['success' => 'Welcome Admin!']);
+                return redirect()->route('barangay_admin.dashboard')->with(['success' => 'Welcome Admin!']);
             default:
                 Auth::logout();
                 return redirect()->route('index')->with('error', 'Unauthorized role');

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,12 +10,15 @@ Route::get('/', function () {
 })->name('index');
 
 
-// Route::prefix('user')
-//     ->middleware(['auth', 'role:super_admin'])->group(function () {
-//         Route::controller(LoginController::class)->group(function () {
-//             Route::get('/', 'user')->name('user.register');
-//         });
-//     });
+
+
+Route::prefix('user')
+    ->middleware(['auth', 'role:super_admin'])->group(function () {
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/', 'index')->name('user.index');
+            Route::post('/store', 'store')->name('user.store');
+        });
+    });
 
 
 
@@ -27,7 +31,7 @@ Route::controller(LoginController::class)->group(function(){
 Route::prefix('admin-dashboard')
     ->middleware(['auth', 'role:barangay_admin'])->group(function () {
         Route::controller(DashboardController::class)->group(function () {
-            Route::get('/', 'adminIndex')->name('admin.dashboard');
+            Route::get('/', 'adminIndex')->name('barangay_admin.dashboard');
         });
     });
 

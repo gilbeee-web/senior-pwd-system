@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name') }}</title>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
 
@@ -19,8 +19,7 @@
         {{-- main Content --}}
         <div class="flex-1 flex flex-col">
 
-            {{-- navbar --}}
-            @include('layouts.partials.navbar')
+            @include('layouts.partials.navbar', ['title' => trim($__env->yieldContent('title'))])
 
             {{-- content --}}
             <main class="p-6">

@@ -1,18 +1,24 @@
 <aside class="w-64 bg-white shadow-md">
     <div class="p-4 font-bold text-lg border-b">
-        Pension System
+        DATA MANAGEMENT
     </div>
 
     <nav class="p-4 space-y-2">
 
         {{-- Dashboard --}}
-        <a href="/dashboard" class="block p-2 rounded hover:bg-gray-100">
-            Dashboard
-        </a>
+        @if(auth()->user()->role === 'super_admin')
+            <a href="{{route('super_admin.dashboard')}}" class="block p-2 rounded hover:bg-gray-100">
+                Dashboard
+            </a>
+        @elseif(auth()->user()->role === 'barangay_admin')
+            <a href="{{route('barangay_admin.dashboard')}}" class="block p-2 rounded hover:bg-gray-100">
+                Dashboard
+            </a>
+        @endif
 
         {{-- Super Admin --}}
         @if(auth()->user()->role === 'super_admin')
-            <a href="/users" class="block p-2 rounded hover:bg-gray-100">
+            <a href="{{route('user.index')}}" class="block p-2 rounded hover:bg-gray-100">
                 User Management
             </a>
         @endif
@@ -25,7 +31,7 @@
         @endif
 
         {{-- Reports --}}
-        @if(in_array(auth()->user()->role, ['super_admin','admin']))
+        @if(in_array(auth()->user()->role, ['super_admin','barangay_admin']))
             <a href="/reports" class="block p-2 rounded hover:bg-gray-100">
                 Reports
             </a>
