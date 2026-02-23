@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\User\UserController;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,12 +12,22 @@ Route::get('/', function () {
 
 
 
+Route::prefix('account')
+    ->middleware(['auth'])->group(function () {
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/{user}/edit', 'edit')->name('user.edit');
+            Route::put('/{id}', 'update')->name('user.update');
+        });
+    });
+
+
+
 
 Route::prefix('user')
     ->middleware(['auth', 'role:super_admin'])->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('/', 'index')->name('user.index');
-            Route::post('/store', 'store')->name('user.store');
+            Route::post('/', 'store')->name('user.store');
         });
     });
 

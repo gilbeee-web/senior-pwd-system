@@ -7,6 +7,7 @@ use App\Models\Barangay;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -16,11 +17,13 @@ class UserController extends Controller
     public function index(){
 
         $users = User::all();
+        $current_user = Auth::user();
 
         $barangays = Barangay::all();
 
         return view('users/index', [
             'users'=> $users,
+            'current_user' => $current_user,
             'barangays' => $barangays
         ]);
 
@@ -28,6 +31,9 @@ class UserController extends Controller
 
 
     public function store(Request $request){
+
+        // dd($request->all());
+
 
         $validated = $request->validate(([
             'name' => 'required|string',
@@ -56,15 +62,29 @@ class UserController extends Controller
         $new_user = User::create($validated);
 
         return redirect()->back()->with([
-            'success' => "User added successfully!",
-            'user' => $new_user,
-            'credentials' => [
+            'generated_credentials' => [
                 'username' => $username,
                 'password' => $tempPassword
             ]
         ]);
 
     }
+
+
+    public function edit(User $user){
+        $current_user = Auth::user();
+
+        $barangays = Barangay::all();
+
+        return view('users/edit', [
+            'current_user' => $current_user, 
+            'user' => $user,
+            'barangays' => $barangays
+        ]);
+    }
+
+
+    
 
 
 }

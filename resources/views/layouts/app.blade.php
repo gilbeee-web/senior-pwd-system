@@ -30,6 +30,84 @@
 
     </div>
 
+
+    @if(session()->has('success') || session()->has('error') || session()->has('warning') || session()->has('info'))
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            let icon = '';
+            let message = '';
+
+            @if(session('success'))
+                icon = 'success';
+                message = "{{ session('success') }}";
+            @elseif(session('error'))
+                icon = 'error';
+                message = "{{ session('error') }}";
+            @elseif(session('warning'))
+                icon = 'warning';
+                message = "{{ session('warning') }}";
+            @elseif(session('info'))
+                icon = 'info';
+                message = "{{ session('info') }}";
+            @endif
+
+            Swal.fire({
+                icon: icon,
+                title: message,
+                confirmButtonColor: '#2563eb'
+            });
+
+        });
+        </script>
+    @endif
+
+
+    @if(session('generated_credentials'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const credentials = @json(session('generated_credentials'));
+
+                Swal.fire({
+                    title: 'Account Created Successfully!',
+                    text: 'Please save this password. User will be required to change password on first login.'
+                    html: `
+                        <div style="text-align:left;">
+                            <p><strong>Username:</strong> ${credentials.username}</p>
+                            <p><strong>Password:</strong> ${credentials.password}</p>
+                            <button id="copyBtn" class="swal2-confirm swal2-styled" style="margin-top:10px;">
+                                Copy Credentials
+                            </button>
+                        </div>
+                    `,
+                    icon: 'success',
+                    showConfirmButton: false
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (e.target && e.target.id === 'copyBtn') {
+                        navigator.clipboard.writeText(
+                            `Username: ${credentials.username}\nPassword: ${credentials.password}`
+                        );
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Copied!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                });
+
+            });
+        </script>
+    @endif
+
+
+    
+
     
 </body>
 </html>
