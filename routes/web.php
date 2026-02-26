@@ -28,6 +28,7 @@ Route::prefix('user')
         Route::controller(UserController::class)->group(function () {
             Route::get('/', 'index')->name('user.index');
             Route::post('/', 'store')->name('user.store');
+            Route::post('/{id}/reset-password', 'resetPassword')->name('user.resetPassword');
         });
     });
 

@@ -16,15 +16,8 @@
             </a>
         @endif
 
-        {{-- Super Admin --}}
-        @if(auth()->user()->role === 'super_admin')
-            <a href="{{route('user.index')}}" class="block p-2 rounded hover:bg-gray-100">
-                User Management
-            </a>
-        @endif
-
         {{-- Beneficiaries (shared) --}}
-        @if(in_array(auth()->user()->role, ['super_admin','admin']))
+        @if(in_array(auth()->user()->role, ['super_admin','barangay_admin']))
             <a href="/beneficiaries" class="block p-2 rounded hover:bg-gray-100">
                 Beneficiaries
             </a>
@@ -34,6 +27,13 @@
         @if(in_array(auth()->user()->role, ['super_admin','barangay_admin']))
             <a href="/reports" class="block p-2 rounded hover:bg-gray-100">
                 Reports
+            </a>
+        @endif
+
+        {{-- Super Admin --}}
+        @if(auth()->user()->role === 'super_admin')
+            <a href="{{route('user.index')}}" class="block p-2 rounded hover:bg-gray-100">
+                User Management
             </a>
         @endif
 

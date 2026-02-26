@@ -71,13 +71,15 @@
 
                 Swal.fire({
                     title: 'Account Created Successfully!',
-                    text: 'Please save this password. User will be required to change password on first login.'
                     html: `
+                        
                         <div style="text-align:left;">
+                            <p>Please save this user crendentials. User will use this to login.</p>
+                            <br>
                             <p><strong>Username:</strong> ${credentials.username}</p>
                             <p><strong>Password:</strong> ${credentials.password}</p>
                             <button id="copyBtn" class="swal2-confirm swal2-styled" style="margin-top:10px;">
-                                Copy Credentials
+                                Copy
                             </button>
                         </div>
                     `,

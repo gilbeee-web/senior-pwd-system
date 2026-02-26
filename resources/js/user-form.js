@@ -32,9 +32,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const barangay = document.getElementById("barangay");
 
-        if (roleSelect.value === "municipal_admin") {
+        if (roleSelect.value === "super_admin") {
+
+            console.log("Municpal admin");
+
             barangayWrapper.classList.add("hidden");
-            if(barangay) barangay.value = "";
+
+            if(barangay){
+                barangay.value = "";
+            } 
+
         } else {
             barangayWrapper.classList.remove("hidden");
         }
@@ -46,4 +53,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // run on page load
     toggleBarangay();
+
+
+    const resetPasswordButton = document.getElementById("reset-password-btn");
+
+    document.querySelectorAll('.reset-password-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+            const userId = this.dataset.id; // get data-id value
+
+            Swal.fire({
+                title: 'Reset Password?',
+                text: "User password will be reset.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, reset it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('reset-password-form-' + userId).submit();
+                }
+            });
+
+        });
+    });
+
+
 });
