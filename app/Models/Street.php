@@ -11,7 +11,7 @@ class Street extends Model
 
     public function barangay()
     {
-        return $this->belongsTo(Barangay::class);
+        return $this->belongsTo(Barangay::class,'barangay_id');
     }
 
     public function addresses()

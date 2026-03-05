@@ -41,13 +41,21 @@
         <label>Role:</label>
         <select name="role" id="role"
             class="border p-2 rounded-lg w-full @error('role') border-red-500 @enderror">
+
             <option value="super_admin"
-                {{ old('role', $user->role ?? '') == 'super_admin' ? 'selected' : '' }}>
+                {{ old('role', $user->role ?? '') == 'super_admin' ? 'selected' : '' }}
+            >
                 Municipal Admin
             </option>
-            <option value="barangay_admin"
-                {{ old('role', $user->role ?? '') == 'barangay_admin' ? 'selected' : '' }}>
-                Barangay Admin
+
+            <option value="barangay_pwd_admin"
+                {{ old('role', $user->role ?? '') == 'barangay_pwd_admin' ? 'selected' : '' }}>
+                Barangay Admin (PWD)
+            </option>
+
+            <option value="barangay_senior_admin"
+                {{ old('role', $user->role ?? '') == 'barangay_senior_admin' ? 'selected' : '' }}>
+                Barangay Admin (Senior Citizen)
             </option>
         </select>
         @error('role')

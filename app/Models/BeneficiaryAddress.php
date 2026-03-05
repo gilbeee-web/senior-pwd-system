@@ -18,7 +18,7 @@ class BeneficiaryAddress extends Model
 
     public function street()
     {
-        return $this->belongsTo(Street::class);
+        return $this->belongsTo(Street::class,'street_id');
     }
 
     public function beneficiaries()

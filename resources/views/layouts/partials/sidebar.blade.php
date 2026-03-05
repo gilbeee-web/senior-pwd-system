@@ -18,7 +18,7 @@
 
         {{-- Beneficiaries (shared) --}}
         @if(in_array(auth()->user()->role, ['super_admin','barangay_admin']))
-            <a href="/beneficiaries" class="block p-2 rounded hover:bg-gray-100">
+            <a href="{{route('beneficiary.index')}}" class="block p-2 rounded hover:bg-gray-100">
                 Beneficiaries
             </a>
         @endif

@@ -11,7 +11,7 @@
       <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data" class="p-4">
          @csrf
 
-         @include('users.partials.form_fields')
+         @include('users.partials.user_form_fields')
 
          <div class="flex justify-end mt-4">
                <button type="submit" class="p-4 bg-blue-500 rounded-lg cursor-pointer text-white">Create</button>

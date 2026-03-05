@@ -11,6 +11,8 @@ class Beneficiary extends Model
 
     use SoftDeletes;
 
+    protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'beneficiary_address_id',
         'type',
@@ -21,18 +23,25 @@ class Beneficiary extends Model
         'birthdate',
         'contact_number',
         'civil_status',
+        'employment_status',
         'gender',
+        'life_status',
+        'residence_status',
+        'created_by', 
+        'updated_by'
     ];
 
     public function address()
     {
-        return $this->belongsTo(BeneficiaryAddress::class);
+        return $this->belongsTo(BeneficiaryAddress::class, 'beneficiary_address_id');
     }
 
     public function pwdDetail()
     {
         return $this->hasOne(PwdDetail::class);
     }
+
+
 
     public function seniorDetail()
     {

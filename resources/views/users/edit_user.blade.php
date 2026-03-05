@@ -1,19 +1,26 @@
-<div class="flex justify-center items-center p-5 border">
-    <h1>Account Settings</h1>
+@extends('layouts.app')
 
-    <hr>
-    <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data" class="p-4">
-        @csrf
-        @method('put')
+@section('title', 'User Management')
 
-        @include('users.partials.form_fields')
+@section('content')
+    <div class="flex justify-center items-center p-5 border">
+        <h1>Account Settings</h1>
 
-        <div class="flex justify-end mt-4">
-            <button type="submit" class="p-4 bg-blue-500 rounded-lg cursor-pointer text-white">Update</button>
-        </div>
-    </form>
+        <hr>
+        <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data" class="p-4">
+            @csrf
+            @method('put')
 
-</div>
+            @include('users.partials.user_form_fields')
+
+            <div class="flex justify-end mt-4">
+                <button type="submit" class="p-4 bg-blue-500 rounded-lg cursor-pointer text-white">Update</button>
+            </div>
+        </form>
+
+    </div>
+
+@endsection
 
 
 
