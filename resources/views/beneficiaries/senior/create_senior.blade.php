@@ -9,7 +9,9 @@
         Back
     </a>
 
-    <div class="mt-5">Register Senior</div>          
+    <div class="mt-5">Register Senior</div>  
+    
+    
 
     
 

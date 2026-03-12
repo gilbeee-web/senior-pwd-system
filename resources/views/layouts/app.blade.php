@@ -6,23 +6,23 @@
     <title>{{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="h-screen overflow-hidden">
 
 
     
 
-    <div class="flex min-h-screen">
+    <div class="flex h-full">
         
         {{-- sidebar --}}
         @include('layouts.partials.sidebar')
 
         {{-- main Content --}}
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col bg-[#DFDFDF]">
 
             @include('layouts.partials.navbar', ['title' => trim($__env->yieldContent('title'))])
 
             {{-- content --}}
-            <main class="p-6">
+            <main class="p-6 overflow-y-auto flex-1">
                 @yield('content')
             </main>
 

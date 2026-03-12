@@ -125,7 +125,7 @@ class PwdController extends Controller
     {
         $pwd->delete();
 
-        return redirect()->route('pwd.index')
+        return redirect()->route('beneficiary.index')
             ->with('success', 'PWD record archived successfully.');
     }
     
@@ -136,7 +136,7 @@ class PwdController extends Controller
 
         $pwd->forceDelete();
 
-        return redirect()->route('pwd.index')
+        return redirect()->route('beneficiary.index')
             ->with('success', 'PWD deleted successfully.');
     }
 

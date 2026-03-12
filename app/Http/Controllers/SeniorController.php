@@ -42,8 +42,7 @@ class SeniorController extends Controller
                     'receives_pension' => $request->boolean('receives_pension') ?? false,
                     'pension_amount' => $request->pension_amount,
                     'staying_with_family' => $request->staying_with_family,
-                    'living_reason' => $request->living_reason ?? null,
-                    'is_middleclass' => $request->boolean('is_middleclass') ?? false
+                    'living_reason' => $request->living_reason ?? null
                 ]);
             });
 

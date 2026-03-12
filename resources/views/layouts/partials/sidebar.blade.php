@@ -1,6 +1,8 @@
-<aside class="w-64 bg-white shadow-md">
-    <div class="p-4 font-bold text-lg border-b">
-        DATA MANAGEMENT
+<aside class="w-64 shadow-md bg-white h-full">
+
+    <div class="px-3 py-1 font-bold text-lg shadow-sm flex gap-x-3 items-center bg-[#C3252B]">
+        <img src="{{asset('images/mswd-logo.png')}}" alt="home_icon" class="h-[40px] w-[40px] object-contain">
+        <h1 class="text-white">MSWD</h1> 
     </div>
 
     <nav class="p-4 space-y-2">
