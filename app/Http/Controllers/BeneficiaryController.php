@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barangay;
 use App\Models\Beneficiary;
 use App\Models\PwdDetail;
 use App\Models\Street;
@@ -15,12 +16,17 @@ class BeneficiaryController extends Controller
     public function index(){
 
         $pwd = PwdDetail::with('beneficiary.address')->get();
+        $barangays = Barangay::all();
 
         $current_user = Auth::user();
 
         // dd($pwd);
 
-        return view('beneficiaries/index', ['pwd_beneficiaries' => $pwd, 'current_user' => $current_user]);
+        return view('beneficiaries/index', [
+            'pwd_beneficiaries' => $pwd, 
+            'current_user' => $current_user, 
+            'barangays' => $barangays
+        ]);
 
     }
 

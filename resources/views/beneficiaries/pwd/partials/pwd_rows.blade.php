@@ -65,7 +65,7 @@
     </tr>
 @empty
     <tr>
-        <td colspan="3" class="text-center py-4 text-gray-500 text-[34px] font-extrabold">
+        <td colspan="7" class="text-center py-4 text-gray-500 text-[34px] font-extrabold">
             No result found.
         </td>
     </tr>

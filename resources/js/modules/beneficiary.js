@@ -15,6 +15,22 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
+    const importPwdBtn = document.getElementById('importPwdBtn');
+    const filePwdInput = document.getElementById('pwdFileInput');
+    const pwdForm = document.getElementById('importPwdForm');
+
+    importPwdBtn.addEventListener('click', () => {
+        filePwdInput.click();
+    });
+
+    filePwdInput.addEventListener('change', () => {
+        if(filePwdInput.files.length > 0){
+            pwdForm.submit();
+        }
+    });
+
+
+
 
     
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePwdRequest;
+use App\Imports\PwdImport;
 use App\Models\Barangay;
 use App\Models\PwdDetail;
 use App\Models\Street;
@@ -10,6 +11,7 @@ use App\Services\BeneficiaryService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PwdController extends Controller
 {
@@ -47,7 +49,7 @@ class PwdController extends Controller
                     'guardian_name' => $request->guardian_name,
                     'blood_type' => $request->blood_type,
                     'educational_attainment' => $request->educational_attainment,
-                    'date_id_issued' => $request->date_id_issued,
+                    'date_id_issued' => $request->date_id_issued ?? today(),
                     'date_id_expiration' => Carbon::parse($request->date_id_issued)->addYears(5),
                     'is_middleclass' => $request->boolean('is_middleclass') ?? false
                 ]);
@@ -104,7 +106,7 @@ class PwdController extends Controller
                     'guardian_name'      => $request->guardian_name,
                     'blood_type'         => $request->blood_type,
                     'educational_attainment' => $request->educational_attainment,
-                    'date_id_issued'     => $request->date_id_issued,
+                    'date_id_issued'     => $request->date_id_issued ?? today(),
                     'date_id_expiration' => Carbon::parse($request->date_id_issued)->addYears(5),
                     'is_middleclass'     => $request->boolean('is_middleclass'),
                 ]);
@@ -166,6 +168,21 @@ class PwdController extends Controller
                 : null,
         ]);
 
+    }
+
+
+
+    public function import(Request $request){
+
+        // dd($request->all());
+
+        $request->validate([
+            'pwd_file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        Excel::import(new PwdImport, $request->file('pwd_file'));
+
+        return back()->with('success', 'PWD data imported successfully!');
     }
 
 }

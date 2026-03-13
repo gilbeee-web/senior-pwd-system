@@ -85,5 +85,6 @@ Route::prefix('pwd')
             Route::get('/{pwd}', 'show')->name('pwd.show');
             Route::delete('/{pwd}/archive', 'archive')->name('pwd.archive');
             Route::delete('/{pwd}', 'destroy')->name('pwd.destroy');
+            Route::post('/pwd/import', 'import')->name('pwd.import');
         });
     });

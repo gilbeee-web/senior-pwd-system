@@ -8,7 +8,7 @@
     <div class="relative">
 
         <button 
-            class="flex items-center gap-x-4 bg-white rounded-l-full px-5 cursor-pointer"
+            class="flex items-center gap-x-4 bg-white rounded-l-full px-5 cursor-pointer border-b"
             id="accountSettings-btn"
         >
             <div class="flex flex-col items-center">
@@ -30,7 +30,7 @@
                 Account Settings
             </a>
 
-            <form action="{{route('user.logout')}}" method="POST" class="w-full flex justify-center hover:bg-gray-100">
+            <form action="{{route('user.logout')}}" method="POST" class="w-full flex justify-center hover:bg-gray-100 rounded-bl-4xl">
                 @csrf
                 <button class="text-left px-4 py-2 cursor-pointer">
                     Logout
