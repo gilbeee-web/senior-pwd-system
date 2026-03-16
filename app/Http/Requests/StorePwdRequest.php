@@ -33,8 +33,7 @@ class StorePwdRequest extends BaseBeneficiaryRequest
             'disability_type' => 'required|string',
             'guardian_name' => 'required|string',
             'blood_type' => 'required|string',
-            'educational_attainment' => 'required|string',
-            'date_id_issued' => 'required|date'
+            'educational_attainment' => 'required|string'
         ]);
     }
 }

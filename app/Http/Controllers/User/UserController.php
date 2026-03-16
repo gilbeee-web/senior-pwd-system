@@ -81,8 +81,10 @@ class UserController extends Controller
 
         $barangays = Barangay::all();
 
+        // dd($user);
+
         return view('users/edit_user', [
-            'current_user' => $current_user, 
+            'current_user' => $current_user,
             'user' => $user,
             'mode' => 'edit',
             'barangays' => $barangays
@@ -178,7 +180,8 @@ class UserController extends Controller
             'generated_credentials' => [
                 'username' => $user->username,
                 'password' => $newPassword
-            ]
+            ],
+            'reset_password' => true
         ]);
 
     }

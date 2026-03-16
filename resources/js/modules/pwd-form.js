@@ -56,40 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // console.log("PWD formsss loaded.");
     
-    document.querySelectorAll('.view-pwd-btn').forEach(button => {
-        button.addEventListener('click', async function () {
-
-            console.log("View button clicked");
-
-            const pwdId = this.dataset.pwdId;
-
-            if(!pwdId){
-                alert("no PWD selected");
-            }
-
-            try {
-                
-                const showUrl = this.dataset.showUrl;
-
-                const response = await fetch(showUrl + pwdId);
-                
-                if(!response.ok){
-                    console.log("Failed to fetch pwd");
-                    throw new Error('Failed to fetch pwd');
-                }
-
-                const pwd_details = await response.json();
-
-                console.log("Pwd details: ", pwd_details);
-
-            } catch (error) {
-                console.log("Failed to fetch the pwd details: ", error);
-            }
-
-        });
-    });
-
-
     const form = document.getElementById("pwd_form");
     const submitBtn = document.getElementById("submitBtn");
     const requiredFields = form.querySelectorAll("[required]");

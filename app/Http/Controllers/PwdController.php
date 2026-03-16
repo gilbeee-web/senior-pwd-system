@@ -155,7 +155,16 @@ class PwdController extends Controller
 
         return response()->json([
             'id' => $pwd->id,
-            'full_name' => $pwd->beneficiary->first_name, $pwd->beneficiary->last_name,
+            'full_name' => 
+                $pwd->beneficiary->last_name . ', ' .
+                $pwd->beneficiary->first_name . ' ' .
+                $pwd->beneficiary->middle_name . ' ' .
+                $pwd->beneficiary->suffix,
+            'birthdate' => $pwd->beneficiary->birthdate,
+            'contact_number' => $pwd->beneficiary->contact_number,
+            'gender' => $pwd->beneficiary->gender,
+            'civil_status' => $pwd->beneficiary->civil_status,
+            'employment_status' => $pwd->beneficiary->employment_status,
             'pwd_id_number' => $pwd->pwd_id_number,
             'disability_type' => $pwd->disability_type,
             'guardian_name' => $pwd->guardian_name,
@@ -166,6 +175,9 @@ class PwdController extends Controller
             'age' => $pwd->beneficiary->birthdate
                 ? \Carbon\Carbon::parse($pwd->beneficiary->birthdate)->age
                 : null,
+            'street' => $pwd->beneficiary->address->street->name,
+            'house_num' => $pwd->beneficiary->address->house_num,
+            'barangay' => $pwd->beneficiary->address->street->barangay->name
         ]);
 
     }

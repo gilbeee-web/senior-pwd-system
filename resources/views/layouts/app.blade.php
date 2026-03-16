@@ -6,12 +6,9 @@
     <title>{{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-screen overflow-hidden">
+<body class="min-h-screen overflow-hidden">
 
-
-    
-
-    <div class="flex h-full">
+    <div class="flex h-screen">
         
         {{-- sidebar --}}
         @include('layouts.partials.sidebar')
@@ -69,11 +66,17 @@
 
                 const credentials = @json(session('generated_credentials'));
 
+                let title = "Account Created Successfully!";
+
+                @if(session('reset_password'))
+                    title = "Password Reset Successfully";
+                @endif
+
                 Swal.fire({
-                    title: 'Account Created Successfully!',
+                    title: title,
                     html: `
                         
-                        <div style="text-align:left;">
+                        <div style="display: flex; flex-direction: column; row-gap: 10px; text-align:center; align-items:center;">
                             <p>Please save this user crendentials. User will use this to login.</p>
                             <br>
                             <p><strong>Username:</strong> ${credentials.username}</p>

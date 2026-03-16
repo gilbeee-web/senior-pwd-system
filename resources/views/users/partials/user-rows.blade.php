@@ -1,17 +1,17 @@
 
 @forelse($users as $user)
     <tr>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$loop->iteration}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$user->name}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$user->username}}</td>
+        <td class="px-4 py-2 text-sm text-gray-800 border font-bold">{{$loop->iteration}}</td>
+        <td class="px-4 py-2 text-sm text-gray-800 border font-bold">{{$user->name}}</td>
+        <td class="px-4 py-2 text-sm text-gray-800 border font-bold">{{$user->username}}</td>
 
-        @if($user->role === 'barangay_admin')
-            <td class="px-4 py-2 text-sm text-gray-800 border">{{$user->barangay}} Admin</td>
+        @if($user->role === 'barangay_pwd_admin' || $user->role === 'barangay_senior_admin')
+            <td class="px-4 py-2 text-sm text-gray-800 border font-bold">{{$user->barangay}} Admin</td>
         @else
-            <td class="px-4 py-2 text-sm text-gray-800 border">Municipal Admin</td>
+            <td class="px-4 py-2 text-sm text-gray-800 border font-bold">Municipal Admin</td>
         @endif
         
-        <td class="px-4 py-2 text-sm border flex items-center justify-center gap-x-3">
+        <td class="px-4 py-2 text-sm border border-gray-400 flex items-center justify-center gap-x-3">
 
             <a href="{{route('user.edit', $user->id)}}" class="text-blue-500 hover:underline mr-2">
                 Edit

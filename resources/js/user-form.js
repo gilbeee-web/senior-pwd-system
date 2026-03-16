@@ -54,9 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // run on page load
     toggleBarangay();
 
-
-    const resetPasswordButton = document.getElementById("reset-password-btn");
-
     document.querySelectorAll('.reset-password-btn').forEach(button => {
         button.addEventListener('click', function () {
 
@@ -77,6 +74,22 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
         });
+    });
+
+    const profile_button = document.getElementById('profile-btn');
+    const profile_file = document.getElementById('profile-file');
+    const profile_img = document.getElementById('profile-img');
+    
+
+    profile_button.addEventListener('click', () => {
+        profile_file.click();
+    });
+
+    profile_file.addEventListener('change', () => {
+        if (profile_file.files.length > 0) {
+            const file = profile_file.files[0];
+            profile_img.src = URL.createObjectURL(file);
+        }
     });
 
 

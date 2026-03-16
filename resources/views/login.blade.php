@@ -6,21 +6,22 @@
         <title>Senior PWD System</title>
         @vite('resources/css/app.css')
     </head>
-    <body class="text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
-        
-        
+    <body 
+        class="bg-cover bg-center min-h-screen flex items-center justify-center"
+        style="background-image: url('{{ asset('images/mswd-bg.png') }}');"
+    >
         
 
-        <div class="p-5 shadow-md border">
+        <div class="p-5 shadow-md rounded-lg bg-white w-80">
 
-            <h1 class="text-3xl font-bold mb-4">Login Page</h1>
+            <h1 class="text-4xl font-bold mb-4">Login</h1>
 
             <form action="{{route('user.login')}}" method="POST" class="flex flex-col gap-5">
                 
                 @csrf
                 
 
-                <div class="flex flex-col gap-2">
+                <div class="w-full flex flex-col gap-2">
                   <label class="block text-sm mb-1">Username:</label>
                   <input 
                     type="text" 
@@ -61,7 +62,7 @@
                 </div>
                 
                 {{-- Submit --}}
-                <button class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+                <button class="w-full bg-[#ED4040] text-white p-2 rounded hover:bg-red-700 cursor-pointer">
                     Login
                 </button>
 

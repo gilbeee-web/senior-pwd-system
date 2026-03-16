@@ -33,14 +33,14 @@
 
                     <a 
                         href="{{route('senior.create')}}"
-                        class="block px-4 py-2 hover:bg-gray-100"
+                        class="block px-4 py-2 rounded-lg hover:bg-gray-100"
                     >
                         Senior Citizen
                     </a>
 
                     <a 
                         href="{{route('pwd.create')}}"
-                        class="block px-4 py-2 hover:bg-gray-100"
+                        class="block px-4 py-2 rounded-lg hover:bg-gray-100"
                     >
                         PWD
                     </a>
@@ -194,5 +194,14 @@
             </tbody>
         </table>
     </div>
+
+
+
+    {{-- show pwd --}}
+    <div id="show-pwd-wrapper" class="hidden">
+        @include('beneficiaries.pwd.partials.show_pwd')
+    </div>
+    
+        
 
 @endsection
