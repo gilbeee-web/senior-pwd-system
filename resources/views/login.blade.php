@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Senior PWD System</title>
-        @vite('resources/css/app.css')
+        @vite(['resources/css/app.css', 'resources/js/login.js'])
     </head>
     <body 
         class="bg-cover bg-center min-h-screen flex items-center justify-center"
@@ -16,7 +16,12 @@
 
             <h1 class="text-4xl font-bold mb-4">Login</h1>
 
-            <form action="{{route('user.login')}}" method="POST" class="flex flex-col gap-5">
+            <form 
+                action="{{route('user.login')}}" 
+                method="POST" 
+                class="flex flex-col gap-5"
+                id="login-form"
+            >
                 
                 @csrf
                 
@@ -62,7 +67,10 @@
                 </div>
                 
                 {{-- Submit --}}
-                <button class="w-full bg-[#ED4040] text-white p-2 rounded hover:bg-red-700 cursor-pointer">
+                <button 
+                    class="w-full bg-[#ED4040] text-white p-2 rounded hover:bg-red-700 cursor-pointer"
+                    id="login-btn"
+                >
                     Login
                 </button>
 

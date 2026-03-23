@@ -9,6 +9,7 @@ use App\Models\PwdDetail;
 use App\Models\Street;
 use App\Services\BeneficiaryService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -188,13 +189,30 @@ class PwdController extends Controller
 
         // dd($request->all());
 
-        $request->validate([
-            'pwd_file' => 'required|mimes:xlsx,xls,csv'
-        ]);
+        try{
+            $request->validate([
+                'pwd_file' => 'required|mimes:xlsx,xls,csv'
+            ]);
 
-        Excel::import(new PwdImport, $request->file('pwd_file'));
+            $import = new PwdImport();
 
-        return back()->with('success', 'PWD data imported successfully!');
+            Excel::import($import, $request->file('pwd_file'));
+
+            $report = $import->getReport();
+
+            if ($report['skipped'] > 0 || $report['duplicate_ids'] > 0 || $report['invalid_barangay'] > 0) {
+                return back()->with('report', $report);
+            }
+
+            return back()->with('success', 'PWD data imported successfully!');
+
+        }catch(Exception $e){
+            return back()->with('error', 'Import failed: ' . $e->getMessage());
+        }
+
+        
+
+        
     }
 
 }

@@ -6,8 +6,9 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use App\Services\Imports\PwdImportService;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class PwdImport implements ToCollection, WithHeadingRow
+class PwdImport implements ToCollection, WithHeadingRow, WithCalculatedFormulas
 {
     /**
     * @param Collection $collection
@@ -28,5 +29,15 @@ class PwdImport implements ToCollection, WithHeadingRow
             $this->importService->handle($row);
 
         }
+    }
+
+    public function getReport()
+    {
+        return [
+            'imported' => $this->importService->imported,
+            'skipped' => $this->importService->skipped,
+            'invalid_barangay' => $this->importService->invalid_barangay,
+            'duplicate_ids' => $this->importService->duplicate_ids,
+        ];
     }
 }

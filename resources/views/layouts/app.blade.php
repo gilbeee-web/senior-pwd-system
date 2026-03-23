@@ -30,32 +30,32 @@
 
     @if(session()->has('success') || session()->has('error') || session()->has('warning') || session()->has('info'))
         <script>
-        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function () {
 
-            let icon = '';
-            let message = '';
+                let icon = '';
+                let message = '';
 
-            @if(session('success'))
-                icon = 'success';
-                message = "{{ session('success') }}";
-            @elseif(session('error'))
-                icon = 'error';
-                message = "{{ session('error') }}";
-            @elseif(session('warning'))
-                icon = 'warning';
-                message = "{{ session('warning') }}";
-            @elseif(session('info'))
-                icon = 'info';
-                message = "{{ session('info') }}";
-            @endif
+                @if(session('success'))
+                    icon = 'success';
+                    message = "{{ session('success') }}";
+                @elseif(session('error'))
+                    icon = 'error';
+                    message = "{{ session('error') }}";
+                @elseif(session('warning'))
+                    icon = 'warning';
+                    message = "{{ session('warning') }}";
+                @elseif(session('info'))
+                    icon = 'info';
+                    message = "{{ session('info') }}";
+                @endif
 
-            Swal.fire({
-                icon: icon,
-                title: message,
-                confirmButtonColor: '#2563eb'
+                Swal.fire({
+                    icon: icon,
+                    title: message,
+                    confirmButtonColor: '#2563eb'
+                });
+
             });
-
-        });
         </script>
     @endif
 
@@ -106,6 +106,25 @@
                     }
                 });
 
+            });
+        </script>
+    @endif
+
+    @if(session('report') )
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const report = @json(session('report'));
+
+                Swal.fire({
+                    title: 'Import Summary',
+                    html: `
+                        Imported: ${report.imported} <br>
+                        Skipped: ${report.skipped} <br>
+                        Invalid Barangay: ${report.invalid_barangay} <br>
+                        Duplicate IDs: ${report.duplicate_ids}
+                    `,
+                    icon: 'success'
+                });
             });
         </script>
     @endif

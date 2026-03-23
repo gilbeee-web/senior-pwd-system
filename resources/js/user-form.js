@@ -80,17 +80,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const profile_file = document.getElementById('profile-file');
     const profile_img = document.getElementById('profile-img');
     
-
-    profile_button.addEventListener('click', () => {
-        profile_file.click();
-    });
-
-    profile_file.addEventListener('change', () => {
-        if (profile_file.files.length > 0) {
-            const file = profile_file.files[0];
-            profile_img.src = URL.createObjectURL(file);
-        }
-    });
+    if(profile_button){
+        profile_button.addEventListener('click', () => {
+            profile_file.click();
+        });
+    }
+    
+    if(profile_file){
+        profile_file.addEventListener('change', () => {
+            if (profile_file.files.length > 0) {
+                const file = profile_file.files[0];
+                profile_img.src = URL.createObjectURL(file);
+            }
+        });
+    }
+   
 
 
 });

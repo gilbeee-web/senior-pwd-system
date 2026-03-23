@@ -58,7 +58,12 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const form = document.getElementById("pwd_form");
     const submitBtn = document.getElementById("submitBtn");
-    const requiredFields = form.querySelectorAll("[required]");
+    let requiredFields = null;
+
+    if(form){
+        requiredFields = form.querySelectorAll("[required]");
+    }
+    
 
     function checkForm() {
         let allFilled = true;
@@ -80,10 +85,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    requiredFields.forEach(field => {
-        field.addEventListener("input", checkForm);
-        field.addEventListener("change", checkForm);
-    });
+    if(requiredFields){
+        requiredFields.forEach(field => {
+            field.addEventListener("input", checkForm);
+            field.addEventListener("change", checkForm);
+        });
+    }
+    
 
 
 
