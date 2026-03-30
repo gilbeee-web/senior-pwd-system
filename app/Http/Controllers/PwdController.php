@@ -174,7 +174,7 @@ class PwdController extends Controller
             'date_id_issued' => $pwd->date_id_issued,
             'birthdate' => $pwd->beneficiary->birthdate,
             'age' => $pwd->beneficiary->birthdate
-                ? \Carbon\Carbon::parse($pwd->beneficiary->birthdate)->age
+                ? Carbon::parse($pwd->beneficiary->birthdate)->age
                 : null,
             'street' => $pwd->beneficiary->address->street->name,
             'house_num' => $pwd->beneficiary->address->house_num,
@@ -209,10 +209,56 @@ class PwdController extends Controller
         }catch(Exception $e){
             return back()->with('error', 'Import failed: ' . $e->getMessage());
         }
+    }
 
-        
 
-        
+    public function bulkUpdateValidate(Request $request){
+        // dd($request->all());
+
+        $pwd_ids = $request->selected_pwds;
+
+        if (!$pwd_ids || count($pwd_ids) === 0) {
+            return back()->with('error', 'No records selected.');
+        }
+
+        //actions to apply
+        $residentAction = $request->resident_action;
+        $statusAction = $request->status_action;
+        $incomeAction = $request->income_action;
+
+        $pwds = PwdDetail::with('beneficiary')->whereIn('id', $pwd_ids)->get();
+
+        // dd($pwds);
+
+        foreach($pwds as $pwd ){
+            $beneficiary = $pwd->beneficiary;
+
+            if($residentAction === 'active'){
+                $beneficiary->resident_status = 'active';
+            }elseif($residentAction === 'inactive'){
+                $beneficiary->resident_status = 'inactive';
+            }
+
+            if($statusAction === 'alive'){
+                $beneficiary->life_status = 'alive';
+            }elseif($statusAction ==='deceased'){
+                $beneficiary->life_status = 'deceased';
+            }
+
+            if($incomeAction === 'below'){
+                $pwd->is_middleclass = 0;
+            }elseif($incomeAction === 'above'){
+                $pwd->is_middleclass = 1;
+            }
+
+            $beneficiary->save();
+            $pwd->save();
+
+
+        }
+
+        return back()->with('success', 'Validated successfully.');
+
     }
 
 }

@@ -2,24 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PwdReportExport;
 use App\Models\Barangay;
-use App\Models\Beneficiary;
-use App\Models\PwdDetail;
-use App\Models\SeniorDetail;
-use App\Models\Street;
 use App\Services\BeneficiaryReportService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
-class BeneficiaryController extends Controller
+class ReportController extends Controller
 {
     //
 
     public function index(Request $request, BeneficiaryReportService $service){
-
-        // dd($request->all());
 
         $current_user = Auth::user();
         $barangays = Barangay::all();
@@ -43,26 +37,23 @@ class BeneficiaryController extends Controller
 
         // dd($pwd);
 
-        return view('beneficiaries/index', [
+        return view('reports/index', [
             'pwd_beneficiaries' => $pwd, 
             'senior_beneficiaries' => $senior,
             'current_user' => $current_user, 
             'barangays' => $barangays
         ]);
-
     }
 
+    public function exportPwd(Request $request){
 
-    public function getStreets(Request $request, $barangay_id){
+        $current_user = Auth::user();
 
-        // dd($barangay_id);
-
-        $streets = Street::where('barangay_id', $barangay_id)->get();
-
-        return response()->json($streets);
-
+        return Excel::download(
+            new PwdReportExport($request, $current_user),
+            'pwd-report.xlsx'
+        );
     }
-
 
 
 }

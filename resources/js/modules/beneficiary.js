@@ -154,7 +154,109 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+
+    const selectAll = document.getElementById('select-all'); //select all button checkbox
+    const bulkBtn = document.getElementById('bulk-update-btn');
+    const bulkUpdate_modal = document.getElementById('bulkUpdate-modal');
+    const closeBulkModalBtn = document.getElementById('close-bulk-modal-btn');
+    const bulkForm = document.getElementById('bulk-update-form');
+    const selectedCountText = document.getElementById('selected-count');
+
+    if(selectAll){
+        selectAll.addEventListener('change', function () {
+            document.querySelectorAll('.row-checkbox').forEach(cb => {
+                cb.checked = this.checked;
+            });
+            updateBtnCnt();
+        });
+    }
+
+    document.addEventListener('change', function (e) {
+        if (e.target.classList.contains('row-checkbox')) {
+            updateBtnCnt();
+        }
+    });
+
+    //update Button and count
+    function updateBtnCnt() {
+        const selected = document.querySelectorAll('.row-checkbox:checked');
+
+        // Update count
+        selectedCountText.textContent = selected.length + " selected";
+
+        // Enable / Disable button
+        if (selected.length > 0) {
+            bulkBtn.disabled = false;
+            bulkBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+            bulkBtn.classList.add('bg-blue-500');
+        } else {
+            selectedCountText.textContent = "";
+            bulkBtn.disabled = true;
+            bulkBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+            bulkBtn.classList.remove('bg-blue-500');
+        }
+    }
     
+    //open modal function
+    if(bulkBtn){
+        bulkBtn.addEventListener('click', function(){
+            const selected = document.querySelectorAll('.row-checkbox:checked');
+
+            // if (selected.length === 0) {
+            //     alert("Please select at least one record.");
+            //     return;
+            // }
+
+            bulkUpdate_modal.classList.remove('hidden');
+        });
+    } 
+    
+    if(closeBulkModalBtn){
+        closeBulkModalBtn.addEventListener('click', function(){
+            bulkUpdate_modal.classList.add('hidden');
+        });
+    }
+
+    //form submit handler
+    if(bulkForm){
+        bulkForm.addEventListener('submit', function(e){
+
+            const selected = document.querySelectorAll('.row-checkbox:checked');
+
+            if (selected.length === 0) {
+                e.preventDefault(); // not to refresh entire page
+                alert("No records selected.");
+                return;
+            }
+            
+
+            //check if no action selected to apply 
+            const resident = document.querySelector('input[name="resident_action"]:checked');
+            const status = document.querySelector('input[name="status_action"]:checked');
+            const income = document.querySelector('input[name="income_action"]:checked');
+
+            if (!resident && !status && !income) {
+                e.preventDefault();
+                alert("Please select at least one action to apply.");
+                return;
+            }
+
+            //remove old id input para pag binuksan ulit modal naka fresh id ma-rrender
+            document.querySelectorAll('.bulk-id-input').forEach(el => el.remove());
+
+            //loop to the checkbox and add some attributes especially the name to submit in the controller
+            selected.forEach(cb => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selected_pwds[]';
+                input.value = cb.value;
+                input.classList.add('bulk-id-input');
+                bulkForm.appendChild(input);
+            });
+        });
+    }
+
+
     
     
 

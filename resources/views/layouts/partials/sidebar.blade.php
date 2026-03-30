@@ -16,33 +16,31 @@
             <a href="{{route('super_admin.dashboard')}}" class="block p-2 rounded hover:bg-gray-100">
                 Dashboard
             </a>
-        @elseif(auth()->user()->role === 'barangay_admin')
-            <a href="{{route('barangay_admin.dashboard')}}" class="block p-2 rounded hover:bg-gray-100">
+        @elseif(auth()->user()->role === 'barangay_pwd_admin')
+            <a href="{{route('barangay_pwd_admin.dashboard')}}" class="block p-2 rounded hover:bg-gray-100">
                 Dashboard
             </a>
         @endif
 
         {{-- Beneficiaries (shared) --}}
-        @if(in_array(auth()->user()->role, ['super_admin','barangay_admin']))
-            <a 
-                href="{{route('beneficiary.index')}}" 
-                class="
-                    block p-2 rounded hover:bg-gray-100 
-                    @if(request()->routeIs('beneficiary.*') || request()->routeIs('pwd.*') || request()->routeIs('senior.*')  ) 
-                        bg-red-500 text-white hover:bg-red-400 
-                    @endif
-                " 
-            >
-                Beneficiaries
-            </a>
-        @endif
+       
+        <a 
+            href="{{route('beneficiary.index')}}" 
+            class="
+                block p-2 rounded hover:bg-gray-100 
+                @if(request()->routeIs('beneficiary.*') || request()->routeIs('pwd.*') || request()->routeIs('senior.*')  ) 
+                    bg-red-500 text-white hover:bg-red-400 
+                @endif
+            " 
+        >
+            Beneficiaries
+        </a>
+       
 
         {{-- Reports --}}
-        @if(in_array(auth()->user()->role, ['super_admin','barangay_admin']))
-            <a href="/reports" class="block p-2 rounded hover:bg-gray-100">
-                Reports
-            </a>
-        @endif
+        <a href="{{route('report.index')}}" class="block p-2 rounded hover:bg-gray-100">
+            Reports
+        </a>
 
         {{-- Super Admin --}}
         @if(auth()->user()->role === 'super_admin')

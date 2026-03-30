@@ -47,8 +47,8 @@ class LoginController extends Controller
         switch($user->role){
             case 'super_admin':
                 return redirect()->route('super_admin.dashboard')->with(['success' => 'Welcome super admin!']);
-            case 'barangay_admin':
-                return redirect()->route('barangay_admin.dashboard')->with(['success' => 'Welcome Admin!']);
+            case 'barangay_pwd_admin':
+                return redirect()->route('barangay_pwd_admin.dashboard')->with(['success' => 'Welcome PWD Admin!']);
             default:
                 Auth::logout();
                 return redirect()->route('index')->with('error', 'Unauthorized role');

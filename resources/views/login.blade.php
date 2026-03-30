@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Senior PWD System</title>
-        @vite(['resources/css/app.css', 'resources/js/login.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body 
         class="bg-cover bg-center min-h-screen flex items-center justify-center"
@@ -81,4 +81,35 @@
 
 
     </body>
+
+    @if(session()->has('success') || session()->has('error') || session()->has('warning') || session()->has('info'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                let icon = '';
+                let message = '';
+
+                @if(session('success'))
+                    icon = 'success';
+                    message = "{{ session('success') }}";
+                @elseif(session('error'))
+                    icon = 'error';
+                    message = "{{ session('error') }}";
+                @elseif(session('warning'))
+                    icon = 'warning';
+                    message = "{{ session('warning') }}";
+                @elseif(session('info'))
+                    icon = 'info';
+                    message = "{{ session('info') }}";
+                @endif
+
+                Swal.fire({
+                    icon: icon,
+                    title: message,
+                    confirmButtonColor: '#2563eb'
+                });
+
+            });
+        </script>
+    @endif
 </html>

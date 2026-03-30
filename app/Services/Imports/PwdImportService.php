@@ -7,6 +7,7 @@ use App\Models\PwdDetail;
 use App\Models\Street;
 use App\Services\BeneficiaryService;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 
@@ -24,6 +25,17 @@ class PwdImportService
     public function __construct(BeneficiaryService $beneficiaryService)
     {
         $this->beneficiaryService = $beneficiaryService;
+    }
+
+    private function formatExcelDate($value)
+    {
+        if (empty($value)) return null;
+
+        if (is_numeric($value)) {
+            return Carbon::instance(ExcelDate::excelToDateTimeObject($value));
+        }
+
+        return Carbon::parse($value);
     }
 
     //uses this function to import file (PwdImport.php file)
@@ -69,14 +81,13 @@ class PwdImportService
                     'middle_name' => $row['middle_name'],
                     'extension' => $row['extension'],
 
-                    'birthdate' => $row['birthdate'],
+                    'birthdate' => $this->formatExcelDate($row['birthdate']),
                     'contact_number' => $row['contact_number'],
                     'civil_status' => $row['civil_status'],
                     'employment_status' => $row['employment_status'],
                     'gender' => $row['gender'],
 
                     'house_num' => $row['house_number'],
-                    'barangay_id' => $barangay->id,
                     'street_id' => $street->id,
                     'municipality' => $row['municipality'] ?? "General Tinio",
                     'province' => $row['province'] ?? "Nueva Ecija",
@@ -92,8 +103,8 @@ class PwdImportService
                     'guardian_name' => $row['guardian_name'],
                     'blood_type' => $row['blood_type'],
                     'educational_attainment' => $row['educational_attainment'],
-                    'date_id_issued' => $row['date_id_issued'] ?? now(),
-                    'date_id_expiration' => Carbon::parse($row['date_id_issued'])->addYears(5),
+                    'date_id_issued' => $this->formatExcelDate($row['date_id_issued']) ?? now(),
+                    'date_id_expiration' => $this->formatExcelDate($row['date_id_issued'])->addYears(5),
                     'is_middleclass' => $row['is_middleclass'] ?? false,
                 ]);
 

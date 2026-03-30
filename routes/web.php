@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PwdController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SeniorController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Container\Attributes\Auth;
@@ -44,9 +45,9 @@ Route::controller(LoginController::class)->group(function(){
 
 
 Route::prefix('admin-dashboard')
-    ->middleware(['auth', 'role:barangay_admin'])->group(function () {
+    ->middleware(['auth', 'role:barangay_pwd_admin'])->group(function () {
         Route::controller(DashboardController::class)->group(function () {
-            Route::get('/', 'adminIndex')->name('barangay_admin.dashboard');
+            Route::get('/', 'adminIndex')->name('barangay_pwd_admin.dashboard');
         });
     });
 
@@ -63,7 +64,6 @@ Route::prefix('beneficiary')
         Route::controller(BeneficiaryController::class)->group(function(){
             Route::get('/', 'index')->name('beneficiary.index');
             Route::get('/streets/{id}', 'getStreets')->name('beneficiary.getStreets');
-
         });
     });
 
@@ -86,5 +86,14 @@ Route::prefix('pwd')
             Route::delete('/{pwd}/archive', 'archive')->name('pwd.archive');
             Route::delete('/{pwd}', 'destroy')->name('pwd.destroy');
             Route::post('/pwd/import', 'import')->name('pwd.import');
+            Route::post('/validate/update', 'bulkUpdateValidate')->name('pwd.validate');
+        });
+    });
+
+Route::prefix('reports')
+    ->middleware(['auth'])->group(function(){
+        Route::controller(ReportController::class)->group(function(){
+           Route::get('/', 'index')->name('report.index');
+           Route::get('/pwd/export', 'exportPwd')->name('report.pwd.export');
         });
     });

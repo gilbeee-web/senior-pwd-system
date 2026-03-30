@@ -75,10 +75,10 @@
             <div class="flex gap-x-10 items-center">
                 <div class="flex flex-col gap-y-1">
 
-                    <label for="">Change Name:</label>
+                    <label for="">Full Name:</label>
                     <input 
                         type="text" 
-                        placeholder="" 
+                        placeholder="Enter full name..." 
                         name="name" 
                         class="border rounded-md p-2 bg-[#F5F5F5] @error('name') border-red-500 @enderror"
                         value="{{ old('name', $user->name ?? '') }}"
@@ -93,10 +93,11 @@
                 
                 <div class="flex flex-col gap-y-1">
 
-                    <label for="">Change Role:</label>
+                    <label for="">Role:</label>
                     <select name="role" id="role"
                         class="border rounded-md p-2 bg-[#F5F5F5] @error('role') border-red-500 @enderror"
                     >
+                        <option value="" disabled selected hidden>Select</option>
 
                         <option value="super_admin"
                             {{ old('role', $user->role ?? '') == 'super_admin' ? 'selected' : '' }}
@@ -123,10 +124,11 @@
 
                 <div class="flex flex-col gap-y-1">
 
-                    <label for="">Change Barangay:</label>
+                    <label for="">Barangay:</label>
                     <select name="barangay_id" id="role"
                         class="border rounded-md p-2 bg-[#F5F5F5] @error('role') border-red-500 @enderror"
                     >
+                        <option value="" disabled selected hidden>Select</option>
                         @foreach($barangays as $brgy)
                             <option value="{{ $brgy->id }}"
                                 {{ old('barangay_id', $user->barangay_id ?? '') == $brgy->id ? 'selected' : '' }}>
@@ -147,9 +149,12 @@
             <div class="w-[40%] flex flex-col gap-y-1">
 
                 <label for="">Change Username:</label>
-                <input type="text" name="username"
+                <input 
+                    type="text"
+                    name="username"
                     class="border p-2 rounded-lg @error('username') border-red-500 @enderror"
                     value="{{ old('username', $user->username ?? '') }}"
+                    placeholder="Enter username..."
                 >
                 @error('username')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -157,19 +162,22 @@
 
             </div>
 
-        @else
+        {{-- @else
             <div class="w-[35%] flex flex-col gap-y-1">
 
-                <label for="">Change Username:</label>
-                <input type="text" name="username"
+                <label for="">Username:</label>
+                <input 
+                    type="text" 
+                    name="username"
                     class="border p-2 rounded-lg @error('username') border-red-500 @enderror"
                     value="{{ old('username', $user->username ?? '') }}"
+                    placeholder="Enter username..."
                 >
                 @error('username')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
 
-            </div>
+            </div> --}}
         @endif
 
         

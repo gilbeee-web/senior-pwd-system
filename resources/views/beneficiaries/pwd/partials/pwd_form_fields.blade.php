@@ -116,6 +116,7 @@
 
             <label for="gender">Gender:</label>
             <select name="gender" id="" class="border rounded-md py-2 px-5 bg-[#F5F5F5]" required>
+                <option value="" disabled selected hidden>Select</option>
                 <option 
                     value="Male" 
                     {{ old('gender', $pwd->beneficiary->gender ?? '') == 'Male' ? 'selected' : '' }}
@@ -140,6 +141,7 @@
             <label for="civil_status">Civil Status:</label>
 
             <select name="civil_status" id="" class="border rounded-md p-2 bg-[#F5F5F5]" required>
+                <option value="" disabled selected hidden>Select</option>
                 <option 
                     value="Single" 
                     {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'Single' ? 'selected' : '' }}
@@ -179,6 +181,7 @@
         <div class="flex flex-col gap-y-1">
             <label for="employment_status">Status of Employment:</label>
             <select name="employment_status" id="" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
+                <option value="" disabled selected hidden>Select</option>
                 <option 
                     value="Employed" 
                     {{ old('employment_status', $pwd->beneficiary->employment_status ?? '') == 'Employed' ? 'selected' : '' }}
@@ -210,6 +213,7 @@
             <label for="educational_attainment">Educational Attainment:</label>
 
             <select name="educational_attainment" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
+                <option value="" disabled selected hidden>Select</option>
                 @foreach([
                     'None',
                     'Kindergarten',
@@ -267,7 +271,7 @@
                 data-street-url="{{ url('beneficiary/streets') }}/"
                 required
             >
-                <option value="">-- Select Barangay --</option>
+                <option value="" disabled selected hidden>Select</option>
 
                 @foreach($barangays as $brgy)
                     <option 
@@ -289,7 +293,7 @@
 
             <label for="street_id">Street:</label>
             <select name="street_id" id="street" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
-                <option value="">Select Street</option>
+                <option value="" disabled selected hidden>Select</option>
                 @if($isEditingPwd)
                     @foreach($streets as $street)
                         <option 
@@ -341,6 +345,7 @@
 
             <label for="disability_type">Disability Type:</label>
             <select name="disability_type" id="disability_type" class="border rounded-md py-2 px-3 bg-[#F5F5F5]" required>
+                <option value="" disabled selected hidden>Select</option>
                 @foreach([
                     'Deaf or Hard of Hearing',
                     'Intellectual',
@@ -387,6 +392,7 @@
         <div class="flex flex-col gap-y-1">
             <label for="blood_type">Blood Type:</label>
             <select name="blood_type" id="blood_type" class="border rounded-md py-2 px-3 bg-[#F5F5F5]" required>
+                <option value="" disabled selected hidden>Select</option>
                 @foreach([
                     'O+',
                     'O-',
@@ -417,7 +423,7 @@
 
     <div>
         @if($isEditingPwd)
-            <div class="flex flex-col gap-y-1">
+            <div class="flex flex-col gap-y-1 inline-block px-5">
                 <label for="date_id_issued">Date ID Issued:</label>
                 <input 
                     type="date" 
