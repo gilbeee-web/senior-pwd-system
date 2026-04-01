@@ -10,15 +10,17 @@
         @if($current_user->role === 'super_admin')
             <div class="flex gap-x-10">
                 <button 
-                    class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer"
                     id="pwd-content-btn"
+                    class="text-2xl font-bold cursor-pointer 
+                    {{ $tab === 'pwd' ? 'border-b-[3px] border-red-500' : 'text-gray-400' }}"
                 >
                     PWD
                 </button>
 
                 <button 
-                    class="text-2xl font-bold text-gray-400 cursor-pointer"
                     id="senior-content-btn"
+                    class="text-2xl font-bold cursor-pointer 
+                    {{ $tab === 'senior' ? 'border-b-[3px] border-red-500' : 'text-gray-400' }}"
                 >
                     Senior Citizen
                 </button>
@@ -105,7 +107,7 @@
             @if($current_user->role === 'barangay_senior_admin')
                 
                 <a 
-                    href="{{route('pwd.create')}}"
+                    href="{{route('senior.create')}}"
                     class="p-2 bg-blue-500 text-white rounded-lg cursor-pointer"
                 >
                     Add Senior Citizen
@@ -157,7 +159,7 @@
 
                 @if($current_user->role === 'barangay_pwd_admin')
                     <!-- Disability Type -->
-                    <div class="flex flex-col" id="disabilityType-filter">
+                    <div class="flex flex-col {{ $tab === 'pwd' ? '' : 'hidden' }}" id="disabilityType-filter">
                         <label for="disability_type" class="font-bold text-sm mb-1">
                             Disability Type
                         </label>
@@ -189,7 +191,7 @@
                         </select>
                     </div>
                 @elseif($current_user->role === 'barangay_senior_admin')
-                    <div class="flex flex-col hidden" id="seniorType-filter">
+                    <div class="flex flex-col {{ $tab === 'senior' ? '' : 'hidden' }}" id="seniorType-filter">
                         <label for="senior_type" class="font-bold text-sm mb-1">
                             Senior Type
                         </label>
@@ -321,7 +323,7 @@
     
     @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_pwd_admin')
 
-        <div class="mt-5" id="pwd-table-wrapper">
+        <div class="mt-5 {{ $tab === 'pwd' ? '' : 'hidden' }}" id="pwd-table-wrapper">
             <table class="w-full text-sm text-center border">
                 <thead class="bg-[#98D172]">
                     <tr>
@@ -330,10 +332,10 @@
                         </th>
                         <th class="px-4 py-2 border">ID number</th>
                         <th class="px-4 py-2 border">Name</th>
-                        <th class="px-4 py-2 border">Birthdate</th>
-                        <th class="px-4 py-2 border">Gender</th>
+                        {{-- <th class="px-4 py-2 border">Birthdate</th> --}}
                         <th class="px-4 py-2 border">Disability Type</th>
-                        <th class="px-4 py-2 border">Address</th>
+                        <th class="px-4 py-2 border">Street</th>
+                        <th class="px-4 py-2 border">Barangay</th>
                         <th class="px-4 py-2 border text-center">Actions</th>
                     </tr>
                 </thead>
@@ -343,28 +345,27 @@
             </table>
         </div>
 
-        <div class="mt-3 flex gap-x-3 items-center">
-            <button 
-                type="button" 
-                id="bulk-update-btn"
-                class="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed"
-                disabled
-            >
-                Validate
-            </button>
+        @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_pwd_admin')
 
-            <span id="selected-count" class="ml-2 text-sm text-gray-600"></span>
-        </div>
+            <div class="mt-3 flex gap-x-3 items-center" id="validate-field">
+                <button 
+                    type="button" 
+                    id="bulk-update-btn"
+                    class="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed"
+                    disabled
+                >
+                    Validate
+                </button>
 
-        <div id="bulkUpdate-modal" class="hidden">
-            @include('beneficiaries.pwd.partials.bulkUpdate_modal')
-        </div>
+                <span id="selected-count" class="ml-2 text-sm text-gray-600"></span>
+            </div>
+
+            <div id="bulkUpdate-modal" class="hidden">
+                @include('beneficiaries.pwd.partials.bulkUpdate_modal')
+            </div>
+        @endif
 
 
-
-
-
-        
         {{-- show pwd --}}
         <div id="show-pwd-wrapper" class="hidden">
             @include('beneficiaries.pwd.partials.show_pwd')
@@ -373,16 +374,15 @@
     @endif
     
     @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_senior_admin')
-        <div class="mt-5 overflow-x-auto hidden" id="senior-table-wrapper">
+        <div class="mt-5 overflow-x-auto {{ $tab === 'senior' ? '' : 'hidden' }}" id="senior-table-wrapper">
             <table class="w-full text-sm text-center border boder-gray-300">
                 <thead class="bg-[#98D172]">
                     <tr>
                         <th class="px-4 py-2 border">ID number</th>
                         <th class="px-4 py-2 border">Name</th>
                         <th class="px-4 py-2 border">Birthdate</th>
-                        <th class="px-4 py-2 border">Gender</th>
-                        <th class="px-4 py-2 border">Contact</th>
-                        <th class="px-4 py-2 border">Address</th>
+                        <th class="px-4 py-2 border">Street</th>
+                        <th class="px-4 py-2 border">Barangay</th>
                         <th class="px-4 py-2 border text-center">Actions</th>
                     </tr>
                 </thead>

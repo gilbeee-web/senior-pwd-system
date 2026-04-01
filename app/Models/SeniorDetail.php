@@ -14,11 +14,9 @@ class SeniorDetail extends Model
         'ncsc_registration_number',
         'place_of_birth',
         'occupation',
-        'other_skills',
         'receives_pension',
         'pension_amount',
-        'staying_with_family',
-        'living_reason',
+        'date_id_issued'
     ];
 
     public function beneficiary()
@@ -28,9 +26,9 @@ class SeniorDetail extends Model
 
 
 
-    // public function familyMembers()
-    // {
-    //     return $this->hasMany(SeniorFamilyMember::class);
-    // }
+    public function familyMembers()
+    {
+        return $this->hasMany(SeniorFamilyMember::class);
+    }
 
 }

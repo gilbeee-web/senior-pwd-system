@@ -30,11 +30,11 @@ class BeneficiaryController extends Controller
         $senior = collect();
 
         if($current_user->role === 'super_admin'){
-            if($tab === 'pwd'){
-                $pwd = $service->getPwdQuery($request, $current_user)->get();
-            }elseif($tab === 'senior'){
-                $senior = $service->getSeniorQuery($request, $current_user)->get();
-            }
+            
+            $pwd = $service->getPwdQuery($request, $current_user)->get();
+            
+            $senior = $service->getSeniorQuery($request, $current_user)->get();
+            
         }elseif($current_user->role === 'barangay_pwd_admin'){
             $pwd = $service->getPwdQuery($request, $current_user)->get();
         }elseif($current_user->role === 'barangay_senior_admin'){
@@ -47,7 +47,8 @@ class BeneficiaryController extends Controller
             'pwd_beneficiaries' => $pwd, 
             'senior_beneficiaries' => $senior,
             'current_user' => $current_user, 
-            'barangays' => $barangays
+            'barangays' => $barangays,
+            'tab' => $tab
         ]);
 
     }

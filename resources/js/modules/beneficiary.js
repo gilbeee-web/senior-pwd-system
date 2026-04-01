@@ -7,33 +7,55 @@ document.addEventListener("DOMContentLoaded", function () {
     const seniorTable = document.getElementById('senior-table-wrapper');
     const pwdFilter = document.getElementById('disabilityType-filter');
     const seniorFilter = document.getElementById('seniorType-filter');
+    const validateField = document.getElementById('validate-field');
 
 
-    if (pwdBtn && seniorBtn) {
+    const activeTabInput = document.getElementById('active-tab');
+
+    if (pwdBtn) {
         pwdBtn.addEventListener('click', () => {
-            pwdTable.classList.remove('hidden');
-            pwdFilter.classList.remove('hidden');
 
-            seniorFilter.classList.add('hidden');
-            seniorTable.classList.add('hidden');
+            if(validateField) validateField.classList.remove('hidden');
+
+            if (pwdTable) pwdTable.classList.remove('hidden');
+            if (pwdFilter) pwdFilter.classList.remove('hidden');
+
+            if (seniorTable) seniorTable.classList.add('hidden');
+            if (seniorFilter) seniorFilter.classList.add('hidden');
 
             pwdBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
             pwdBtn.classList.remove('text-gray-400');
-            seniorBtn.classList.remove('border-b-[3px]', 'border-red-500');
-            seniorBtn.classList.add('text-gray-400');
+
+            if (seniorBtn) {
+                seniorBtn.classList.remove('border-b-[3px]', 'border-red-500');
+                seniorBtn.classList.add('text-gray-400');
+            }
+
+            if (activeTabInput) activeTabInput.value = 'pwd';
         });
+    }
 
+    if (seniorBtn) {
         seniorBtn.addEventListener('click', () => {
-            seniorTable.classList.remove('hidden');
-            seniorFilter.classList.remove('hidden');
 
-            pwdFilter.classList.add('hidden');
-            pwdTable.classList.add('hidden');
+            
+
+            if (seniorTable) seniorTable.classList.remove('hidden');
+            if (seniorFilter) seniorFilter.classList.remove('hidden');
+
+            if(validateField) validateField.classList.add('hidden');
+            if (pwdTable) pwdTable.classList.add('hidden');
+            if (pwdFilter) pwdFilter.classList.add('hidden');
 
             seniorBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
             seniorBtn.classList.remove('text-gray-400');
-            pwdBtn.classList.remove('border-b-[3px]', 'border-red-500');
-            pwdBtn.classList.add('text-gray-400');
+
+            if (pwdBtn) {
+                pwdBtn.classList.remove('border-b-[3px]', 'border-red-500');
+                pwdBtn.classList.add('text-gray-400');
+            }
+
+            if (activeTabInput) activeTabInput.value = 'senior';
         });
     }
 

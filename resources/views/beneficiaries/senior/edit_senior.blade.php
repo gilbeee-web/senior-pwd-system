@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Add Senior Citizen')
+@section('title', 'Beneficiaries')
 
 @section('content')
-
 
     <div class="w-full flex flex-col justify-center shadow-lg rounded-lg bg-white">
 
@@ -16,7 +15,7 @@
         @endif
 
         <div class="w-full flex justify-between items-center px-5">
-            <span class="font-bold text-2xl text-[#172373]"><u>Register Senior Citizen</u></span>
+            <span class="font-bold text-2xl text-[#172373]"><u>Update Senior Citizen</u></span>
 
             <span class="text-[40px]">
                 <a href="{{route('beneficiary.index')}}">
@@ -25,9 +24,10 @@
             </span>
         </div>
 
-        <form id="senior_form" action="{{route('senior.store')}}" method="POST" class="flex flex-col gap-y-5 mb-5">
+        <form id="senior_form" action="{{route('senior.update', $senior->id)}}" method="POST" class="flex flex-col gap-y-5 mb-5">
             
             @csrf
+            @method('put')
 
             @include('beneficiaries.senior.partials.senior_form_fields')
 
@@ -43,11 +43,11 @@
                 </a>
 
                 <button 
-                    class="p-3 bg-green-500 hover:bg-green-300 text-white rounded-md shadow-lg cursor-pointer" 
+                    class="p-3 bg-green-500 text-white rounded-md cursor-pointer shadow-lg" 
                     type="submit"
                     id="submitBtn"
                 >
-                    Submit
+                    Update
                 </button>
 
             </div>
@@ -55,10 +55,5 @@
         </form>
 
     </div>
-
-    
-    
-
-    
 
 @endsection

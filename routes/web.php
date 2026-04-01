@@ -71,6 +71,9 @@ Route::prefix('senior')
     ->middleware('auth')->group(function(){
         Route::controller(SeniorController::class)->group(function(){
             Route::get('/create', 'create')->name('senior.create');
+            Route::post('/', 'store')->name('senior.store');
+            Route::get('/{senior}/edit', 'edit')->name('senior.edit');
+            Route::put('/{senior}', 'update')->name('senior.update');
 
         });
     });

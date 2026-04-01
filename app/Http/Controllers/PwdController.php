@@ -56,7 +56,7 @@ class PwdController extends Controller
                 ]);
             });
 
-            return redirect()->route('beneficiary.index')->with('success', 'PWD added successfully!');
+            return redirect()->route('beneficiary.index', ['tab' => 'pwd'])->with('success', 'PWD added successfully!');
 
         }catch(\Exception $e){
             dd('PWD Registration Failed: ' . $e->getMessage());

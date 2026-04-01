@@ -19,17 +19,39 @@ class StoreSeniorRequest extends BaseBeneficiaryRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+    protected function prepareForValidation()
+    {
+        if ($this->family) {
+
+            $filtered = collect($this->family)
+                ->filter(function ($member) {
+                    return !empty($member['full_name']);
+                })
+                ->values() // reset indexes (VERY IMPORTANT)
+                ->toArray();
+
+            $this->merge([
+                'family' => $filtered
+            ]);
+        }
+    }
+
     public function rules(): array
     {
-        return [
-            //
+        return array_merge($this->baseRules(), [
             'osca_id_number' => 'required|string',
             'ncsc_registration_number' => 'nullable|string',
             'place_of_birth' => 'required|string',
             'occupation' => 'required|string',
-            'other_skills' => 'nullable|string',
             'pension_amount' => 'nullable|integer',
-            'living_reason' => 'required|string'
-        ];
+            'family' => 'nullable|array',
+            'family.*.full_name' => 'required|string',
+            'family.*.relationship' => 'required|string',
+            'family.*.birthdate' => 'required|date',
+            'family.*.occupation' => 'nullable|string',
+            'family.*.civil_status' => 'nullable|string',
+            'family.*.income' => 'nullable|numeric'
+        ]);
     }
 }
