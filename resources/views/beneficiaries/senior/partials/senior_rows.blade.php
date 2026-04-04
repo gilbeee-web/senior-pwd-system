@@ -15,9 +15,10 @@
         <td class="px-4 py-2 text-sm border flex items-center justify-center gap-x-3">
 
             <button 
-                class="view-pwd-btn text-blue-500 hover:underline mr-2"
-                data-pwd-id="{{ $senior->id }}"
-                data-show-url="{{ url('pwd/') }}/"
+                class="view-btn text-blue-500 hover:underline mr-2"
+                data-id="{{ $senior->id }}"
+                data-type="senior"
+                data-show-url="{{ url('senior/') }}/"
             >
                 View
             </button>

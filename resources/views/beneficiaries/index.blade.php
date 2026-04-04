@@ -391,6 +391,11 @@
                 </tbody>
             </table>
         </div>
+
+        {{-- show senior citizen --}}
+        <div id="show-senior-wrapper" class="hidden">
+            @include('beneficiaries.senior.partials.show_senior')
+        </div>
     @endif
     
 

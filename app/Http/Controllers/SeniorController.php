@@ -8,6 +8,7 @@ use App\Models\SeniorDetail;
 use App\Models\SeniorFamilyMember;
 use App\Models\Street;
 use App\Services\BeneficiaryService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -187,6 +188,41 @@ class SeniorController extends Controller
             return back()->withInput()->with('error', 'Something went wrong. Please try again');
 
         }
+    }
+
+    public function show(SeniorDetail $senior)
+    {
+        $senior->load('familyMembers');
+        return response()->json([
+            'id' => $senior->id,
+            'full_name' => 
+                $senior->beneficiary->last_name . ', ' .
+                $senior->beneficiary->first_name . ' ' .
+                $senior->beneficiary->middle_name . ' ' .
+                $senior->beneficiary->suffix,
+            'birthdate' => $senior->beneficiary->birthdate,
+            'contact_number' => $senior->beneficiary->contact_number,
+            'gender' => $senior->beneficiary->gender,
+            'civil_status' => $senior->beneficiary->civil_status,
+            'employment_status' => $senior->beneficiary->employment_status,
+            'osca_id_number' => $senior->osca_id_number,
+            'date_id_issued' => $senior->date_id_issued,
+            'age' => $senior->beneficiary->birthdate
+                ? Carbon::parse($senior->beneficiary->birthdate)->age
+                : null,
+            'street' => $senior->beneficiary->address->street->name,
+            'house_num' => $senior->beneficiary->address->house_num,
+            'barangay' => $senior->beneficiary->address->street->barangay->name,
+            'ncsc_registration_number' => $senior->ncsc_registration_number ?? 'N/A',
+            'place_of_birth' => $senior->place_of_birth,
+            'occupation' => $senior->occupation ?? 'N/A',
+            'pension_amount' => $senior->pension_amount ?? 'N/A',
+            'date_id_issued' => $senior->date_id_issued 
+                ? Carbon::parse($senior->date_id_issued)->format('m-d-Y') 
+                : now()->format('m-d-Y'),
+            'family_members' => $senior->familyMembers
+        ]);
+
     }
 
 

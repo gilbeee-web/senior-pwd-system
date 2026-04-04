@@ -74,6 +74,7 @@ Route::prefix('senior')
             Route::post('/', 'store')->name('senior.store');
             Route::get('/{senior}/edit', 'edit')->name('senior.edit');
             Route::put('/{senior}', 'update')->name('senior.update');
+            Route::get('/{senior}', 'show')->name('senior.show');
 
         });
     });

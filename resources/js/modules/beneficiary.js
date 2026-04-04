@@ -106,75 +106,193 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
 
-    function populatePwdView(data){
+    // function populatePwdView(data){
+
+    //     Object.keys(data).forEach(key => {
+
+    //         const element = document.querySelector(`[data-field="${key}"]`);
+
+    //         if(element){
+    //             element.textContent = data[key] ?? "";
+    //         }
+
+    //     });
+
+    // }
+
+    function populateView(type, data) {
 
         Object.keys(data).forEach(key => {
 
-            const element = document.querySelector(`[data-field="${key}"]`);
+            const element = document.querySelector(
+                `[data-type="${type}"][data-field="${key}"]`
+            );
 
-            if(element){
+            if (element) {
                 element.textContent = data[key] ?? "";
             }
-
         });
 
     }
 
-    const show_pwdWrapper = document.getElementById('show-pwd-wrapper');
+    function renderFamilyMembers(members) {
+        const container = document.getElementById('family-members-container');
 
-    function togglePwdView() {
+        if (!container) return;
 
-        if (!show_pwdWrapper){
+        container.innerHTML = '';
+
+        if (!members || members.length === 0) {
+            container.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-gray-500 py-3">
+                        No family members found.
+                    </td>
+                </tr>
+            `;
             return;
-        } 
+        }
 
-        show_pwdWrapper.classList.toggle('hidden');
+        members.forEach(member => {
+
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td class="border px-3 py-2">${member.full_name ?? ''}</td>
+                <td class="border px-3 py-2">${member.relationship ?? ''}</td>
+                <td class="border px-3 py-2">${member.birthdate ?? ''}</td>
+                <td class="border px-3 py-2">${member.civil_status ?? ''}</td>
+                <td class="border px-3 py-2">${member.occupation ?? ''}</td>
+            `;
+
+            container.appendChild(row);
+        });
     }
 
-    const closePwdModalButton = document.getElementById("close-pwd-modal-btn");
+
+    // const show_pwdWrapper = document.getElementById('show-pwd-wrapper');
+
+    // function togglePwdView() {
+
+    //     if (!show_pwdWrapper){
+    //         return;
+    //     } 
+
+    //     show_pwdWrapper.classList.toggle('hidden');
+    // }
+
+    function toggleView(type) {
+        const wrapper = document.getElementById(`show-${type}-wrapper`);
+
+        if (!wrapper) return;
+
+        wrapper.classList.toggle('hidden');
+    }
+
+
+
+    // const closePwdModalButton = document.getElementById("close-pwd-modal-btn");
     
-    if(closePwdModalButton){
-        closePwdModalButton.addEventListener("click", togglePwdView);
-    } 
+    // if(closePwdModalButton){
+    //     closePwdModalButton.addEventListener("click", togglePwdView);
+    // } 
 
-
-
-    document.querySelectorAll('.view-pwd-btn').forEach(button => {
-        button.addEventListener('click', async function () {
-
-            console.log("View button clicked");
-
-            const pwdId = this.dataset.pwdId;
-
-            if(!pwdId){
-                alert("no PWD selected");
-            }
-
-            try {
-                
-                const showUrl = this.dataset.showUrl;
-
-                const response = await fetch(showUrl + pwdId);
-                
-                if(!response.ok){
-                    console.log("Failed to fetch pwd");
-                    throw new Error('Failed to fetch pwd');
-                }
-
-                const pwd_details = await response.json();
-                console.log("Pwd details: ", pwd_details);
-
-                populatePwdView(pwd_details);
-
-                
-                togglePwdView();
-
-            } catch (error) {
-                console.log("Failed to fetch the pwd details: ", error);
-            }
-
+    //close modal based on the type (pwd or senior) defined in the button
+    function setupCloseButtons() {
+        document.querySelectorAll('[data-close-modal]').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const type = this.dataset.type;
+                toggleView(type);
+            });
         });
-    });
+    }
+
+    async function handleViewClick(button){
+
+        const id = button.dataset.id;
+        const type = button.dataset.type;
+        const url = button.dataset.showUrl;
+
+        if (!id) {
+            alert(`No ${type} selected`);
+            return;
+        }
+
+        try {
+            const response = await fetch(url + id);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${type}`);
+            }
+
+            const data = await response.json();
+
+            populateView(type, data);
+            toggleView(type);
+
+            if (type === 'senior') {
+                renderFamilyMembers(data.family_members);
+            }
+
+        } catch (error) {
+            console.error(`Error fetching ${type}:`, error);
+        }
+
+
+    }
+
+    function initViewButtons() {
+        document.querySelectorAll('.view-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                handleViewClick(this);
+            });
+        });
+    }
+
+    initViewButtons();
+    setupCloseButtons();
+
+
+
+
+
+
+    // document.querySelectorAll('.view-pwd-btn').forEach(button => {
+    //     button.addEventListener('click', async function () {
+
+    //         console.log("View button clicked");
+
+    //         const pwdId = this.dataset.pwdId;
+
+    //         if(!pwdId){
+    //             alert("no PWD selected");
+    //         }
+
+    //         try {
+                
+    //             const showUrl = this.dataset.showUrl;
+
+    //             const response = await fetch(showUrl + pwdId);
+                
+    //             if(!response.ok){
+    //                 console.log("Failed to fetch pwd");
+    //                 throw new Error('Failed to fetch pwd');
+    //             }
+
+    //             const pwd_details = await response.json();
+    //             console.log("Pwd details: ", pwd_details);
+
+    //             populatePwdView(pwd_details);
+
+                
+    //             togglePwdView();
+
+    //         } catch (error) {
+    //             console.log("Failed to fetch the pwd details: ", error);
+    //         }
+
+    //     });
+    // });
 
 
     const selectAll = document.getElementById('select-all'); //select all button checkbox

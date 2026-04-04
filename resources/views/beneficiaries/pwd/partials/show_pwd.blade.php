@@ -6,7 +6,7 @@
         <div class="w-full flex justify-between items-center px-5 sticky top-[-20px] bg-white">
             <span class="font-bold text-2xl text-[#172373]"><u>PWD Information</u></span>
 
-            <button class="text-[40px] cursor-pointer" id="close-pwd-modal-btn">
+            <button class="text-[40px] cursor-pointer" data-close-modal data-type="pwd">
                 &times;
             </button>
         </div>
@@ -23,37 +23,37 @@
 
                 <div class="flex flex-col gap-y-1 lg:col-span-3">
                     <label>Full Name:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="full_name">Arlet Verzola Jr</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="full_name"></span>
                 </div> 
 
                 <div class="flex flex-col gap-y-1">
                     <label>Date of Birth:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="birthdate">01-20-2004</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="birthdate"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Contact Number:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="contact_number">09815130382</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="contact_number"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Gender:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="gender">Male</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="gender"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Civil Status:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="civil_status">Married</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="civil_status"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Employment Status:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="employment_status">Employed</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="employment_status"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Educational Attainment:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="educational_attainment">College</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="educational_attainment"></span>
                 </div>  
 
             </div>
@@ -71,17 +71,17 @@
 
                 <div class="flex flex-col gap-y-1">
                     <label>House Number:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="house_num">121</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="house_num"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Barangay:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="barangay">N/A</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="barangay"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Street:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="street">Camia B</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="street"></span>
                 </div>  
 
             </div>
@@ -99,22 +99,22 @@
 
                 <div class="flex flex-col gap-y-1">
                     <label>PWD ID Number:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="pwd_id_number">00-000-000-0000000</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="pwd_id_number"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Disability Type:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="disability_type">Deaf</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="disability_type"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Guardian Name:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="guardian_name">Botoy Moises</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="guardian_name"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Blood Type:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-field="blood_type">O+</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="pwd" data-field="blood_type"></span>
                 </div>  
 
             </div>
