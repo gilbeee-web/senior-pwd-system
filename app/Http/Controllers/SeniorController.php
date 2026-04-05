@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSeniorRequest;
+use App\Imports\SeniorImport;
 use App\Models\Barangay;
 use App\Models\SeniorDetail;
 use App\Models\SeniorFamilyMember;
 use App\Models\Street;
 use App\Services\BeneficiaryService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SeniorController extends Controller
 {
@@ -34,6 +37,14 @@ class SeniorController extends Controller
     public function store(StoreSeniorRequest $request){
         // dd($request->all());
         try{
+
+            $birthdate = Carbon::parse($request->birthdate);
+
+            if ($birthdate->age < 60) {
+                return back()
+                    ->withErrors(['birthdate' => 'Must be 60 years old and above to register as Senior Citizen.'])
+                    ->withInput();
+            }
 
             DB::transaction(function() use($request){
 
@@ -82,7 +93,7 @@ class SeniorController extends Controller
 
     public function edit(SeniorDetail $senior){
 
-        //load all the pwd including its relationship
+        //load all the senior including its relationship
         $senior->load('beneficiary.address.street.barangay');
 
         $barangays = Barangay::all();
@@ -162,6 +173,14 @@ class SeniorController extends Controller
 
         try{
 
+            $birthdate = Carbon::parse($request->birthdate);
+
+            if ($birthdate->age < 60) {
+                return back()
+                    ->withErrors(['birthdate' => 'Must be 60 years old and above to register as Senior Citizen.'])
+                    ->withInput();
+            }
+
             DB::transaction(function() use($request, $senior){
 
                 $this->beneficiaryService->update(
@@ -223,6 +242,33 @@ class SeniorController extends Controller
             'family_members' => $senior->familyMembers
         ]);
 
+    }
+
+    public function import(Request $request){
+
+        // dd($request->all());
+
+        try{
+
+            $request->validate([
+                'senior_file' => 'required|mimes:xlsx,xls,csv'
+            ]);
+
+            $import = new SeniorImport();
+
+            Excel::import($import, $request->file('senior_file'));
+
+            $report = $import->getReport();
+
+            if ($report['skipped'] > 0 || $report['duplicate_ids'] > 0 || $report['invalid_barangay'] > 0) {
+                return back()->with('report', $report);
+            }
+
+            return redirect()->route('beneficiary.index', ['tab' => 'senior'])->with('success', 'Senior data imported successfully!');
+
+        }catch(Exception $e){
+            return back()->with('error', 'Import failed: ' . $e->getMessage());
+        }
     }
 
 

@@ -38,7 +38,14 @@
        
 
         {{-- Reports --}}
-        <a href="{{route('report.index')}}" class="block p-2 rounded hover:bg-gray-100">
+        <a 
+            href="{{route('report.index')}}" 
+            class="block p-2 rounded hover:bg-gray-100
+                @if(request()->routeIs('report.*')) 
+                    bg-red-500 text-white hover:bg-red-400 
+                @endif
+            "
+        >
             Reports
         </a>
 

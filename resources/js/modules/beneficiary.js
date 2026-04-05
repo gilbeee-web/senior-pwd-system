@@ -60,50 +60,85 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    const btn = document.getElementById("addBeneficiary-btn");
+    const addBeneficiarybtn = document.getElementById("addBeneficiary-btn");
     const dropdown = document.getElementById("beneficiaryDropdown");
 
-    if(btn){
-        btn.addEventListener("click", function () {
+    if(addBeneficiarybtn){
+        addBeneficiarybtn.addEventListener("click", function () {
             dropdown.classList.toggle("hidden");
         });
 
         // Close dropdown when clicking outside
         document.addEventListener("click", function (e) {
-            if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+            if (!addBeneficiarybtn.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.classList.add("hidden");
             }
         });
     }
     
     
+    //uses class attribute to import files not hardcoded ids
+    document.querySelectorAll('.import-form').forEach(form => {
 
+        const button = form.querySelector('.import-btn');
+        const fileInput = form.querySelector('.file-input');
 
-    const importPwdBtn = document.getElementById('importPwdBtn');
-    const filePwdInput = document.getElementById('pwdFileInput');
-    const pwdForm = document.getElementById('importPwdForm');
+        if (!button || !fileInput){
+            return;
+        } 
 
-    if(importPwdBtn){
-        importPwdBtn.addEventListener('click', () => {
-            filePwdInput.click();
+        //click button to open file explorer
+        button.addEventListener('click', () => {
+            fileInput.click();
         });
-    }
-    
-    if(filePwdInput){
-        filePwdInput.addEventListener('change', () => {
-            if(filePwdInput.files.length > 0){
-                
-                importPwdBtn.textContent = "Importing...";
 
-                setTimeout(()=>{
-                    pwdForm.submit();
-                    importPwdBtn.textContent = "Import PWD";
+        // when file selected then submit form
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+
+                const originalText = button.textContent;
+                button.textContent = "Importing...";
+                button.disabled = true;
+
+                form.submit();
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
                 }, 3000);
-
-                
             }
         });
-    }
+
+
+    });
+
+
+
+    // const importPwdBtn = document.getElementById('importPwdBtn');
+    // const filePwdInput = document.getElementById('pwdFileInput');
+    // const pwdForm = document.getElementById('importPwdForm');
+
+    // if(importPwdBtn){
+    //     importPwdBtn.addEventListener('click', () => {
+    //         filePwdInput.click();
+    //     });
+    // }
+    
+    // if(filePwdInput){
+    //     filePwdInput.addEventListener('change', () => {
+    //         if(filePwdInput.files.length > 0){
+                
+    //             importPwdBtn.textContent = "Importing...";
+
+    //             setTimeout(()=>{
+    //                 pwdForm.submit();
+    //                 importPwdBtn.textContent = "Import PWD";
+    //             }, 3000);
+
+                
+    //         }
+    //     });
+    // }
     
 
     // function populatePwdView(data){
@@ -249,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    initViewButtons();
+    initViewButtons(); //initialize view buttons
     setupCloseButtons();
 
 

@@ -104,6 +104,15 @@ class BeneficiaryReportService{
             });
         }
 
+        // filter by BARANGAY
+        if ($request->barangay) {
+            $query->whereHas('beneficiary.address.street', function ($q) use ($request) {
+                $q->where('barangay_id', $request->barangay);
+            });
+        }
+
+
+
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('osca_id_number', 'like', "%{$request->search}%")
@@ -111,6 +120,27 @@ class BeneficiaryReportService{
                       $q2->where('first_name', 'like', "%{$request->search}%")
                          ->orWhere('last_name', 'like', "%{$request->search}%");
                   });
+            });
+        }
+
+        //filter by gender
+        if ($request->gender) {
+            $query->whereHas('beneficiary', function ($q) use ($request) {
+                $q->where('gender', $request->gender);
+            });
+        }
+
+        //filter by civil status
+        if ($request->civil_status) {
+            $query->whereHas('beneficiary', function ($q) use ($request) {
+                $q->where('civil_status', $request->civil_status);
+            });
+        }
+
+        //filter by civil status
+        if ($request->employment_status) {
+            $query->whereHas('beneficiary', function ($q) use ($request) {
+                $q->where('employment_status', $request->employment_status);
             });
         }
 
@@ -130,6 +160,21 @@ class BeneficiaryReportService{
                 }
             });
         }
+
+        if ($request->isBday) {
+            $todayMonth = now()->month;
+            $todayDay = now()->day;
+
+            $query->whereHas('beneficiary', function ($q) use ($todayMonth, $todayDay) {
+                $q->whereMonth('birthdate', $todayMonth)
+                ->whereDay('birthdate', $todayDay);
+            });
+        }
+
+        //make it alphabetical order based on last name
+        $query->join('beneficiaries', 'beneficiaries.id', '=', 'senior_details.beneficiary_id')
+          ->orderBy('beneficiaries.last_name', 'asc')
+          ->select('senior_details.*');
 
         return $query;
     }

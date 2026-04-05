@@ -75,6 +75,7 @@ Route::prefix('senior')
             Route::get('/{senior}/edit', 'edit')->name('senior.edit');
             Route::put('/{senior}', 'update')->name('senior.update');
             Route::get('/{senior}', 'show')->name('senior.show');
+            Route::post('/import', 'import')->name('senior.import');
 
         });
     });
@@ -89,7 +90,7 @@ Route::prefix('pwd')
             Route::get('/{pwd}', 'show')->name('pwd.show');
             Route::delete('/{pwd}/archive', 'archive')->name('pwd.archive');
             Route::delete('/{pwd}', 'destroy')->name('pwd.destroy');
-            Route::post('/pwd/import', 'import')->name('pwd.import');
+            Route::post('/import', 'import')->name('pwd.import');
             Route::post('/validate/update', 'bulkUpdateValidate')->name('pwd.validate');
         });
     });
@@ -99,5 +100,6 @@ Route::prefix('reports')
         Route::controller(ReportController::class)->group(function(){
            Route::get('/', 'index')->name('report.index');
            Route::get('/pwd/export', 'exportPwd')->name('report.pwd.export');
+           Route::get('/senior/export', 'exportSenior')->name('report.senior.export');
         });
     });

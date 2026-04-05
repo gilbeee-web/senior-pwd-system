@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PwdReportExport;
+use App\Exports\SeniorReportExport;
 use App\Models\Barangay;
 use App\Services\BeneficiaryReportService;
 use Illuminate\Http\Request;
@@ -24,11 +25,8 @@ class ReportController extends Controller
         $senior = collect();
 
         if($current_user->role === 'super_admin'){
-            if($tab === 'pwd'){
-                $pwd = $service->getPwdQuery($request, $current_user)->get();
-            }elseif($tab === 'senior'){
-                $senior = $service->getSeniorQuery($request, $current_user)->get();
-            }
+            $pwd = $service->getPwdQuery($request, $current_user)->get();
+            $senior = $service->getSeniorQuery($request, $current_user)->get();
         }elseif($current_user->role === 'barangay_pwd_admin'){
             $pwd = $service->getPwdQuery($request, $current_user)->get();
         }elseif($current_user->role === 'barangay_senior_admin'){
@@ -41,7 +39,8 @@ class ReportController extends Controller
             'pwd_beneficiaries' => $pwd, 
             'senior_beneficiaries' => $senior,
             'current_user' => $current_user, 
-            'barangays' => $barangays
+            'barangays' => $barangays,
+            'tab' => $tab
         ]);
     }
 
@@ -52,6 +51,16 @@ class ReportController extends Controller
         return Excel::download(
             new PwdReportExport($request, $current_user),
             'pwd-report.xlsx'
+        );
+    }
+
+    public function exportSenior(Request $request){
+
+        $current_user = Auth::user();
+
+        return Excel::download(
+            new SeniorReportExport($request, $current_user),
+            'senior-report.xlsx'
         );
     }
 

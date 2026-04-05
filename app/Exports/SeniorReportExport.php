@@ -7,9 +7,11 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
 
-class PwdReportExport implements FromView
+class SeniorReportExport implements FromView
 {
-   
+    /**
+    * @return \Illuminate\Support\Collection
+    */
     protected $request;
     protected $user;
     protected $columns;
@@ -25,9 +27,9 @@ class PwdReportExport implements FromView
     {
         $service = new BeneficiaryReportService();
 
-        $data = $service->getPwdQuery($this->request, $this->user)->get();
+        $data = $service->getSeniorQuery($this->request, $this->user)->get();
 
-        return view('exports.pwd_report', [
+        return view('exports.senior_report', [
             'data' => $data,
             'columns' => $this->columns
         ]);

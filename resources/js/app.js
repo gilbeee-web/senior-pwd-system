@@ -5,6 +5,7 @@ import './modules/beneficiary';
 import './modules/pwd-form';
 import './account-settings';
 import './login';
+import './modules/report';
 import Swal from 'sweetalert2';
 
 window.Swal = Swal;

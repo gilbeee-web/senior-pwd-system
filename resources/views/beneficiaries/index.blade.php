@@ -68,18 +68,18 @@
 
                 </div>
 
-                <form id="importPwdForm" action="{{ route('pwd.import') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('pwd.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
                     @csrf
-                    <input type="file" name="pwd_file" id="pwdFileInput" accept=".xlsx,.xls,.csv" hidden>
-                    <button type="button" id="importPwdBtn" class="bg-green-500 text-white px-4 py-2 rounded cursor-pointer">
+                    <input type="file" name="pwd_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
+                    <button type="button" class="import-btn bg-green-500 text-white px-4 py-2 rounded">
                         Import PWD
                     </button>
                 </form>
 
-                <form id="importSeniorForm" action="" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('senior.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
                     @csrf
-                    <input type="file" name="file" id="seniorFileInput" accept=".xlsx,.xls,.csv" hidden>
-                    <button type="button" id="importSeniorBtn" class="bg-yellow-500 text-white px-4 py-2 rounded cursor-pointer">
+                    <input type="file" name="senior_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
+                    <button type="button" class="import-btn bg-yellow-500 text-white px-4 py-2 rounded">
                         Import Senior
                     </button>
                 </form>
@@ -97,8 +97,8 @@
 
                 <form id="importPwdForm" action="{{ route('pwd.import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="file" name="pwd_file" id="pwdFileInput" accept=".xlsx,.xls,.csv" hidden>
-                    <button type="button" id="importPwdBtn" class="bg-green-500 text-white px-4 py-2 rounded cursor-pointer">
+                    <input type="file" name="pwd_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
+                    <button type="button" class="import-btn bg-green-500 text-white px-4 py-2 rounded">
                         Import PWD
                     </button>
                 </form>
@@ -115,8 +115,8 @@
 
                 <form id="importSeniorForm" action="" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="file" name="file" id="seniorFileInput" accept=".xlsx,.xls,.csv" hidden>
-                    <button type="button" id="importSeniorBtn" class="bg-green-500 text-white px-4 py-2 rounded cursor-pointer">
+                    <input type="file" name="senior_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
+                    <button type="button" class="import-btn bg-yellow-500 text-white px-4 py-2 rounded">
                         Import Senior
                     </button>
                 </form>
@@ -133,7 +133,7 @@
             <div class="">
                 <label for="" class="font-bold text-sm ml-2">Search:</label>
 
-                <input type="hidden" name="tab" id="active-tab" value="{{ request('tab', 'pwd') }}">
+                <input type="hidden" name="tab" id="activeReport-tab" value="{{ request('tab', 'pwd') }}">
 
                 <div class="flex gap-x-5">
                     <input 
@@ -218,7 +218,7 @@
                     </div>
                 @elseif($current_user->role === 'super_admin')
 
-                    <div class="flex flex-col" id="disabilityType-filter">
+                    <div class="flex flex-col {{ $tab === 'pwd' ? '' : 'hidden' }}" id="disabilityType-filter">
                         <label for="disability_type" class="font-bold text-sm mb-1">
                             Disability Type
                         </label>
@@ -250,7 +250,7 @@
                         </select>
                     </div>
 
-                    <div class="flex flex-col hidden" id="seniorType-filter">
+                    <div class="flex flex-col {{ $tab === 'senior' ? '' : 'hidden' }}" id="seniorType-filter">
                         <label for="senior_type" class="font-bold text-sm mb-1">
                             Senior Type
                         </label>
@@ -347,7 +347,7 @@
 
         @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_pwd_admin')
 
-            <div class="mt-3 flex gap-x-3 items-center" id="validate-field">
+            <div class="mt-3 flex gap-x-3 items-center {{ $tab === 'pwd' ? '' : 'hidden' }}"" id="validate-field">
                 <button 
                     type="button" 
                     id="bulk-update-btn"
