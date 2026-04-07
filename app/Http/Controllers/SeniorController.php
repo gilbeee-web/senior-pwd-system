@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSeniorRequest;
+use App\Http\Requests\UpdateSeniorRequest;
 use App\Imports\SeniorImport;
+use App\Models\ActionRequest;
 use App\Models\Barangay;
 use App\Models\SeniorDetail;
 use App\Models\SeniorFamilyMember;
@@ -12,6 +14,7 @@ use App\Services\BeneficiaryService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -269,6 +272,100 @@ class SeniorController extends Controller
         }catch(Exception $e){
             return back()->with('error', 'Import failed: ' . $e->getMessage());
         }
+    }
+
+    public function requestUpdateSenior(UpdateSeniorRequest $request, $id){
+
+        $senior = SeniorDetail::findOrFail($id);
+        $validated = $request->validated();
+
+        $gracePeriodDays = 1;
+        $withinGracePeriod = $senior->created_at->diffInDays(now()) <= $gracePeriodDays;
+
+        $payload = [
+            'beneficiary' => [
+                'first_name' => $validated['first_name'] ?? null,
+                'last_name' => $validated['last_name'] ?? null,
+                'middle_name' => $validated['middle_name'] ?? null,
+                'extension' => $validated['extension'] ?? null,
+                'birthdate' => $validated['birthdate'] ?? null,
+                'contact_number' => $validated['contact_number'] ?? null,
+                'civil_status' => $validated['civil_status'] ?? null,
+                'employment_status' => $validated['employment_status'] ?? null,
+                'gender' => $validated['gender'] ?? null
+            ],
+
+            'beneficiary_address' => [
+                'house_num' => $validated['house_num'] ?? null,
+                'barangay_id' => $validated['barangay_id'] ?? null,
+                'street_id' => $validated['street_id'] ?? null
+            ],
+
+            'senior' => [
+                'osca_id_number' => $validated['osca_id_number'] ?? null,
+                'ncsc_registration_number' => $validated['ncsc_registration_number'] ?? null, 
+                'place_of_birth' => $validated['place_of_birth'] ?? null, 
+                'occupation' => $validated['occupation'] ?? null, 
+                'pension_amount' => $validated['pension_amount'] ?? null, 
+                'date_id_issued' => $validated['date_id_issued'] ?? null, 
+            ],
+
+            'family' => $validated['family'] ?? []
+        ];
+
+
+        if($withinGracePeriod){
+            DB::transaction(function() use ($senior, $payload) {
+
+                // Update beneficiary
+                $senior->beneficiary->update($payload['beneficiary']);
+
+                // Update senior
+                $senior->update($payload['senior']);
+
+                // Sync family members
+                $this->syncFamilyMembers($payload['family'], $senior);
+            });
+
+            return back()->with('success', 'Senior updated successfully.');
+        }
+
+        ActionRequest::create([
+            'type' => 'update',
+            'model_type' => SeniorDetail::class,
+            'model_id' => $senior->id,
+            'requested_by' => Auth::id(),
+            'payload' => $payload,
+            'status' => 'pending',
+        ]);
+        
+        return back()->with('success', 'Update request submitted.');
+
+    }
+
+    public function archive(SeniorDetail $senior)
+    {
+        $gracePeriodDays = 1;
+        $withinGracePeriod = $senior->created_at->diffInDays(now()) <= $gracePeriodDays;
+
+        if($withinGracePeriod){
+            $senior->delete();
+
+            return redirect()->route('beneficiary.index')
+                ->with('success', 'Senior record archived successfully.');
+        }
+
+        ActionRequest::create([
+            'type' => 'archive',
+            'model_type' => SeniorDetail::class,
+            'model_id' => $senior->id,
+            'requested_by' => Auth::id(),
+            'payload' => null,
+            'status' => 'pending',
+        ]);
+
+         return redirect()->route('beneficiary.index')
+                ->with('success', 'Archive request submitted.');
     }
 
 

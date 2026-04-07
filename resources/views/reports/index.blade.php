@@ -354,7 +354,7 @@
                         <th class="px-4 py-2 border">Educational Attainment</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-[#F0F0F0]">
                     @include('reports.partials.pwd_rows_report')
                 </tbody>
             </table>

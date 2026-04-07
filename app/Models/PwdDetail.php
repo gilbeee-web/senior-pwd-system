@@ -30,4 +30,12 @@ class PwdDetail extends Model
     {
         return $this->belongsTo(Beneficiary::class);
     }
+
+    //Requests related to this pwd
+    public function requests()
+    {
+        return $this->morphMany(ActionRequest::class, 'model');
+    }
+
+    
 }

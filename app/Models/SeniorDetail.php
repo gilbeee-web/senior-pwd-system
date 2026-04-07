@@ -31,4 +31,10 @@ class SeniorDetail extends Model
         return $this->hasMany(SeniorFamilyMember::class);
     }
 
+    // Requests related to this senior
+    public function requests()
+    {
+        return $this->morphMany(ActionRequest::class, 'model');
+    }
+
 }

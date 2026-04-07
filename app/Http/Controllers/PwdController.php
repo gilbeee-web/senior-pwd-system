@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePwdRequest;
+use App\Http\Requests\UpdatePwdRequest;
 use App\Imports\PwdImport;
+use App\Models\ActionRequest;
 use App\Models\Barangay;
 use App\Models\PwdDetail;
 use App\Models\Street;
@@ -11,6 +13,7 @@ use App\Services\BeneficiaryService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -126,10 +129,28 @@ class PwdController extends Controller
 
     public function archive(PwdDetail $pwd)
     {
-        $pwd->delete();
+        $gracePeriodDays = 1;
+        $withinGracePeriod = $pwd->created_at->diffInDays(now()) <= $gracePeriodDays;
 
-        return redirect()->route('beneficiary.index')
-            ->with('success', 'PWD record archived successfully.');
+        if($withinGracePeriod){
+            $pwd->delete();
+
+            return redirect()->route('beneficiary.index')
+                ->with('success', 'PWD record archived successfully.');
+        }
+
+        ActionRequest::create([
+            'type' => 'archive',
+            'model_type' => PwdDetail::class,
+            'model_id' => $pwd->id,
+            'requested_by' => Auth::id(),
+            'payload' => null,
+            'status' => 'pending',
+        ]);
+
+         return redirect()->route('beneficiary.index')
+                ->with('success', 'Archive request submitted.');
+       
     }
     
 
@@ -259,6 +280,68 @@ class PwdController extends Controller
 
         return back()->with('success', 'Validated successfully.');
 
+    }
+
+
+    public function requestUpdatePwd(UpdatePwdRequest $request, $id){
+
+        $pwd = PwdDetail::findOrFail($id);
+        $validated = $request->validated();
+
+        $gracePeriodDays = 1;
+        $withinGracePeriod = $pwd->created_at->diffInDays(now()) <= $gracePeriodDays;
+
+        $payload = [
+            'beneficiary' => [
+                'first_name' => $validated['first_name'] ?? null,
+                'last_name' => $validated['last_name'] ?? null,
+                'middle_name' => $validated['middle_name'] ?? null,
+                'extension' => $validated['extension'] ?? null,
+                'birthdate' => $validated['birthdate'] ?? null,
+                'contact_number' => $validated['contact_number'] ?? null,
+                'civil_status' => $validated['civil_status'] ?? null,
+                'employment_status' => $validated['employment_status'] ?? null,
+                'gender' => $validated['gender'] ?? null
+            ],
+
+            'beneficiary_address' => [
+                'house_num' => $validated['house_num'] ?? null,
+                'barangay_id' => $validated['barangay_id'] ?? null,
+                'street_id' => $validated['street_id'] ?? null
+            ],
+
+            'pwd' => [
+                'pwd_id_number' => $validated['pwd_id_number'] ?? null,
+                'disability_type' => $validated['disability_type'] ?? null,
+                'guardian_name' => $validated['guardian_name'] ?? null,
+                'blood_type' => $validated['blood_type'] ?? null,
+                'educational_attainment' => $validated['educational_attainment'] ?? null,
+                'date_id_issued' => $validated['date_id_issued'] ?? null,
+                'date_id_expiration' => Carbon::parse($validated['date_id_issued'] )->addYears(5)
+            ]
+        ];
+
+        if($withinGracePeriod){
+            DB::transaction(function() use ($pwd, $payload) {
+
+                // Update beneficiary
+                $pwd->beneficiary->update($payload['beneficiary']);
+
+                // Update senior
+                $pwd->update($payload['pwd']);
+            });
+        }
+
+        ActionRequest::create([
+            'type' => 'update',
+            'model_type' => PwdDetail::class,
+            'model_id' => $pwd->id,
+            'requested_by' => Auth::id(),
+            'payload' => $payload,
+            'status' => 'pending',
+        ]);
+
+        return back()->with('success', 'Update request submitted.');
     }
 
 }
