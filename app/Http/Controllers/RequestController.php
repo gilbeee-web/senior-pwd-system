@@ -16,6 +16,24 @@ class RequestController extends Controller
 {
     //
 
+    public function index(Request $request){
+
+        $tab_status = "pending";
+
+
+        if($request->status){
+            $tab_status = $request->status;
+        }
+
+        $requests = ActionRequest::with(['requester', 'model.beneficiary'])
+            ->where('status', $tab_status)
+            ->latest()
+            ->paginate(10);
+
+        // dd($requests);
+    
+        return view('requests/index', ['requests' => $requests, 'tab_status' => $tab_status]);
+    }
    
 
     public function approve($id, RequestApprovalService $service){
@@ -26,7 +44,12 @@ class RequestController extends Controller
 
         $service->approve($request, $current_user->id);
 
-        return back()->with('success', 'Request approved successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Approved successfully'
+        ]);
+
+        // return back()->with('success', 'Request approved successfully.');
     }
 
 

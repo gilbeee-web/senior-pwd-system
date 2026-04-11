@@ -64,6 +64,20 @@ class BeneficiaryController extends Controller
 
     }
 
+    public function getArchive($type){
+
+        if ($type === 'pwd') {
+            $data = PwdDetail::with('beneficiary.address')->onlyTrashed()->with('beneficiary')->get();
+        } elseif ($type === 'senior') {
+            $data = SeniorDetail::with('beneficiary.address')->onlyTrashed()->with('beneficiary')->get();
+        } else {
+            abort(404);
+        }
+
+        return view('beneficiaries/archive', ['data' => $data, 'type' => $type]);
+
+    }
+
 
 
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PwdController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SeniorController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Container\Attributes\Auth;
@@ -44,26 +45,29 @@ Route::controller(LoginController::class)->group(function(){
 });
 
 
-Route::prefix('admin-dashboard')
-    ->middleware(['auth', 'role:barangay_pwd_admin'])->group(function () {
+Route::prefix('dashboard')
+    ->middleware(['auth'])->group(function () {
         Route::controller(DashboardController::class)->group(function () {
-            Route::get('/', 'adminIndex')->name('barangay_pwd_admin.dashboard');
+            Route::get('/super-admin', 'superAdminIndex')->name('super_admin.dashboard');
+            Route::get('/pwd-admin', 'pwdAdminIndex')->name('barangay_pwd_admin.dashboard');
+            Route::get('/senior-admin', 'seniorAdminIndex')->name('barangay_senior_admin.dashboard');
         });
     });
 
 
-Route::prefix('super-admin')
-    ->middleware(['auth', 'role:super_admin'])->group(function () {
-        Route::controller(DashboardController::class)->group(function () {
-            Route::get('/', 'superAdminIndex')->name('super_admin.dashboard');
-        });
-    });
+// Route::prefix('super-admin')
+//     ->middleware(['auth', 'role:super_admin'])->group(function () {
+//         Route::controller(DashboardController::class)->group(function () {
+//             Route::get('/', 'superAdminIndex')->name('super_admin.dashboard');
+//         });
+//     });
 
 Route::prefix('beneficiary')
     ->middleware('auth')->group(function(){
         Route::controller(BeneficiaryController::class)->group(function(){
             Route::get('/', 'index')->name('beneficiary.index');
             Route::get('/streets/{id}', 'getStreets')->name('beneficiary.getStreets');
+            Route::get('/archive/{type}','getArchive')->name('beneficiary.getArchive');
         });
     });
 
@@ -76,6 +80,9 @@ Route::prefix('senior')
             Route::put('/{senior}', 'update')->name('senior.update');
             Route::get('/{senior}', 'show')->name('senior.show');
             Route::post('/import', 'import')->name('senior.import');
+            Route::post('/restore/{id}', 'restore')->name('senior.restore');
+            Route::delete('/{senior}', 'destroy')->name('senior.destroy');
+            Route::delete('/delete-all', 'destroyAll')->name('senior.destroyAll');
 
         });
     });
@@ -91,7 +98,9 @@ Route::prefix('pwd')
             Route::delete('/{pwd}/archive', 'archive')->name('pwd.archive');
             Route::delete('/{pwd}', 'destroy')->name('pwd.destroy');
             Route::post('/import', 'import')->name('pwd.import');
+            Route::post('/restore/{id}', 'restore')->name('pwd.restore');
             Route::post('/validate/update', 'bulkUpdateValidate')->name('pwd.validate');
+            Route::delete('/delete-all', 'destroyAll')->name('pwd.destroyAll');
         });
     });
 
@@ -101,5 +110,14 @@ Route::prefix('reports')
            Route::get('/', 'index')->name('report.index');
            Route::get('/pwd/export', 'exportPwd')->name('report.pwd.export');
            Route::get('/senior/export', 'exportSenior')->name('report.senior.export');
+        });
+    });
+
+
+Route::prefix('/requests')
+    ->middleware(['auth', 'role:super_admin'])->group(function(){
+        Route::controller(RequestController::class)->group(function(){
+           Route::get('/', 'index')->name('request.index');
+           Route::post('/approve/{id}', 'approve')->name('request.approve');
         });
     });

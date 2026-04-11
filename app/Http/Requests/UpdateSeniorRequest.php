@@ -30,11 +30,12 @@ class UpdateSeniorRequest extends StoreSeniorRequest
 
             'family' => 'nullable|array',
             'family.*.id' => 'nullable|integer|exists:senior_family_members,id',
-            'family.*.action' => 'required|string|in:create,update,delete',
 
-            'family.*.full_name' => 'required_if:family.*.action,create,update|string',
-            'family.*.relationship' => 'required_if:family.*.action,create,update|string',
-            'family.*.birthdate' => 'required_if:family.*.action,create,update|date',
+            'family.*.action' => 'nullable|string|in:create,update,delete',
+
+            'family.*.full_name' => 'required|string',
+            'family.*.relationship' => 'required|string',
+            'family.*.birthdate' => 'required|date',
             'family.*.occupation' => 'nullable|string',
             'family.*.civil_status' => 'nullable|string',
             'family.*.income' => 'nullable|numeric'

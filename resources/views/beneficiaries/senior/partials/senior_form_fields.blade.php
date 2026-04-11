@@ -86,7 +86,7 @@
             <input 
                 type="date" placeholder="" 
                 name="birthdate" class="border rounded-md p-2 bg-[#F5F5F5]"
-                value="{{ old('birthdate', $senior->beneficiary->birthdate ?? '') }}"
+                value="{{ old('birthdate', \Carbon\Carbon::parse($senior->beneficiary->birthdate)->format('Y-m-d')) }}"
                 required
             >
             @error('birthdate')

@@ -20,6 +20,10 @@
             <a href="{{route('barangay_pwd_admin.dashboard')}}" class="block p-2 rounded hover:bg-gray-100">
                 Dashboard
             </a>
+        @elseif(auth()->user()->role === 'barangay_senior_admin')
+            <a href="{{route('barangay_senior_admin.dashboard')}}" class="block p-2 rounded hover:bg-gray-100">
+                Dashboard
+            </a>
         @endif
 
         {{-- Beneficiaries (shared) --}}
@@ -48,6 +52,20 @@
         >
             Reports
         </a>
+
+        {{-- Requests --}}
+        @if(auth()->user()->role === 'super_admin')
+            <a 
+                href="{{route('request.index')}}" 
+                class="block p-2 rounded hover:bg-gray-100
+                    @if(request()->routeIs('request.*')) 
+                        bg-red-500 text-white hover:bg-red-400 
+                    @endif
+                "
+            >
+                Requests
+            </a>
+        @endif
 
         {{-- Super Admin --}}
         @if(auth()->user()->role === 'super_admin')

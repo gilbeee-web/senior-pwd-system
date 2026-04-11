@@ -14,7 +14,7 @@
                     class="text-2xl font-bold cursor-pointer 
                     {{ $tab === 'pwd' ? 'border-b-[3px] border-red-500' : 'text-gray-400' }}"
                 >
-                    PWD
+                    PWDs
                 </button>
 
                 <button 
@@ -27,103 +27,90 @@
             </div>
         @elseif($current_user->role === 'barangay_pwd_admin')
             <div>
-                <button class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">PWDs</button>
+                <h1 class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">Person With Disabilities</h1>
             </div>
         @elseif($current_user->role === 'barangay_senior_admin')
             <div>
-                <button class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">Senior Citizen</button>
+                <h1 class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">Senior Citizens</h1>
             </div>
         @endif
 
-        <div class="flex gap-x-5">
-            @if($current_user->role === 'super_admin')
+        <div class="flex gap-x-5 mr-5 items-center">
 
-                <div class="relative inline-block">
-                
-                    <button
-                        class="p-2 bg-blue-500 text-white rounded-lg cursor-pointer"
-                        id="addBeneficiary-btn"
+            @if($current_user->role === 'barangay_pwd_admin' || $current_user->role === 'super_admin')
+
+                <div class="pwd-action-btn">
+                    <a
+                        href="{{route('pwd.create')}}"
+                        class="p-2 bg-blue-500 text-white rounded-lg cursor-pointer
+                        "
                     >
-                        Add Beneficiary
-                    </button>
-
-                    <!-- Dropdown -->
-                    <div id="beneficiaryDropdown"
-                        class="hidden absolute w-35 bg-white border rounded-lg shadow-lg z-50">
-
-                        <a 
-                            href="{{route('senior.create')}}"
-                            class="block px-4 py-2 rounded-lg hover:bg-gray-100"
-                        >
-                            Senior Citizen
-                        </a>
-
-                        <a 
-                            href="{{route('pwd.create')}}"
-                            class="block px-4 py-2 rounded-lg hover:bg-gray-100"
-                        >
-                            PWD
-                        </a>
-                    </div>
-
+                        New PWD
+                    </a>
                 </div>
-
-                <form action="{{ route('pwd.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
-                    @csrf
-                    <input type="file" name="pwd_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
-                    <button type="button" class="import-btn bg-green-500 text-white px-4 py-2 rounded">
-                        Import PWD
-                    </button>
-                </form>
-
-                <form action="{{ route('senior.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
-                    @csrf
-                    <input type="file" name="senior_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
-                    <button type="button" class="import-btn bg-yellow-500 text-white px-4 py-2 rounded">
-                        Import Senior
-                    </button>
-                </form>
-            @endif
-            
-            @if($current_user->role === 'barangay_pwd_admin')
                 
-                <a 
-                    href="{{route('pwd.create')}}"
-                    class="p-2 bg-blue-500 text-white rounded-lg cursor-pointer"
-                >
-                    Add PWD
-                </a>
-               
-
-                <form id="importPwdForm" action="{{ route('pwd.import') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" name="pwd_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
-                    <button type="button" class="import-btn bg-green-500 text-white px-4 py-2 rounded">
-                        Import PWD
-                    </button>
-                </form>
-            @endif
-
-            @if($current_user->role === 'barangay_senior_admin')
+                <div class="pwd-action-btn">
+                    <form action="{{ route('pwd.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
+                        @csrf
+                        <input type="file" name="pwd_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
+                        <button
+                            type="button"
+                            class="import-btn p-2 bg-green-500 text-white rounded-lg cursor-pointer
+                            "
+                        >
+                            Import PWD
+                        </button>
+                    </form>
+                </div>
                 
-                <a 
-                    href="{{route('senior.create')}}"
-                    class="p-2 bg-blue-500 text-white rounded-lg cursor-pointer"
-                >
-                    Add Senior Citizen
-                </a>
-
-                <form id="importSeniorForm" action="" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" name="senior_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
-                    <button type="button" class="import-btn bg-yellow-500 text-white px-4 py-2 rounded">
-                        Import Senior
-                    </button>
-                </form>
+                <div class="pwd-action-btn">
+                    <a
+                        href="{{route('beneficiary.getArchive', "pwd")}}"
+                        class="p-2 bg-green-500 text-white rounded-lg cursor-pointer"
+                    >
+                        Archived
+                    </a>
+                </div>
+                
             @endif
 
+            @if($current_user->role === 'barangay_senior_admin' || $current_user->role === 'super_admin')
 
+                <div class="senior-action-btn hidden">
+                    <a
+                        href="{{route('senior.create')}}"
+                        class="p-2 bg-blue-500 text-white rounded-lg cursor-pointer"
+                    >
+                        New Senior Citizen
+                    </a>
+                </div>
+                
+                <div class="senior-action-btn hidden">
+                    <form action="{{ route('senior.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
+                        @csrf
+                        <input type="file" name="senior_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
+                        <button
+                            class="import-btn p-2 bg-green-500 text-white rounded-lg cursor-pointer"
+                        >
+                            Import Senior Citizen
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="senior-action-btn hidden">
+                    <a
+                        href="{{route('beneficiary.getArchive', "senior")}}"
+                        class="archive-btn p-2 bg-green-500 text-white rounded-lg cursor-pointer"
+                    >
+                        Archived
+                    </a>
+                </div>
+                
+            @endif
+
+           
         </div>
+
         
     </div>
 
@@ -159,7 +146,7 @@
 
                 @if($current_user->role === 'barangay_pwd_admin')
                     <!-- Disability Type -->
-                    <div class="flex flex-col {{ $tab === 'pwd' ? '' : 'hidden' }}" id="disabilityType-filter">
+                    <div class="flex flex-col" id="disabilityType-filter">
                         <label for="disability_type" class="font-bold text-sm mb-1">
                             Disability Type
                         </label>
@@ -191,7 +178,7 @@
                         </select>
                     </div>
                 @elseif($current_user->role === 'barangay_senior_admin')
-                    <div class="flex flex-col {{ $tab === 'senior' ? '' : 'hidden' }}" id="seniorType-filter">
+                    <div class="flex flex-col " id="seniorType-filter">
                         <label for="senior_type" class="font-bold text-sm mb-1">
                             Senior Type
                         </label>
@@ -218,7 +205,7 @@
                     </div>
                 @elseif($current_user->role === 'super_admin')
 
-                    <div class="flex flex-col {{ $tab === 'pwd' ? '' : 'hidden' }}" id="disabilityType-filter">
+                    <div class="flex flex-col" id="disabilityType-filter">
                         <label for="disability_type" class="font-bold text-sm mb-1">
                             Disability Type
                         </label>
@@ -250,7 +237,7 @@
                         </select>
                     </div>
 
-                    <div class="flex flex-col {{ $tab === 'senior' ? '' : 'hidden' }}" id="seniorType-filter">
+                    <div class="flex flex-col hidden" id="seniorType-filter">
                         <label for="senior_type" class="font-bold text-sm mb-1">
                             Senior Type
                         </label>
@@ -323,7 +310,7 @@
     
     @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_pwd_admin')
 
-        <div class="mt-5 {{ $tab === 'pwd' ? '' : 'hidden' }}" id="pwd-table-wrapper">
+        <div class="mt-5 " id="pwd-table-wrapper">
             <table class="w-full text-sm text-center border">
                 <thead class="bg-[#98D172]">
                     <tr>
@@ -347,7 +334,7 @@
 
         @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_pwd_admin')
 
-            <div class="mt-3 flex gap-x-3 items-center {{ $tab === 'pwd' ? '' : 'hidden' }}"" id="validate-field">
+            <div class="mt-3 flex gap-x-3 items-center "" id="validate-field">
                 <button 
                     type="button" 
                     id="bulk-update-btn"
@@ -374,7 +361,7 @@
     @endif
     
     @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_senior_admin')
-        <div class="mt-5 overflow-x-auto {{ $tab === 'senior' ? '' : 'hidden' }}" id="senior-table-wrapper">
+        <div class="mt-5 overflow-x-auto hidden" id="senior-table-wrapper">
             <table class="w-full text-sm text-center border boder-gray-300">
                 <thead class="bg-[#98D172]">
                     <tr>

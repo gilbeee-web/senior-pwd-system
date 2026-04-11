@@ -8,5 +8,5 @@
         <button type="submit">Logout</button>
     </form>
 
-    <h1>WELCOME BARANGAY Admin</h1>
+    <h1>WELCOME PWD Admin</h1>
 @endsection

@@ -161,8 +161,10 @@ class UserController extends Controller
 
         if($current_user->role === 'super_admin'){
             return redirect()->route('user.index')->with(['success' => 'Updated successfully!']);
-        }else{
-            return redirect()->route('barangay_admin.dashboard')->with(['success' => 'Updated successfully!']);
+        }else if($current_user->role === 'barangay_pwd_admin'){
+            return redirect()->route('barangay_pwd_admin.dashboard')->with(['success' => 'Updated successfully!']);
+        }else if($current_user->role === 'barangay_senior_admin'){
+            return redirect()->route('barangay_senior_admin.dashboard')->with(['success' => 'Updated successfully!']);
         }
     }
 

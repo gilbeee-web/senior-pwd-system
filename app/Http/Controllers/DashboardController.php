@@ -9,9 +9,13 @@ class DashboardController extends Controller
     //
 
 
-    public function adminIndex(){
+    public function pwdAdminIndex(){
 
-        return view('dashboard/admin');
+        return view('dashboard/pwd_admin');
+    }
+
+    public function seniorAdminIndex(){
+        return view('dashboard/senior_admin');
     }
 
     public function superAdminIndex(){

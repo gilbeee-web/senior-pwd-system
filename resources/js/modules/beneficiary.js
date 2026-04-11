@@ -23,6 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
             if (seniorTable) seniorTable.classList.add('hidden');
             if (seniorFilter) seniorFilter.classList.add('hidden');
 
+            document.querySelectorAll('.senior-action-btn').forEach(button => {
+                button.classList.add('hidden');
+            });
+
+            document.querySelectorAll('.pwd-action-btn').forEach(button => {
+                button.classList.remove('hidden');
+            });
+
             pwdBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
             pwdBtn.classList.remove('text-gray-400');
 
@@ -47,6 +55,14 @@ document.addEventListener("DOMContentLoaded", function () {
             if (pwdTable) pwdTable.classList.add('hidden');
             if (pwdFilter) pwdFilter.classList.add('hidden');
 
+            document.querySelectorAll('.pwd-action-btn').forEach(button => {
+                button.classList.add('hidden');
+            });
+
+            document.querySelectorAll('.senior-action-btn').forEach(button => {
+                button.classList.remove('hidden');
+            });
+
             seniorBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
             seniorBtn.classList.remove('text-gray-400');
 
@@ -61,20 +77,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     const addBeneficiarybtn = document.getElementById("addBeneficiary-btn");
-    const dropdown = document.getElementById("beneficiaryDropdown");
+    const addBeneficiarydropdown = document.getElementById("beneficiaryDropdown");
 
     if(addBeneficiarybtn){
         addBeneficiarybtn.addEventListener("click", function () {
-            dropdown.classList.toggle("hidden");
+            addBeneficiarydropdown.classList.toggle("hidden");
         });
 
         // Close dropdown when clicking outside
         document.addEventListener("click", function (e) {
-            if (!addBeneficiarybtn.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.add("hidden");
+            if (!addBeneficiarybtn.contains(e.target) && !addBeneficiarydropdown.contains(e.target)) {
+                addBeneficiarydropdown.classList.add("hidden");
             }
         });
     }
+
+    const importBeneficiaryBtn = document.getElementById('importBeneficiary-btn');
+    const importBeneficiaryDropdown = document.getElementById('importBeneficiary-dropdown');
+
+    if(importBeneficiaryBtn){
+        importBeneficiaryBtn.addEventListener('click', function (){
+            importBeneficiaryDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (e) {
+            if (!importBeneficiaryBtn.contains(e.target) && !importBeneficiaryDropdown.contains(e.target)) {
+                importBeneficiaryDropdown.classList.add("hidden");
+            }
+        });
+
+    }
+
+
     
     
     //uses class attribute to import files not hardcoded ids
@@ -110,6 +145,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
 
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (activeTabInput && activeTabInput.value === 'senior') {
+            seniorBtn.click();
+        } else {
+            pwdBtn.click();
+        }
     });
 
 

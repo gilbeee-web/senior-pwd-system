@@ -11,6 +11,7 @@ use App\Models\SeniorDetail;
 use App\Models\SeniorFamilyMember;
 use App\Models\Street;
 use App\Services\BeneficiaryService;
+use App\Services\UpdateSeniorService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -23,10 +24,14 @@ class SeniorController extends Controller
     //
 
     protected $beneficiaryService;
+    protected $currentUserRole;
 
     public function __construct(BeneficiaryService $beneficiaryService)
     {
         $this->beneficiaryService = $beneficiaryService;
+        $current_user = Auth::user();
+
+        $currentUserRole = $current_user->role;
     }
 
 
@@ -99,6 +104,8 @@ class SeniorController extends Controller
         //load all the senior including its relationship
         $senior->load('beneficiary.address.street.barangay');
 
+        // dd($senior);
+
         $barangays = Barangay::all();
 
         $currentBarangayId = optional($senior->beneficiary->address->street->barangay)->id;
@@ -125,92 +132,131 @@ class SeniorController extends Controller
     }
 
 
-    private function syncFamilyMembers(array $family, SeniorDetail $senior)
-    {
-        // Get existing IDs from DB
-        $existingIds = $senior->familyMembers()->pluck('id')->toArray();
-
-        // Get incoming IDs from form
-        $incomingIds = collect($family)
-            ->pluck('id')
-            ->filter()
-            ->toArray();
-
-        // DELETE removed members
-        $idsToDelete = array_diff($existingIds, $incomingIds);
-
-        if (!empty($idsToDelete)) {
-            $senior->familyMembers()->whereIn('id', $idsToDelete)->delete();
-        }
-
-        foreach ($family as $member) {
-
-            //check if the id is existing then update
-            if (isset($member['id'])) {
-                $senior->familyMembers()
-                    ->where('id', $member['id'])
-                    ->update([
-                        'full_name' => $member['full_name'],
-                        'relationship' => $member['relationship'],
-                        'birthdate' => $member['birthdate'],
-                        'occupation' => $member['occupation'] ?? null,
-                        'civil_status' => $member['civil_status'] ?? null,
-                        'income' => $member['income'] ?? 0,
-                    ]);
-            } else {
-                // CREATE new if id is not existed
-                $senior->familyMembers()->create([
-                    'full_name' => $member['full_name'],
-                    'relationship' => $member['relationship'],
-                    'birthdate' => $member['birthdate'],
-                    'occupation' => $member['occupation'] ?? null,
-                    'civil_status' => $member['civil_status'] ?? null,
-                    'income' => $member['income'] ?? 0,
-                ]);
-            }
-        }
-    }
-
-
-    public function update(StoreSeniorRequest $request, SeniorDetail $senior){
+    public function update(UpdateSeniorRequest $request, SeniorDetail $senior, UpdateSeniorService $updateSeniorService){
 
         try{
+            $validated = $request->validated();
 
-            $birthdate = Carbon::parse($request->birthdate);
+            // dd($validated);
+            
+            if (isset($validated['birthdate'])) {
 
-            if ($birthdate->age < 60) {
-                return back()
-                    ->withErrors(['birthdate' => 'Must be 60 years old and above to register as Senior Citizen.'])
-                    ->withInput();
+                $birthdate = Carbon::parse($validated['birthdate']);
+                $age = $birthdate->age;
+
+                if($age < 60){
+                    return back()
+                        ->withErrors(['birthdate' => 'Must be 60 years old and above to register as Senior Citizen.'])
+                        ->withInput();
+                }
             }
 
-            DB::transaction(function() use($request, $senior){
+            $gracePeriodMinutes = 1; 
+            $withinGracePeriod = $senior->created_at->diffInMinutes(now()) <= $gracePeriodMinutes;
 
-                $this->beneficiaryService->update(
-                    $senior->beneficiary,
-                    $request->validated()
-                );
+            $payload = [
+                'beneficiary' => [
+                    'first_name' => $validated['first_name'] ?? null,
+                    'last_name' => $validated['last_name'] ?? null,
+                    'middle_name' => $validated['middle_name'] ?? null,
+                    'extension' => $validated['extension'] ?? null,
+                    'birthdate' => $validated['birthdate'] ?? null,
+                    'contact_number' => $validated['contact_number'] ?? null,
+                    'civil_status' => $validated['civil_status'] ?? null,
+                    'employment_status' => $validated['employment_status'] ?? null,
+                    'gender' => $validated['gender'] ?? null
+                ],
 
-                $senior->update([
-                    'osca_id_number' => $request->osca_id_number,
-                    'ncsc_registration_number' => $request->ncsc_registration_number,
-                    'place_birth' => $request->place_birth,
-                    'occupation' => $request->occupation,
-                    'pension_amount' => $request->pension_amount ?? 0
-                ]);
+                'beneficiary_address' => [
+                    'house_num' => $validated['house_num'] ?? null,
+                    'barangay_id' => $validated['barangay_id'] ?? null,
+                    'street_id' => $validated['street_id'] ?? null
+                ],
 
-                $this->syncFamilyMembers($request->family ?? [], $senior);
-            });
+                'senior' => [
+                    'osca_id_number' => $validated['osca_id_number'] ?? null,
+                    'ncsc_registration_number' => $validated['ncsc_registration_number'] ?? null,
+                    'place_of_birth' => $validated['place_of_birth'] ?? null,
+                    'occupation' => $validated['occupation'] ?? null,
+                    'pension_amount' => $validated['pension_amount'] ?? null,
+                    'date_id_issued' => $validated['date_id_issued'] ?? null,
+                ],
 
-            return redirect()->route('beneficiary.index', ['tab' => 'senior'])->with('success', 'Senior Citizen updated successfully!');
+                'family' => $validated['family'] ?? []
+            ];
 
-        }catch(\Exception $e){
-            dd('Senior Update Failed: ' . $e->getMessage());
-            
-            return back()->withInput()->with('error', 'Something went wrong. Please try again');
+            if($withinGracePeriod || $this->currentUserRole === 'super_admin'){
+                // DB::transaction(function () use ($senior, $payload) {
 
+                //     $senior->beneficiary->update($payload['beneficiary']);
+                //     $senior->beneficiary->address->update($payload['beneficiary_address']);
+                //     $senior->update($payload['senior']);
+
+                //     $this->syncFamilyMembers($payload['family'], $senior);
+                // });
+
+                $updateSeniorService->update($senior, $payload);
+
+                return redirect()->route('beneficiary.index', ['tab' => 'senior'])->with('success', 'Senior updated successfully.');
+            }
+
+            ActionRequest::create([
+                'type' => 'update',
+                'model_type' => SeniorDetail::class,
+                'model_id' => $senior->id,
+                'requested_by' => Auth::id(),
+                'payload' => $payload,
+                'status' => 'pending',
+            ]);
+
+            return redirect()->route('beneficiary.index', ['tab' => 'senior'])->with('info', 'Update request submitted for approval.');
+
+        }catch(Exception $e){
+            return back()
+            ->withInput()
+            ->with('error', 'Something went wrong. Please try again: ' . $e->getMessage());
         }
     }
+
+    // public function update(StoreSeniorRequest $request, SeniorDetail $senior){
+
+    //     try{
+            
+    //         $birthdate = Carbon::parse($request->birthdate);
+
+    //         if ($birthdate->age < 60) {
+    //             return back()
+    //                 ->withErrors(['birthdate' => 'Must be 60 years old and above to register as Senior Citizen.'])
+    //                 ->withInput();
+    //         }
+
+    //         DB::transaction(function() use($request, $senior){
+
+    //             $this->beneficiaryService->update(
+    //                 $senior->beneficiary,
+    //                 $request->validated()
+    //             );
+
+    //             $senior->update([
+    //                 'osca_id_number' => $request->osca_id_number,
+    //                 'ncsc_registration_number' => $request->ncsc_registration_number,
+    //                 'place_birth' => $request->place_birth,
+    //                 'occupation' => $request->occupation,
+    //                 'pension_amount' => $request->pension_amount ?? 0
+    //             ]);
+
+    //             $this->syncFamilyMembers($request->family ?? [], $senior);
+    //         });
+
+    //         return redirect()->route('beneficiary.index', ['tab' => 'senior'])->with('success', 'Senior Citizen updated successfully!');
+
+    //     }catch(\Exception $e){
+    //         dd('Senior Update Failed: ' . $e->getMessage());
+            
+    //         return back()->withInput()->with('error', 'Something went wrong. Please try again');
+
+    //     }
+    // }
 
     public function show(SeniorDetail $senior)
     {
@@ -274,81 +320,81 @@ class SeniorController extends Controller
         }
     }
 
-    public function requestUpdateSenior(UpdateSeniorRequest $request, $id){
+    // public function requestUpdateSenior(UpdateSeniorRequest $request, $id){
 
-        $senior = SeniorDetail::findOrFail($id);
-        $validated = $request->validated();
+    //     $senior = SeniorDetail::findOrFail($id);
+    //     $validated = $request->validated();
 
-        $gracePeriodDays = 1;
-        $withinGracePeriod = $senior->created_at->diffInDays(now()) <= $gracePeriodDays;
+    //     $gracePeriodDays = 1;
+    //     $withinGracePeriod = $senior->created_at->diffInDays(now()) <= $gracePeriodDays;
 
-        $payload = [
-            'beneficiary' => [
-                'first_name' => $validated['first_name'] ?? null,
-                'last_name' => $validated['last_name'] ?? null,
-                'middle_name' => $validated['middle_name'] ?? null,
-                'extension' => $validated['extension'] ?? null,
-                'birthdate' => $validated['birthdate'] ?? null,
-                'contact_number' => $validated['contact_number'] ?? null,
-                'civil_status' => $validated['civil_status'] ?? null,
-                'employment_status' => $validated['employment_status'] ?? null,
-                'gender' => $validated['gender'] ?? null
-            ],
+    //     $payload = [
+    //         'beneficiary' => [
+    //             'first_name' => $validated['first_name'] ?? null,
+    //             'last_name' => $validated['last_name'] ?? null,
+    //             'middle_name' => $validated['middle_name'] ?? null,
+    //             'extension' => $validated['extension'] ?? null,
+    //             'birthdate' => $validated['birthdate'] ?? null,
+    //             'contact_number' => $validated['contact_number'] ?? null,
+    //             'civil_status' => $validated['civil_status'] ?? null,
+    //             'employment_status' => $validated['employment_status'] ?? null,
+    //             'gender' => $validated['gender'] ?? null
+    //         ],
 
-            'beneficiary_address' => [
-                'house_num' => $validated['house_num'] ?? null,
-                'barangay_id' => $validated['barangay_id'] ?? null,
-                'street_id' => $validated['street_id'] ?? null
-            ],
+    //         'beneficiary_address' => [
+    //             'house_num' => $validated['house_num'] ?? null,
+    //             'barangay_id' => $validated['barangay_id'] ?? null,
+    //             'street_id' => $validated['street_id'] ?? null
+    //         ],
 
-            'senior' => [
-                'osca_id_number' => $validated['osca_id_number'] ?? null,
-                'ncsc_registration_number' => $validated['ncsc_registration_number'] ?? null, 
-                'place_of_birth' => $validated['place_of_birth'] ?? null, 
-                'occupation' => $validated['occupation'] ?? null, 
-                'pension_amount' => $validated['pension_amount'] ?? null, 
-                'date_id_issued' => $validated['date_id_issued'] ?? null, 
-            ],
+    //         'senior' => [
+    //             'osca_id_number' => $validated['osca_id_number'] ?? null,
+    //             'ncsc_registration_number' => $validated['ncsc_registration_number'] ?? null, 
+    //             'place_of_birth' => $validated['place_of_birth'] ?? null, 
+    //             'occupation' => $validated['occupation'] ?? null, 
+    //             'pension_amount' => $validated['pension_amount'] ?? null, 
+    //             'date_id_issued' => $validated['date_id_issued'] ?? null, 
+    //         ],
 
-            'family' => $validated['family'] ?? []
-        ];
+    //         'family' => $validated['family'] ?? []
+    //     ];
 
 
-        if($withinGracePeriod){
-            DB::transaction(function() use ($senior, $payload) {
+    //     if($withinGracePeriod){
+    //         DB::transaction(function() use ($senior, $payload) {
 
-                // Update beneficiary
-                $senior->beneficiary->update($payload['beneficiary']);
+    //             // Update beneficiary
+    //             $senior->beneficiary->update($payload['beneficiary']);
 
-                // Update senior
-                $senior->update($payload['senior']);
+    //             // Update senior
+    //             $senior->update($payload['senior']);
 
-                // Sync family members
-                $this->syncFamilyMembers($payload['family'], $senior);
-            });
+    //             // Sync family members
+    //             $this->syncFamilyMembers($payload['family'], $senior);
+    //         });
 
-            return back()->with('success', 'Senior updated successfully.');
-        }
+    //         return back()->with('success', 'Senior updated successfully.');
+    //     }
 
-        ActionRequest::create([
-            'type' => 'update',
-            'model_type' => SeniorDetail::class,
-            'model_id' => $senior->id,
-            'requested_by' => Auth::id(),
-            'payload' => $payload,
-            'status' => 'pending',
-        ]);
+    //     ActionRequest::create([
+    //         'type' => 'update',
+    //         'model_type' => SeniorDetail::class,
+    //         'model_id' => $senior->id,
+    //         'requested_by' => Auth::id(),
+    //         'payload' => $payload,
+    //         'status' => 'pending',
+    //     ]);
         
-        return back()->with('success', 'Update request submitted.');
+    //     return back()->with('success', 'Update request submitted.');
 
-    }
+    // }
 
     public function archive(SeniorDetail $senior)
     {
         $gracePeriodDays = 1;
         $withinGracePeriod = $senior->created_at->diffInDays(now()) <= $gracePeriodDays;
 
-        if($withinGracePeriod){
+        if($withinGracePeriod || $this->currentUserRole === 'super_admin' ){
             $senior->delete();
 
             return redirect()->route('beneficiary.index')
@@ -366,6 +412,39 @@ class SeniorController extends Controller
 
          return redirect()->route('beneficiary.index')
                 ->with('success', 'Archive request submitted.');
+    }
+
+    public function restore($id)
+    {
+        $senior = SeniorDetail::withTrashed()->findOrFail($id);
+        $senior->restore();
+
+        return redirect()->back()->with('success', 'Senior restored successfully.');
+    }
+
+    public function destroy($id)
+    {
+        if($this->currentUserRole !== 'super_admin'){
+            return redirect()->back()->with('error', 'Only super admin could permanently delete data.');
+        }
+
+        $senior = SeniorDetail::withTrashed()->findOrFail($id);
+
+        $senior->forceDelete();
+
+        return redirect()->back()->with('success', 'Senior deleted successfully.');
+    }
+
+    public function destroyAll()
+    {
+        if($this->currentUserRole !== 'super_admin'){
+            return redirect()->back()->with('error', "You're not allowed to perform this action.");
+        }
+
+        // Permanently delete ALL archived (soft deleted) records
+        SeniorDetail::onlyTrashed()->forceDelete();
+
+        return redirect()->back()->with('success', 'All archived Senior Citizens records deleted permanently.');
     }
 
 

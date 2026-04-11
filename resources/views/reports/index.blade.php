@@ -5,7 +5,7 @@
 @section('content')
 
     
-    <div class="flex gap-x-10">
+    {{-- <div class="flex gap-x-10">
         <button 
             id="pwd-report-content-btn"
             class="text-2xl font-bold cursor-pointer 
@@ -21,7 +21,35 @@
         >
             Senior Citizen
         </button>
-    </div>
+    </div> --}}
+
+    @if($current_user->role === 'super_admin')
+        <div class="flex gap-x-10">
+            <button 
+                id="pwd-report-content-btn"
+                class="text-2xl font-bold cursor-pointer 
+                {{ $tab === 'pwd' ? 'border-b-[3px] border-red-500' : 'text-gray-400' }}"
+            >
+                PWD
+            </button>
+
+            <button 
+                id="senior-report-content-btn"
+                class="text-2xl font-bold cursor-pointer 
+                {{ $tab === 'senior' ? 'border-b-[3px] border-red-500' : 'text-gray-400' }}"
+            >
+                Senior Citizen
+            </button>
+        </div>
+    @elseif($current_user->role === 'barangay_pwd_admin')
+        <div>
+            <button class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">PWDs</button>
+        </div>
+    @elseif($current_user->role === 'barangay_senior_admin')
+        <div>
+            <button class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">Senior Citizen</button>
+        </div>
+    @endif
     
 
     <div class="mt-5 flex flex-col">

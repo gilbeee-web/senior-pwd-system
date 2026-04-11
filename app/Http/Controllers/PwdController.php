@@ -10,6 +10,7 @@ use App\Models\Barangay;
 use App\Models\PwdDetail;
 use App\Models\Street;
 use App\Services\BeneficiaryService;
+use App\Services\UpdatePwdService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,10 +23,14 @@ class PwdController extends Controller
     //
 
     protected $beneficiaryService;
+    protected $currentUserRole;
 
     public function __construct(BeneficiaryService $beneficiaryService)
     {
         $this->beneficiaryService = $beneficiaryService;
+
+        $current_user = Auth::user();
+        $this->currentUserRole = $current_user->role;
     }
 
 
@@ -91,48 +96,115 @@ class PwdController extends Controller
         ]);
     }
 
+    public function update(UpdatePwdRequest $request, $id, UpdatePwdService $updatePwdService){
+        $pwd = PwdDetail::findOrFail($id);
+        $validated = $request->validated();
 
+        $gracePeriodMinutes = 1; 
+        $withinGracePeriod = $pwd->created_at->diffInMinutes(now()) <= $gracePeriodMinutes;
 
-    public function update(StorePwdRequest $request, PwdDetail $pwd){
+        $payload = [
+            'beneficiary' => [
+                'first_name' => $validated['first_name'] ?? null,
+                'last_name' => $validated['last_name'] ?? null,
+                'middle_name' => $validated['middle_name'] ?? null,
+                'extension' => $validated['extension'] ?? null,
+                'birthdate' => $validated['birthdate'] ?? null,
+                'contact_number' => $validated['contact_number'] ?? null,
+                'civil_status' => $validated['civil_status'] ?? null,
+                'employment_status' => $validated['employment_status'] ?? null,
+                'gender' => $validated['gender'] ?? null
+            ],
 
-        try{
+            'beneficiary_address' => [
+                'house_num' => $validated['house_num'] ?? null,
+                'barangay_id' => $validated['barangay_id'] ?? null,
+                'street_id' => $validated['street_id'] ?? null
+            ],
 
-            DB::transaction(function() use($request, $pwd){
+            'pwd' => [
+                'pwd_id_number' => $validated['pwd_id_number'] ?? null,
+                'disability_type' => $validated['disability_type'] ?? null,
+                'guardian_name' => $validated['guardian_name'] ?? null,
+                'blood_type' => $validated['blood_type'] ?? null,
+                'educational_attainment' => $validated['educational_attainment'] ?? null,
+                'date_id_issued' => $validated['date_id_issued'] ?? null,
+                'date_id_expiration' => Carbon::parse($validated['date_id_issued'] )->addYears(5)
+            ]
+        ];
 
-                $this->beneficiaryService->update(
-                    $pwd->beneficiary,
-                    $request->validated()
-                );
+        if($withinGracePeriod || $this->currentUserRole === 'superadmin'){
+            // DB::transaction(function() use ($pwd, $payload) {
 
-                $pwd->update([
-                    'pwd_id_number'      => $request->pwd_id_number,
-                    'disability_type'    => $request->disability_type,
-                    'guardian_name'      => $request->guardian_name,
-                    'blood_type'         => $request->blood_type,
-                    'educational_attainment' => $request->educational_attainment,
-                    'date_id_issued'     => $request->date_id_issued ?? today(),
-                    'date_id_expiration' => Carbon::parse($request->date_id_issued)->addYears(5),
-                    'is_middleclass'     => $request->boolean('is_middleclass'),
-                ]);
-            });
+            //     // Update beneficiary
+            //     $pwd->beneficiary->update($payload['beneficiary']);
 
-            return redirect()->route('beneficiary.index')->with('success', 'PWD updated successfully!');
+            //     //Update beneficiary address
+            //     $pwd->beneficiary->address->update($payload['beneficiary_address']);
 
-        }catch(\Exception $e){
-            dd('PWD Updated Failed: ' . $e->getMessage());
-            
-            return back()->withInput()->with('error', 'Something went wrong. Please try again');
+            //     // Update senior
+            //     $pwd->update($payload['pwd']);
+            // });
 
+            $updatePwdService->update($pwd, $payload);
+
+            return redirect()->route('beneficiary.index', ['tab' => 'pwd'])->with('success', 'PWD updated successfully.');
         }
+
+        ActionRequest::create([
+            'type' => 'update',
+            'model_type' => PwdDetail::class,
+            'model_id' => $pwd->id,
+            'requested_by' => Auth::id(),
+            'payload' => $payload,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('beneficiary.index', ['tab' => 'pwd'])->with('success', 'Update request submitted.');
     }
+
+
+
+    // public function update(StorePwdRequest $request, PwdDetail $pwd){
+
+    //     try{
+
+    //         DB::transaction(function() use($request, $pwd){
+
+    //             $this->beneficiaryService->update(
+    //                 $pwd->beneficiary,
+    //                 $request->validated()
+    //             );
+
+    //             $pwd->update([
+    //                 'pwd_id_number'      => $request->pwd_id_number,
+    //                 'disability_type'    => $request->disability_type,
+    //                 'guardian_name'      => $request->guardian_name,
+    //                 'blood_type'         => $request->blood_type,
+    //                 'educational_attainment' => $request->educational_attainment,
+    //                 'date_id_issued'     => $request->date_id_issued ?? today(),
+    //                 'date_id_expiration' => Carbon::parse($request->date_id_issued)->addYears(5),
+    //                 'is_middleclass'     => $request->boolean('is_middleclass'),
+    //             ]);
+    //         });
+
+    //         return redirect()->route('beneficiary.index')->with('success', 'PWD updated successfully!');
+
+    //     }catch(\Exception $e){
+    //         dd('PWD Updated Failed: ' . $e->getMessage());
+            
+    //         return back()->withInput()->with('error', 'Something went wrong. Please try again');
+
+    //     }
+    // }
 
 
     public function archive(PwdDetail $pwd)
     {
-        $gracePeriodDays = 1;
-        $withinGracePeriod = $pwd->created_at->diffInDays(now()) <= $gracePeriodDays;
+        $gracePeriodMinutes = 1; 
+        $withinGracePeriod = $pwd->created_at->diffInMinutes(now()) <= $gracePeriodMinutes;
 
-        if($withinGracePeriod){
+        if($withinGracePeriod || $this->currentUserRole === 'super_admin'){
             $pwd->delete();
 
             return redirect()->route('beneficiary.index')
@@ -156,18 +228,35 @@ class PwdController extends Controller
 
     public function destroy($id)
     {
+        if($this->currentUserRole !== 'super_admin'){
+            return redirect()->back()->with('error', 'Only super admin could permanently delete data.');
+        }
+
         $pwd = PwdDetail::withTrashed()->findOrFail($id);
 
         $pwd->forceDelete();
 
-        return redirect()->route('beneficiary.index')
-            ->with('success', 'PWD deleted successfully.');
+        return redirect()->back()->with('success', 'PWD deleted successfully.');
+    }
+
+    public function destroyAll()
+    {
+        if($this->currentUserRole !== 'super_admin'){
+            return redirect()->back()->with('error', "You're not allowed to perform this action.");
+        }
+        
+        // Permanently delete ALL archived (soft deleted) records
+        PwdDetail::onlyTrashed()->forceDelete();
+
+        return redirect()->back()->with('success', 'All archived PWD records deleted permanently.');
     }
 
     public function restore($id)
     {
         $pwd = PwdDetail::withTrashed()->findOrFail($id);
         $pwd->restore();
+
+        return redirect()->back()->with('success', 'PWD restored successfully.');
     }
 
 
@@ -283,65 +372,6 @@ class PwdController extends Controller
     }
 
 
-    public function requestUpdatePwd(UpdatePwdRequest $request, $id){
 
-        $pwd = PwdDetail::findOrFail($id);
-        $validated = $request->validated();
-
-        $gracePeriodDays = 1;
-        $withinGracePeriod = $pwd->created_at->diffInDays(now()) <= $gracePeriodDays;
-
-        $payload = [
-            'beneficiary' => [
-                'first_name' => $validated['first_name'] ?? null,
-                'last_name' => $validated['last_name'] ?? null,
-                'middle_name' => $validated['middle_name'] ?? null,
-                'extension' => $validated['extension'] ?? null,
-                'birthdate' => $validated['birthdate'] ?? null,
-                'contact_number' => $validated['contact_number'] ?? null,
-                'civil_status' => $validated['civil_status'] ?? null,
-                'employment_status' => $validated['employment_status'] ?? null,
-                'gender' => $validated['gender'] ?? null
-            ],
-
-            'beneficiary_address' => [
-                'house_num' => $validated['house_num'] ?? null,
-                'barangay_id' => $validated['barangay_id'] ?? null,
-                'street_id' => $validated['street_id'] ?? null
-            ],
-
-            'pwd' => [
-                'pwd_id_number' => $validated['pwd_id_number'] ?? null,
-                'disability_type' => $validated['disability_type'] ?? null,
-                'guardian_name' => $validated['guardian_name'] ?? null,
-                'blood_type' => $validated['blood_type'] ?? null,
-                'educational_attainment' => $validated['educational_attainment'] ?? null,
-                'date_id_issued' => $validated['date_id_issued'] ?? null,
-                'date_id_expiration' => Carbon::parse($validated['date_id_issued'] )->addYears(5)
-            ]
-        ];
-
-        if($withinGracePeriod){
-            DB::transaction(function() use ($pwd, $payload) {
-
-                // Update beneficiary
-                $pwd->beneficiary->update($payload['beneficiary']);
-
-                // Update senior
-                $pwd->update($payload['pwd']);
-            });
-        }
-
-        ActionRequest::create([
-            'type' => 'update',
-            'model_type' => PwdDetail::class,
-            'model_id' => $pwd->id,
-            'requested_by' => Auth::id(),
-            'payload' => $payload,
-            'status' => 'pending',
-        ]);
-
-        return back()->with('success', 'Update request submitted.');
-    }
 
 }

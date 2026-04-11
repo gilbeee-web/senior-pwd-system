@@ -86,7 +86,8 @@
             <input 
                 type="date" placeholder="" 
                 name="birthdate" class="border rounded-md p-2 bg-[#F5F5F5]"
-                value="{{ old('birthdate', $pwd->beneficiary->birthdate ?? '') }}"
+                {{-- value="{{ old('birthdate', $pwd->beneficiary->birthdate ?? '') }}" --}}
+                value="{{ old('birthdate', \Carbon\Carbon::parse($pwd->beneficiary->birthdate ?? '')->format('Y-m-d')) }}"
                 required
             >
             @error('birthdate')
@@ -429,7 +430,8 @@
                     type="date" 
                     name="date_id_issued" 
                     class="border rounded-md py-2 px-3 bg-[#F5F5F5]"
-                    value="{{ old('date_id_issued', $pwd->date_id_issued ?? '') }}"
+                    {{-- value="{{ old('date_id_issued', $pwd->date_id_issued ?? '') }}" --}}
+                    value="{{ old('date_id_issued', \Carbon\Carbon::parse($pwd->date_id_issued ?? '')->format('Y-m-d')) }}"
                 >
                 @error('date_id_issued')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

@@ -32,38 +32,14 @@
                 Edit
             </a>
             
-
-            {{-- if super admin allowed both delete and archive --}}
-
-            @if($current_user->role === 'super_admin')
-
-                <form action="{{route('pwd.archive', $pwd->id)}}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to archive this PWD member?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-red-500 hover:underline">
-                        {{-- <img src="{{ asset('assets/table_icons/deleteBtn.svg') }}" alt="" class="object-contain w-[20px] h-[20px] cursor-pointer"> --}}
-                        Archive
-                    </button>
-                </form>
-
-                {{-- <form action="{{route('pwd.destroy', $pwd->id)}}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this PWD member?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-red-500 hover:underline">
-                        Delete
-                    </button>
-                </form> --}}
-
-            @else
-                <form action="{{route('pwd.archive', $pwd->id)}}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this PWD member?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-red-500 hover:underline">
-                        {{-- <img src="{{ asset('assets/table_icons/deleteBtn.svg') }}" alt="" class="object-contain w-[20px] h-[20px] cursor-pointer"> --}}
-                        Delete
-                    </button>
-                </form>
-            @endif
+            <form action="{{route('pwd.archive', $pwd->id)}}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this PWD member?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-500 hover:underline">
+                    Archive
+                </button>
+            </form>
+            
 
             
 

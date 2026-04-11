@@ -3,12 +3,24 @@
 namespace App\Services;
 
 use App\Models\ActionRequest;
+use App\Models\PwdDetail;
+use App\Models\SeniorDetail;
 use Exception;
 use Illuminate\Notifications\Action;
 use Illuminate\Support\Facades\DB;
 
 class RequestApprovalService
 {
+
+    protected $updateSeniorService;
+    protected $updatePwdService;
+
+    public function __construct(UpdateSeniorService $updateSeniorService, UpdatePwdService $updatePwdService)
+    {
+        
+        $this->updateSeniorService = $updateSeniorService;
+        $this->updatePwdService = $updatePwdService;
+    }
 
     public function approve(ActionRequest $request, $adminId){
 
@@ -68,15 +80,36 @@ class RequestApprovalService
         ]);
     }
 
-
-    protected function handleUpdate($model, $payload){
-
-        if(!$payload){
+    protected function handleUpdate($model, $payload)
+    {
+        if (!$payload) {
             throw new Exception('No data to update.');
         }
-        
-        $model->update($payload);
+
+        if ($model instanceof SeniorDetail) {
+            $this->updateSeniorService->update($model, $payload);
+        } 
+        elseif ($model instanceof PwdDetail) {
+            $this->updatePwdService->update($model, $payload);
+        } 
+        else {
+            throw new Exception('Unsupported model type.');
+        }
     }
+
+
+    // protected function handleUpdate($model, $payload){
+
+    //     if(!$payload){
+    //         throw new Exception('No data to update.');
+    //     }
+
+    //     if($model->type === 'senior'){
+    //         $this->updateSeniorService->update($model, $payload);
+    //     }
+        
+    //     $model->update($payload);
+    // }
 
 
     protected function handleArchive($model){
