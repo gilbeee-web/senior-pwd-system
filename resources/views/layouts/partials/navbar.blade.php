@@ -26,14 +26,14 @@
         >
 
             <a href="{{route('user.edit', auth()->user()->id)}}"
-                class="px-4 py-2 hover:bg-gray-100 w-full flex justify-center">
-                Account Settings
+                class="px-4 py-2 hover:bg-gray-100 w-full flex gap-x-3 items-center">
+                <span class="object-contain w-6 h-6"><img src="{{asset('/images/icons/account-settings.svg')}}" alt=""></span> Account Settings
             </a>
 
-            <form action="{{route('user.logout')}}" method="POST" class="w-full flex justify-center hover:bg-gray-100 rounded-bl-4xl">
+            <form action="{{route('user.logout')}}" method="POST" class="w-full flex hover:bg-gray-100 rounded-bl-4xl">
                 @csrf
-                <button class="text-left px-4 py-2 cursor-pointer">
-                    Logout
+                <button class="text-left px-4 py-2 cursor-pointer flex gap-x-3 items-center">
+                   <span class="object-contain w-6 h-6"><img src="{{asset('/images/icons/logout.svg')}}" alt=""></span> Logout
                 </button>
             </form>
 

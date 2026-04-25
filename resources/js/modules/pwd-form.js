@@ -56,41 +56,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // console.log("PWD formsss loaded.");
     
-    const form = document.getElementById("pwd_form");
-    const submitBtn = document.getElementById("submitBtn");
-    let requiredFields = null;
+    // const form = document.getElementById("pwd_form");
+    // const submitBtn = document.getElementById("submitBtn");
+    // let requiredFields = null;
 
-    if(form){
-        requiredFields = form.querySelectorAll("[required]");
-    }
+    // if(form){
+    //     requiredFields = form.querySelectorAll("[required]");
+    // }
     
 
-    function checkForm() {
-        let allFilled = true;
+    // function checkForm() {
+    //     let allFilled = true;
 
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                allFilled = false;
-            }
-        });
+    //     requiredFields.forEach(field => {
+    //         if (!field.value.trim()) {
+    //             allFilled = false;
+    //         }
+    //     });
 
-        if (allFilled) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove("bg-[#FF9793]", "cursor-not-allowed");
-            submitBtn.classList.add("bg-green-500", "cursor-pointer");
-        } else {
-            submitBtn.disabled = true;
-            submitBtn.classList.remove("bg-green-500", "cursor-pointer");
-            submitBtn.classList.add("bg-[#FF9793]", "cursor-not-allowed");
-        }
-    }
+    //     if (allFilled) {
+    //         submitBtn.disabled = false;
+    //         submitBtn.classList.remove("bg-[#FF9793]", "cursor-not-allowed");
+    //         submitBtn.classList.add("bg-green-500", "cursor-pointer");
+    //     } else {
+    //         submitBtn.disabled = true;
+    //         submitBtn.classList.remove("bg-green-500", "cursor-pointer");
+    //         submitBtn.classList.add("bg-[#FF9793]", "cursor-not-allowed");
+    //     }
+    // }
 
-    if(requiredFields){
-        requiredFields.forEach(field => {
-            field.addEventListener("input", checkForm);
-            field.addEventListener("change", checkForm);
-        });
-    }
+    // if(requiredFields){
+    //     requiredFields.forEach(field => {
+    //         field.addEventListener("input", checkForm);
+    //         field.addEventListener("change", checkForm);
+    //     });
+    // }
+
+    
     
 
 

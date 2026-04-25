@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const addUserButton = document.getElementById("addUser-btn");
-    const closeUserButton = document.getElementById("close-btn");
+    const closeUserButton = document.getElementById("user-close-btn");
 
     if(addUserButton){
         addUserButton.addEventListener("click", toggleUserForm);
@@ -26,15 +26,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function toggleBarangay() {
 
+        console.log("Toggle Barangay")
+
         if (!roleSelect || !barangayWrapper){
             return;
-        } 
+        }
 
         const barangay = document.getElementById("barangay");
 
-        if (roleSelect.value === "super_admin") {
+        if (roleSelect.value === "super_admin" || roleSelect.value === 'senior_admin' || roleSelect.value === 'pwd_admin') {
 
-            console.log("Municpal admin");
+            console.log("Admin");
 
             barangayWrapper.classList.add("hidden");
 
@@ -94,6 +96,30 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    const actionButtons = document.querySelectorAll('.user-more-action-btn');
+    if(actionButtons){
+        actionButtons.forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.stopPropagation();
+
+                // close all dropdowns first
+                document.querySelectorAll('.user-more-action-wrapper')
+                    .forEach(menu => menu.classList.add('hidden'));
+
+                // open current dropdown
+                const wrapper = btn.nextElementSibling;
+                wrapper.classList.toggle('hidden');
+            });
+        });
+
+        // close when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.user-more-action-wrapper')
+                .forEach(menu => menu.classList.add('hidden'));
+        });
+    }
+    
    
 
 

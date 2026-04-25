@@ -7,6 +7,10 @@ import './account-settings';
 import './login';
 import './modules/report';
 import './modules/request';
+import './modules/print';
+import './modules/dashboard';
+import './employee-form';
+import './modules/archive';
 import Swal from 'sweetalert2';
 
 window.Swal = Swal;

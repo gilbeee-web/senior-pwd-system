@@ -42,4 +42,13 @@ abstract class BaseBeneficiaryRequest extends FormRequest
 
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'birthdate.required' => 'Birthdate is required',
+            'birthdate.date'     => 'Birthdate must be a valid date',
+            'birthdate.before'   => 'Birthdate must be in the past',
+        ];
+    }
 }

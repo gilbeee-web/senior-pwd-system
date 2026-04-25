@@ -447,6 +447,22 @@ class SeniorController extends Controller
         return redirect()->back()->with('success', 'All archived Senior Citizens records deleted permanently.');
     }
 
+    public function printSenior(Request $request){
+
+        // dd($request->all());
+        $senior_ids = $request->selected_seniors;
+
+        if (!$senior_ids || count($senior_ids) === 0) {
+            return back()->with('error', 'No records selected.');
+        }
+
+        $seniors = SeniorDetail::with('beneficiary')->whereIn('id', $senior_ids)->get();
+
+        // dd($seniors);
+
+        return view('beneficiaries/senior/print_senior', ['senior' => $seniors]);
+    }
+
 
 
 }

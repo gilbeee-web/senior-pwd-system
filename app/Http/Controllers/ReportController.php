@@ -25,12 +25,12 @@ class ReportController extends Controller
         $senior = collect();
 
         if($current_user->role === 'super_admin'){
-            $pwd = $service->getPwdQuery($request, $current_user)->get();
-            $senior = $service->getSeniorQuery($request, $current_user)->get();
-        }elseif($current_user->role === 'barangay_pwd_admin'){
-            $pwd = $service->getPwdQuery($request, $current_user)->get();
-        }elseif($current_user->role === 'barangay_senior_admin'){
-            $senior = $service->getSeniorQuery($request, $current_user)->get();
+            $pwd = $service->getPwdQuery($request, $current_user)->paginate(5);
+            $senior = $service->getSeniorQuery($request, $current_user)->paginate(5);
+        }elseif($current_user->role === 'barangay_pwd_admin' || $current_user->role === 'pwd_admin'){
+            $pwd = $service->getPwdQuery($request, $current_user)->paginate(5);
+        }elseif($current_user->role === 'barangay_senior_admin' || $current_user->role === 'senior_admin'){
+            $senior = $service->getSeniorQuery($request, $current_user)->paginate(5);
         }
 
         // dd($pwd);

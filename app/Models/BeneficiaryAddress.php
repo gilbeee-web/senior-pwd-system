@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BeneficiaryAddress extends Model
 {
     //
+    use HasFactory;
+    
     protected $fillable = [
         'house_num',
         'street_id',

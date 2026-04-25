@@ -16,20 +16,60 @@ class RequestController extends Controller
 {
     //
 
+    protected $currentUserRole;
+
+    public function __construct()
+    {
+        $current_user = Auth::user();
+
+        $this->currentUserRole = $current_user->role;
+    }
+
     public function index(Request $request){
 
-        $tab_status = "pending";
+        $query = ActionRequest::with(['requester', 'model.beneficiary']);
+        $tab_status = $request->status ?? 'pending';
 
+        
+        $query->where('status', $tab_status);
+        
 
-        if($request->status){
-            $tab_status = $request->status;
+        //filter by type of request ('Archive' , 'Update')
+        if($request->type){
+            $query->where('type', $request->type);
         }
 
-        $requests = ActionRequest::with(['requester', 'model.beneficiary'])
-            ->where('status', $tab_status)
-            ->latest()
-            ->paginate(10);
+        //filter if the role is super_admin 
+        if ($this->currentUserRole !== 'super_admin') {
 
+            if ($this->currentUserRole === 'pwd_admin') {
+                $query->where('model_type', 'App\Models\PwdDetail');
+            } elseif ($this->currentUserRole === 'senior_admin') {
+                $query->where('model_type', 'App\Models\SeniorDetail');
+            }
+
+        } else {
+            // Super admin can filter manually by model_type if provided
+            if ($request->model_type) {
+                $query->where('model_type', $request->model_type);
+            }
+        }
+
+
+        // Filter by date range
+        if ($request->start_date && $request->end_date) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($request->start_date)->startOfDay(),
+                Carbon::parse($request->end_date)->endOfDay(),
+            ]);
+        } elseif ($request->start_date) {
+            $query->where('created_at', '>=', Carbon::parse($request->start_date)->startOfDay());
+        } elseif ($request->end_date) {
+            $query->where('created_at', '<=', Carbon::parse($request->end_date)->endOfDay());
+        }
+
+        $requests = $query->latest()->paginate(10);
+        
         // dd($requests);
     
         return view('requests/index', ['requests' => $requests, 'tab_status' => $tab_status]);

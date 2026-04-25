@@ -5,7 +5,7 @@
       
       <div class="flex justify-between items-center p-4 border-b">
          <h2 class="font-semibold text-lg">Create User</h2>
-         <button class="text-2xl cursor-pointer" id="close-btn">&times;</button>
+         <button class="text-2xl cursor-pointer" id="user-close-btn">&times;</button>
       </div>
 
       <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data" class="p-4">

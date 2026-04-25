@@ -33,7 +33,8 @@ class UpdatePwdRequest extends BaseBeneficiaryRequest
             'guardian_name' => 'sometimes|string',
             'blood_type' => 'sometimes|string',
             'educational_attainment' => 'sometimes|string',
-            'date_id_issued' => 'sometimes|string'
+            'date_id_issued' => 'sometimes|string',
+            'qr_link' => 'sometimes|string'
         ]);
     }
 }

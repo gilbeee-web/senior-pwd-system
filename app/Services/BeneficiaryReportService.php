@@ -13,11 +13,18 @@ class BeneficiaryReportService{
 
         $query = PwdDetail::with('beneficiary.address');
 
-        if ($user->role !== 'super_admin') {
+        if (in_array($user->role, ['barangay_pwd_admin'])) {
             $query->whereHas('beneficiary.address.street', function ($q) use ($user) {
                 $q->where('barangay_id', $user->barangay_id);
             });
         }
+
+        //show only what they created if not categorized by barangay
+        // if (in_array($user->role, ['barangay_pwd_admin'])) {
+        //     $query->whereHas('beneficiary.address.street', function ($q) use ($user) {
+        //         $q->where('created_by', $user->id);
+        //     });
+        // }
 
         if ($request->search) {
             $query->where(function ($q) use ($request) {
@@ -83,10 +90,9 @@ class BeneficiaryReportService{
             });
         }
 
-        //make it alphabetical order based on last name
         $query->join('beneficiaries', 'beneficiaries.id', '=', 'pwd_details.beneficiary_id')
-          ->orderBy('beneficiaries.last_name', 'asc')
-          ->select('pwd_details.*');
+            ->orderBy('beneficiaries.created_at', 'desc')
+            ->select('pwd_details.*');
 
 
 
@@ -98,7 +104,7 @@ class BeneficiaryReportService{
     {
         $query = SeniorDetail::with('beneficiary.address');
 
-        if ($user->role !== 'super_admin') {
+        if (in_array($user->role, ['barangay_senior_admin'])) {
             $query->whereHas('beneficiary.address.street', function ($q) use ($user) {
                 $q->where('barangay_id', $user->barangay_id);
             });
@@ -173,7 +179,7 @@ class BeneficiaryReportService{
 
         //make it alphabetical order based on last name
         $query->join('beneficiaries', 'beneficiaries.id', '=', 'senior_details.beneficiary_id')
-          ->orderBy('beneficiaries.last_name', 'asc')
+          ->orderBy('beneficiaries.created_at', 'desc')
           ->select('senior_details.*');
 
         return $query;

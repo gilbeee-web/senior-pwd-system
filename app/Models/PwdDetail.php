@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PwdDetail extends Model
 {
     //
+    use HasFactory;
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
@@ -22,6 +24,7 @@ class PwdDetail extends Model
         'educational_attainment',
         'date_id_issued',
         'date_id_expiration',
+        'qr_link',
         'is_middleclass',
     ];
 

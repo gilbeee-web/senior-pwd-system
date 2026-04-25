@@ -15,37 +15,37 @@
         <span class="text-white text-xl font-bold">Personal information</span>
     </div>
 
-    <div class="flex gap-x-10 items-center px-5">
+    <div class="grid grid-cols-5 gap-6 px-5">
 
         <div class="flex flex-col gap-y-1">
 
-            <label for="">Last Name:</label>
+            <label for="">Last Name: <span class="text-red-500">*</span></label>
             <input 
                 type="text" 
                 placeholder="" 
                 name="last_name" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('last_name', $pwd->beneficiary->last_name ?? '') }}"
                 required
             >
             @error('last_name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>    
 
         <div class="flex flex-col gap-y-1">
 
-            <label for="">First Name:</label>
+            <label for="">First Name: <span class="text-red-500">*</span></label>
             <input 
                 type="text" placeholder="" 
                 name="first_name" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('first_name', $pwd->beneficiary->first_name ?? '') }}"
                 required
             >
             @error('first_name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
@@ -57,65 +57,65 @@
                 type="text" 
                 placeholder="" 
                 name="middle_name" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('middle_name', $pwd->beneficiary->middle_name ?? '') }}"
             >
             @error('middle_name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
 
         <div class="flex flex-col gap-y-1">
 
-            <label for="">Suffix (optional):</label>
+            <label for="">Suffix:</label>
             <input 
                 type="text" placeholder="" 
-                name="extension" class="border rounded-md p-2 bg-[#F5F5F5]"
+                name="extension" class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('extension', $pwd->beneficiary->extension ?? '') }}"
             >
             @error('extension')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
 
         <div class="flex flex-col gap-y-1">
 
-            <label for="birthdate">Date of birth:</label>
+            <label for="birthdate">Date of birth: <span class="text-red-500">*</span></label>
             <input 
                 type="date" placeholder="" 
-                name="birthdate" class="border rounded-md p-2 bg-[#F5F5F5]"
-                {{-- value="{{ old('birthdate', $pwd->beneficiary->birthdate ?? '') }}" --}}
+                name="birthdate" 
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('birthdate', \Carbon\Carbon::parse($pwd->beneficiary->birthdate ?? '')->format('Y-m-d')) }}"
                 required
             >
             @error('birthdate')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
     </div>
 
-    <div class="flex gap-x-10 items-center px-5">
+    <div class="grid grid-cols-5 gap-6 px-5">
 
         <div class="flex flex-col gap-y-1">
-            <label for="contact_number">Contact Number:</label>
+            <label for="contact_number">Contact Number: <span class="text-red-500">*</span></label>
             <input 
                 type="text" 
                 name="contact_number" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('contact_number', $pwd->beneficiary->contact_number ?? '') }}"
                 required
             >
             @error('contact_number')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
 
-            <label for="gender">Gender:</label>
+            <label for="gender">Gender: <span class="text-red-500">*</span></label>
             <select name="gender" id="" class="border rounded-md py-2 px-5 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 <option 
@@ -133,13 +133,13 @@
                 </option>
             </select>
             @error('gender')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         
         <div class="flex flex-col gap-y-1">
-            <label for="civil_status">Civil Status:</label>
+            <label for="civil_status">Civil Status: <span class="text-red-500">*</span></label>
 
             <select name="civil_status" id="" class="border rounded-md p-2 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
@@ -175,12 +175,12 @@
                 </option>
             </select>
             @error('civil_status')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
-            <label for="employment_status">Status of Employment:</label>
+            <label for="employment_status">Status of Employment: <span class="text-red-500">*</span></label>
             <select name="employment_status" id="" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 <option 
@@ -206,12 +206,12 @@
 
             </select>
             @error('employment_status')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
-            <label for="educational_attainment">Educational Attainment:</label>
+            <label for="educational_attainment">Educational Attainment: <span class="text-red-500">*</span></label>
 
             <select name="educational_attainment" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
@@ -225,6 +225,7 @@
                     'Vocational',
                     'Post Graduate'
                 ] as $edu)
+                
                     <option 
                         value="{{ $edu }}"
                         {{ old('educational_attainment', $pwd->educational_attainment ?? '') == $edu ? 'selected' : '' }}
@@ -235,7 +236,7 @@
             </select>
 
             @error('educational_attainment')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
     </div>
@@ -247,24 +248,24 @@
         <span class="text-white text-xl font-bold">Address Information</span>
     </div>
 
-    <div class="flex gap-x-10 items-center px-5">
+    <div class="grid grid-cols-5 gap-6 px-5">
 
         <div class="flex flex-col gap-y-1">
-            <label for="house_num">House Number:</label>
+            <label for="house_num">House Number: <span class="text-red-500">*</span></label>
             <input 
                 type="text" 
                 name="house_num" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase" 
                 value="{{ old('house_num', $pwd->beneficiary->address->house_num ?? '') }}"
                 required
             >
             @error('house_num')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
-            <label for="barangay_id">Barangay:</label>
+            <label for="barangay_id">Barangay: <span class="text-red-500">*</span></label>
             <select 
                 name="barangay_id"
                 id="barangay"
@@ -286,13 +287,13 @@
                 @endforeach
             </select>
             @error('barangay_id')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
 
-            <label for="street_id">Street:</label>
+            <label for="street_id">Street: <span class="text-red-500">*</span></label>
             <select name="street_id" id="street" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 @if($isEditingPwd)
@@ -311,7 +312,7 @@
             </select>
 
             @error('street_id')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
@@ -324,27 +325,27 @@
         <span class="text-white text-xl font-bold">PWD Information</span>
     </div>
 
-    <div class="flex gap-x-10 items-center px-5">
+    <div class="grid grid-cols-4 gap-6 px-5">
 
         <div class="flex flex-col gap-y-1">
-            <label for="pwd_id_number">PWD ID Number(RR-PPM-BBB-NNNNNN):</label>
+            <label for="pwd_id_number">PWD ID Number: <span class="text-red-500">*</span></label>
 
             <input 
                 type="text" 
                 name="pwd_id_number" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('pwd_id_number', $pwd->pwd_id_number ?? '') }}"
                 required
             >
 
             @error('pwd_id_number')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
 
-            <label for="disability_type">Disability Type:</label>
+            <label for="disability_type">Disability Type: <span class="text-red-500">*</span></label>
             <select name="disability_type" id="disability_type" class="border rounded-md py-2 px-3 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 @foreach([
@@ -352,7 +353,7 @@
                     'Intellectual',
                     'Learning',
                     'Mental',
-                    'Physical',
+                    'Physical(Orthophedic)',
                     'Psychosocial',
                     'Speech and Language Impairment',
                     'Visual',
@@ -371,27 +372,27 @@
             
 
             @error('disability_type')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
 
         <div class="flex flex-col gap-y-1">
-            <label for="guardian_name">Guardian Name:</label>
+            <label for="guardian_name">Guardian Name: <span class="text-red-500">*</span></label>
             <input 
                 type="text" 
                 name="guardian_name" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('guardian_name', $pwd->guardian_name ?? '') }}"
                 required
             >
             @error('guardian_name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
-            <label for="blood_type">Blood Type:</label>
+            <label for="blood_type">Blood Type: <span class="text-red-500">*</span></label>
             <select name="blood_type" id="blood_type" class="border rounded-md py-2 px-3 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 @foreach([
@@ -416,15 +417,14 @@
             </select>
 
             @error('blood_type')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
-    </div>
 
-    <div>
+        
         @if($isEditingPwd)
-            <div class="flex flex-col gap-y-1 inline-block px-5">
+            <div class="flex flex-col gap-y-1">
                 <label for="date_id_issued">Date ID Issued:</label>
                 <input 
                     type="date" 
@@ -434,11 +434,27 @@
                     value="{{ old('date_id_issued', \Carbon\Carbon::parse($pwd->date_id_issued ?? '')->format('Y-m-d')) }}"
                 >
                 @error('date_id_issued')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
                 @enderror
             </div>
         @endif
+        
     </div>
+
+    <div class="w-[90%] flex flex-col gap-y-1 px-5">
+        <label for="qr_link">QR Link: <span class="text-red-500">*</span></label>
+        <input 
+            type="text" 
+            name="qr_link" 
+            class="border rounded-md p-2 bg-[#F5F5F5]"
+            value="{{ old('qr_link', $pwd->qr_link ?? '') }}"
+            required
+        >
+        @error('qr_link')
+            <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
+        @enderror
+    </div>
+
 
 </div>
 

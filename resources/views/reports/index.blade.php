@@ -4,25 +4,6 @@
 
 @section('content')
 
-    
-    {{-- <div class="flex gap-x-10">
-        <button 
-            id="pwd-report-content-btn"
-            class="text-2xl font-bold cursor-pointer 
-            {{ $tab === 'pwd' ? 'border-b-[3px] border-red-500' : 'text-gray-400' }}"
-        >
-            PWD
-        </button>
-
-        <button 
-            id="senior-report-content-btn"
-            class="text-2xl font-bold cursor-pointer 
-            {{ $tab === 'senior' ? 'border-b-[3px] border-red-500' : 'text-gray-400' }}"
-        >
-            Senior Citizen
-        </button>
-    </div> --}}
-
     @if($current_user->role === 'super_admin')
         <div class="flex gap-x-10">
             <button 
@@ -41,11 +22,11 @@
                 Senior Citizen
             </button>
         </div>
-    @elseif($current_user->role === 'barangay_pwd_admin')
+    @elseif($current_user->role === 'barangay_pwd_admin' || $current_user->role === 'pwd_admin')
         <div>
-            <button class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">PWDs</button>
+            <button class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">Person With Disabilities</button>
         </div>
-    @elseif($current_user->role === 'barangay_senior_admin')
+    @elseif($current_user->role === 'barangay_senior_admin' || $current_user->role === 'senior_admin')
         <div>
             <button class="text-2xl font-bold border-b-[3px] border-red-500 cursor-pointer">Senior Citizen</button>
         </div>
@@ -56,11 +37,11 @@
         
         <h1 class="text-lg font-bold">Filter by:</h1>
 
-        <form action="{{route('report.index')}}" method="GET">
+        <form action="{{route('report.index')}}" method="GET" id="report-filter-form">
             <div class="p-5 bg-white shadow-md rounded flex flex-col gap-y-7">
-                <div class="flex gap-x-10 items-center">
+                <div class="flex gap-x-7 items-center">
 
-                    <input type="hidden" name="tab" id="active-tab" value="{{ request('tab', 'pwd') }}">
+                    <input type="hidden" name="tab" id="activeReport-tab" value="{{ request('tab', 'pwd') }}">
 
                     <div>
                         <select 
@@ -73,7 +54,10 @@
 
                             @foreach($barangays as $barangay)
 
-                                <option value="{{ $barangay->id }}">
+                                <option 
+                                    value="{{ $barangay->id }}"
+                                    {{ request('barangay') == $barangay->id ? 'selected' : '' }}
+                                >
                                     {{ $barangay->name }}
                                 </option>
 
@@ -81,7 +65,11 @@
                         </select>
                     </div>
                     
-                    @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_pwd_admin')
+                    @if(
+                        $current_user->role === 'super_admin' || 
+                        $current_user->role === 'barangay_pwd_admin' || 
+                        $current_user->role === 'pwd_admin'
+                    )
                         <div class="pwd_filter {{$tab === 'pwd' ? '' : 'hidden' }}">
                             <select 
                                 name="disability_type" 
@@ -104,7 +92,10 @@
                                     'Rare Disease'
                                 ] as $disability)
 
-                                    <option value="{{ $disability }}">
+                                    <option 
+                                        value="{{ $disability }}" 
+                                        {{ request('disability_type') == $disability ? 'selected' : '' }}
+                                    >
                                         {{ $disability }}
                                     </option>
 
@@ -113,7 +104,11 @@
                         </div>
                     @endif
 
-                    @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_senior_admin')
+                    @if(
+                        $current_user->role === 'super_admin' || 
+                        $current_user->role === 'barangay_senior_admin' || 
+                        $current_user->role === 'senior_admin'
+                    )
                         <div class="senior_filter {{$tab === 'senior' ? '' : 'hidden' }} flex gap-x-10">
         
                             <select 
@@ -130,7 +125,10 @@
                                     'Centenarian'
                                 ] as $senior)
 
-                                    <option value="{{ $senior }}">
+                                    <option 
+                                        value="{{ $senior }}"
+                                        {{ request('senior_type') == $senior ? 'selected' : '' }}
+                                    >
                                         {{ $senior }}
                                     </option>
 
@@ -147,11 +145,11 @@
                             name="gender" 
                             id="gender"
                             class="border rounded-md py-2 px-1 bg-[#F5F5F5]"
-                        >
+                        >   
                             <option value="" disabled selected hidden>Select Gender</option>
                             <option value="">All</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>Female</option>
                         </select>
                     </div>
 
@@ -170,9 +168,9 @@
                                 'Separated',
                                 'Widowed',
                                 'Cohabitation (Live in)',
-                            ] as $disability)
-                                <option value="{{ $disability }}">
-                                    {{ $disability }}
+                            ] as $civil_status)
+                                <option value="{{ $civil_status }}" {{ request('civil_status') == $civil_status ? 'selected' : '' }}>
+                                    {{ $civil_status }}
                                 </option>
                             @endforeach
                         </select>
@@ -192,23 +190,36 @@
                                 'Unemployed',
                                 'Self-employed',
                             ] as $employment_status)
-                                <option value="{{ $employment_status }}">
+                                <option value="{{ $employment_status }}" {{ request('employment_status') == $employment_status ? 'selected' : '' }}>
                                     {{ $employment_status }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
+
+                    @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_senior_admin' || $current_user->role === 'senior_admin')
+                        <div class="senior_filter flex gap-x-3 items-center mr-5 {{$tab === 'senior' ? '' : 'hidden' }}">
+                            <input type="checkbox" class="h-7 w-7" name="isBday" value="1" {{ request('isBday') == 1 ? 'checked' : '' }}>
+                            <label>Birthday Today</label>
+                        </div>
+                    @endif
                 </div>
                 
                 <div class="flex justify-between items-center mr-5">
-
-                    <div class="pwd_filter flex gap-x-10 items-center">
-                        @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_pwd_admin')
-                            <div>
+                    <span class="{{$tab === 'senior' ? '' : 'hidden' }}"></span>
+                    @if(
+                        $current_user->role === 'super_admin' || 
+                        $current_user->role === 'barangay_pwd_admin' || 
+                        $current_user->role === 'pwd_admin'
+                    )  
+                        <div class="flex gap-x-10 items-center {{$tab === 'pwd' ? '' : 'hidden' }}">
+                            
+                                
+                            <div class="pwd_filter">
                                 <select 
                                     name="educational_attainment" 
                                     id="educational_attainment"
-                                    class="border rounded-md py-2 px-1 bg-[#F5F5F5] {{$tab === 'pwd' ? '' : 'hidden' }}"
+                                    class="border rounded-md py-2 px-1 bg-[#F5F5F5]"
                                 >
                                     <option value="" disabled selected hidden>Select Educational Attainment</option>
                                     <option value="">All</option>
@@ -222,14 +233,17 @@
                                         'Vocational',
                                         'Post Graduate'
                                     ] as $educational_attainment)
-                                        <option value="{{ $educational_attainment }}">
+                                        <option 
+                                            value="{{ $educational_attainment }}" 
+                                            {{ request('educational_attainment') == $educational_attainment ? 'selected' : '' }}
+                                        >
                                             {{ $educational_attainment }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <div class="flex gap-x-3 items-center {{$tab === 'pwd' ? '' : 'hidden' }}">
+                            <div class="pwd_filter flex gap-x-3 items-center">
                                 <label class="font-semibold">Age Range:</label>
 
                                 
@@ -252,19 +266,18 @@
                                     placeholder="Max"
                                     min="0"
                                 >
-                            </div>
-                        @endif
-                    </div>
-
-                    @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_senior_admin')
-                        <div class="senior_filter flex gap-x-3 items-center mr-5 {{$tab === 'senior' ? '' : 'hidden' }}">
-                            <input type="checkbox" class="h-7 w-7" name="isBday" value="1">
-                            <label>Birthday Today</label>
+                            </div>                            
                         </div>
                     @endif
 
+                    
                     <div>
-                        <button class="px-5 py-2 bg-green-500 rounded-lg text-white cursor-pointer">Apply Filter</button>
+                        <button class="px-5 py-2 bg-blue-500 rounded-lg text-white cursor-pointer flex gap-x-2 items-center">
+                            <span>
+                                <img src="{{asset('/images/icons/filter.svg')}}" alt="" class="w-6 h-6 object-contain">
+                            </span>
+                            Apply Filter
+                        </button>
                     </div>
 
                 </div>
@@ -274,225 +287,257 @@
         
     </div>
 
-    @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_pwd_admin')
-
-        <div class="w-full flex justify-end mt-5 {{$tab === 'pwd' ? '' : 'hidden' }}" id="pwd_export_settings">
+    @if(
+        $current_user->role === 'super_admin' || 
+        $current_user->role === 'barangay_pwd_admin' || 
+        $current_user->role === 'pwd_admin'
+    )
+        <div class="w-full mt-5 {{$tab === 'pwd' ? '' : 'hidden' }}">
+            <div class="w-full flex justify-end" id="pwd_export_settings">
             
-            <form action="{{ route('report.pwd.export') }}" method="GET">
-                <input type="hidden" name="barangay" value="{{ request('barangay') }}">
-                <input type="hidden" name="disability_type" value="{{ request('disability_type') }}">
-                <input type="hidden" name="gender" value="{{ request('gender') }}">
-                <input type="hidden" name="civil_status" value="{{ request('civil_status') }}">
-                <input type="hidden" name="educational_attainment" value="{{ request('educational_attainment') }}">
-                <input type="hidden" name="employment_status" value="{{ request('employment_status') }}">
-                <input type="hidden" name="min_age" value="{{ request('min_age') }}">
-                <input type="hidden" name="max_age" value="{{ request('max_age') }}">
+                <form action="{{ route('report.pwd.export') }}" method="GET">
+                    <input type="hidden" name="barangay" value="{{ request('barangay') }}">
+                    <input type="hidden" name="disability_type" value="{{ request('disability_type') }}">
+                    <input type="hidden" name="gender" value="{{ request('gender') }}">
+                    <input type="hidden" name="civil_status" value="{{ request('civil_status') }}">
+                    <input type="hidden" name="educational_attainment" value="{{ request('educational_attainment') }}">
+                    <input type="hidden" name="employment_status" value="{{ request('employment_status') }}">
+                    <input type="hidden" name="min_age" value="{{ request('min_age') }}">
+                    <input type="hidden" name="max_age" value="{{ request('max_age') }}">
 
-                <!-- DROPDOWN BUTTON -->
-                <div class="relative inline-block text-left column-wrapper">
-                    <button 
-                        type="button"
-                        class="column-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
-                        Select Columns ▼
-                    </button>
+                    <!-- DROPDOWN BUTTON -->
+                    <div class="relative inline-block text-left column-wrapper">
+                        <button 
+                            type="button"
+                            class="column-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 flex gap-x-2 items-center"
+                        >
+                            Select Columns 
+                            <span>
+                                <img src="{{asset('/images/icons/arrow-down.svg')}}" alt="Arrow down" class="object-contain w-5 h-5">
+                            </span>
+                        </button>
 
-                    <!-- DROPDOWN CONTENT -->
-                    <div
-                        class="column-dropdown hidden absolute right-0 mt-2 w-56 bg-white border rounded shadow-lg z-50 p-3 space-y-2"
-                    >
+                        <!-- DROPDOWN CONTENT -->
+                        <div
+                            class="column-dropdown hidden absolute right-0 mt-2 w-56 bg-white border rounded shadow-lg z-50 p-3 space-y-2"
+                        >
+                            <!-- SELECT ALL -->
+                            <div class="border-b pb-2">
+                                <label class="flex items-center gap-2 font-semibold">
+                                    <input type="checkbox" class="select-all">
+                                    Select All
+                                </label>
+                            </div>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="pwd_id_number" checked>
-                            ID Number
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="pwd_id_number" checked>
+                                ID Number
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="name" checked>
-                            Name
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="name" checked>
+                                Name
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="birthdate" checked>
-                            Birthdate
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="birthdate" checked>
+                                Birthdate
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="disability_type" checked>
-                            Disability Type
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="disability_type" checked>
+                                Disability Type
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="gender" checked>
-                            Gender
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="gender" checked>
+                                Gender
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="street" checked>
-                            Street
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="street" checked>
+                                Street
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="barangay" checked>
-                            Barangay
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="barangay" checked>
+                                Barangay
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="civil_status">
-                            Civil Status
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="civil_status">
+                                Civil Status
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="employment_status">
-                            Employment Status
-                        </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="employment_status">
+                                Employment Status
+                            </label>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="educational_attainment">
-                            Educational Attainment
-                        </label>
-
-                        <!-- SELECT ALL -->
-                        <div class="border-t pt-2">
-                            <label class="flex items-center gap-2 font-semibold">
-                                <input type="checkbox" class="select-all">
-                                Select All
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="educational_attainment">
+                                Educational Attainment
                             </label>
                         </div>
                     </div>
+
+
+                    <button type="submit" class="hover:underline hover:text-green-500 cursor-pointer">Export Excel</button>
+                </form>
+            </div>
+
+            <div class="mt-2" id="pwd-report-table-wrapper">
+                <table class="w-full text-sm text-left border-collapse bg-white shadow-md">
+                    <thead class="text-gray-600 uppercase text-xs border-b">
+                        <tr class="bg-gray-50">
+                            <th class="p-3">ID NO. / DISABILITY TYPE</th>
+                            <th class="p-3">FULL NAME</th>
+                            <th class="p-3">BIRTHDATE</th>
+                            <th class="p-3">ADDRESS</th>
+                            <th class="p-3">CIVIL & EMPLOYMENT STATUS</th>
+                            <th class="p-3">EDUCATIONAL ATTAINMENT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @include('reports.partials.pwd_rows_report')
+                    </tbody>
+                </table>
+
+                <div class="mt-1">
+                    @include('pagination.pwd_pagination')
                 </div>
+            </div>
 
-
-                <button type="submit" class="hover:underline hover:text-green-500 cursor-pointer">Export Excel (P)</button>
-            </form>
         </div>
-
-        <div class="mt-2 {{ $tab === 'pwd' ? '' : 'hidden' }}" id="pwd-report-table-wrapper">
-
-            <table class="w-full text-sm text-center border">
-                <thead class="bg-[#98D172]">
-                    <tr>
-                        <th class="px-4 py-2 border">ID number</th>
-                        <th class="px-4 py-2 border">Name</th>
-                        <th class="px-4 py-2 border">Gender</th>
-                        <th class="px-4 py-2 border">Disability Type</th>
-                        <th class="px-4 py-2 border">Street</th>
-                        <th class="px-4 py-2 border">Barangay</th>
-                        <th class="px-4 py-2 border">Civil Status</th>
-                        <th class="px-4 py-2 border">Employment Status</th>
-                        <th class="px-4 py-2 border">Educational Attainment</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-[#F0F0F0]">
-                    @include('reports.partials.pwd_rows_report')
-                </tbody>
-            </table>
-        </div>
+        
     @endif
 
-    @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_senior_admin')
+    @if(
+        $current_user->role === 'super_admin' || 
+        $current_user->role === 'barangay_senior_admin' || 
+        $current_user->role === 'senior_admin'
+    )
 
-        <div class="w-full flex justify-end mt-5 {{$tab === 'senior' ? '' : 'hidden' }}" id="senior_export_settings">
+        <div class="w-full mt-5 {{$tab === 'senior' ? '' : 'hidden' }}">
+            <div class="w-full flex justify-end" id="senior_export_settings">
             
-            <form action="{{ route('report.senior.export') }}" method="GET">
-                <input type="hidden" name="barangay" value="{{ request('barangay') }}">
-                <input type="hidden" name="senior_type" value="{{ request('senior_type') }}">
-                <input type="hidden" name="gender" value="{{ request('gender') }}">
-                <input type="hidden" name="civil_status" value="{{ request('civil_status') }}">
-                <input type="hidden" name="employment_status" value="{{ request('employment_status') }}">
+                <form action="{{ route('report.senior.export') }}" method="GET">
+                    <input type="hidden" name="barangay" value="{{ request('barangay') }}">
+                    <input type="hidden" name="senior_type" value="{{ request('senior_type') }}">
+                    <input type="hidden" name="gender" value="{{ request('gender') }}">
+                    <input type="hidden" name="civil_status" value="{{ request('civil_status') }}">
+                    <input type="hidden" name="employment_status" value="{{ request('employment_status') }}">
 
 
-                <!-- DROPDOWN BUTTON -->
-                <div class="relative inline-block text-left column-wrapper">
-                    <button 
-                        type="button"
-                        class="column-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
-                        Select Columns ▼
-                    </button>
+                    <!-- DROPDOWN BUTTON -->
+                    <div class="relative inline-block text-left column-wrapper">
+                        <button 
+                            type="button"
+                            class="column-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 flex gap-x-2 items-center"
+                        >
+                            Select Columns 
+                            <span>
+                                <img src="{{asset('/images/icons/arrow-down.svg')}}" alt="Arrow down" class="object-contain w-5 h-5">
+                            </span>
+                        </button>
 
-                    <!-- DROPDOWN CONTENT -->
-                    <div
-                        class="column-dropdown hidden absolute right-0 mt-2 w-56 bg-white border rounded shadow-lg z-50 p-3 space-y-2"
-                    >
+                        <!-- DROPDOWN CONTENT -->
+                        <div
+                            class="column-dropdown hidden absolute right-0 mt-2 w-56 bg-white border rounded shadow-lg z-50 p-3 space-y-2"
+                        >
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="osca_id_number" checked>
-                            ID Number
-                        </label>
+                            <!-- SELECT ALL -->
+                            <div class="border-b pb-2">
+                                <label class="flex items-center gap-2 font-semibold">
+                                    <input type="checkbox" class="select-all">
+                                    Select All
+                                </label>
+                            </div>
 
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="name" checked>
-                            Name
-                        </label>
-
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="gender" checked>
-                            Gender
-                        </label>
-
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="birthdate" checked>
-                            Birthdate
-                        </label>
-
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="age" checked>
-                            Age
-                        </label>
-
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="street" checked>
-                            Street
-                        </label>
-
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="barangay" checked>
-                            Barangay
-                        </label>
-
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="civil_status">
-                            Civil Status
-                        </label>
-
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="columns[]" value="employment_status">
-                            Employment Status
-                        </label>
-
-                        <!-- SELECT ALL -->
-                        <div class="border-t pt-2">
-                            <label class="flex items-center gap-2 font-semibold">
-                                <input type="checkbox" class="select-all">
-                                Select All
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="osca_id_number" checked>
+                                ID Number
                             </label>
+
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="name" checked>
+                                Name
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="gender" checked>
+                                Gender
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="birthdate" checked>
+                                Birthdate
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="age" checked>
+                                Age
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="street" checked>
+                                Street
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="barangay" checked>
+                                Barangay
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="civil_status">
+                                Civil Status
+                            </label>
+
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="columns[]" value="employment_status">
+                                Employment Status
+                            </label>
+
+                            
                         </div>
                     </div>
+
+                    <button type="submit" class="hover:underline hover:text-green-500 cursor-pointer">
+                        Export Excel
+                    </button>
+                </form>
+            </div>
+
+            <div class="mt-2" id="senior-report-table-wrapper">
+                <table class="w-full text-sm text-left border-collapse bg-white shadow-md">
+                    <thead class="text-gray-600 uppercase text-xs border-b">
+                        <tr class="bg-gray-50">
+                            <th class="p-3">ID NO.</th>
+                            <th class="p-3">FULL NAME</th>
+                            <th class="p-3">BIRTHDATE</th>
+                            <th class="p-3">AGE</th>
+                            <th class="p-3">GENDER</th>
+                            <th class="p-3">ADDRESS</th>
+                            <th class="p-3">CIVIL & EMPLOYMENT STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @include('reports.partials.senior_rows_report')
+                    </tbody>
+                </table>
+
+                <div class="mt-1">
+                    @include('pagination.senior_pagination')
                 </div>
-
-                <button type="submit" class="hover:underline hover:text-green-500 cursor-pointer">Export Excel (S)</button>
-            </form>
+                
+                
+            </div>
         </div>
+        
+        
 
-        <div class="mt-2 {{ $tab === 'senior' ? '' : 'hidden' }}" id="senior-report-table-wrapper" >
-            <table class="w-full text-sm text-center border">
-                <thead class="bg-[#98D172]">
-                    <tr>
-                        <th class="px-4 py-2 border">ID number</th>
-                        <th class="px-4 py-2 border">Name</th>
-                        <th class="px-4 py-2 border">Age</th>
-                        <th class="px-4 py-2 border">Birthdate</th>
-                        <th class="px-4 py-2 border">Gender</th>
-                        <th class="px-4 py-2 border">Street</th>
-                        <th class="px-4 py-2 border">Barangay</th>
-                        <th class="px-4 py-2 border">Employment Status</th>
-                        <th class="px-4 py-2 border">Civil Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @include('reports.partials.senior_rows_report')
-                </tbody>
-            </table>
-        </div>
+        
     @endif
 
 

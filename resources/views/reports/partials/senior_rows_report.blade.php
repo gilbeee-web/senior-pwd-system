@@ -1,22 +1,25 @@
 @forelse($senior_beneficiaries as $senior)
-    <tr>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$senior->osca_id_number}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$senior->beneficiary->last_name}} {{$senior->beneficiary->first_name}} </td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">
-            {{ \Carbon\Carbon::parse($senior->beneficiary->birthdate)->age }}
+    <tr class="border-b hover:bg-gray-200">
+        <td class="p-3">{{$senior->osca_id_number}}</td>
+        <td class="p-3 uppercase">{{$senior->beneficiary->last_name}} {{$senior->beneficiary->first_name}} </td>
+        <td class="p-3">
+            <h1>{{ \Carbon\Carbon::parse($senior->beneficiary->birthdate)->format('m-d-Y') }}</h1>
         </td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">
-            {{ \Carbon\Carbon::parse($senior->beneficiary->birthdate)->format('F d, Y') }}
+
+        <td class="p-3">
+            <h1>{{ \Carbon\Carbon::parse($senior->beneficiary->birthdate)->age }}</h1>
         </td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$senior->beneficiary->gender}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">
-            {{$senior->beneficiary->address->street->name}}
+
+        <td class="p-3 uppercase">{{$senior->beneficiary->gender}}</td>
+
+        <td class="p-3">
+            <h1 class="uppercase">{{$senior->beneficiary->address->street->barangay->name}}</h1>
+            <p>{{$senior->beneficiary->address->street->name}}</p>
         </td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">
-            {{$senior->beneficiary->address->street->barangay->name}}
+        <td class="p-3 uppercase">
+            <h1>{{$senior->beneficiary->civil_status}}</h1>
+            <p>{{$senior->beneficiary->employment_status ?? 'N/A'}}</p>
         </td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$senior->beneficiary->employment_status}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$senior->beneficiary->civil_status}}</td>
     </tr>
 @empty
     <tr>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AuthorizeEmployeeController;
 use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PwdController;
@@ -49,8 +50,8 @@ Route::prefix('dashboard')
     ->middleware(['auth'])->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::get('/super-admin', 'superAdminIndex')->name('super_admin.dashboard');
-            Route::get('/pwd-admin', 'pwdAdminIndex')->name('barangay_pwd_admin.dashboard');
-            Route::get('/senior-admin', 'seniorAdminIndex')->name('barangay_senior_admin.dashboard');
+            Route::get('/pwd-admin', 'pwdAdminIndex')->name('pwd_admin.dashboard');
+            Route::get('/senior-admin', 'seniorAdminIndex')->name('senior_admin.dashboard');
         });
     });
 
@@ -81,8 +82,10 @@ Route::prefix('senior')
             Route::get('/{senior}', 'show')->name('senior.show');
             Route::post('/import', 'import')->name('senior.import');
             Route::post('/restore/{id}', 'restore')->name('senior.restore');
+            Route::delete('/{senior}/archive', 'archive')->name('senior.archive');
             Route::delete('/{senior}', 'destroy')->name('senior.destroy');
             Route::delete('/delete-all', 'destroyAll')->name('senior.destroyAll');
+            Route::post('/print', 'printSenior')->name('senior.print');
 
         });
     });
@@ -101,6 +104,8 @@ Route::prefix('pwd')
             Route::post('/restore/{id}', 'restore')->name('pwd.restore');
             Route::post('/validate/update', 'bulkUpdateValidate')->name('pwd.validate');
             Route::delete('/delete-all', 'destroyAll')->name('pwd.destroyAll');
+            Route::post('/print', 'printPwd')->name('pwd.print');
+
         });
     });
 
@@ -115,9 +120,21 @@ Route::prefix('reports')
 
 
 Route::prefix('/requests')
-    ->middleware(['auth', 'role:super_admin'])->group(function(){
+    ->middleware(['auth', 'role:super_admin,pwd_admin,senior_admin'])->group(function(){
         Route::controller(RequestController::class)->group(function(){
            Route::get('/', 'index')->name('request.index');
            Route::post('/approve/{id}', 'approve')->name('request.approve');
+        });
+    });
+
+Route::prefix('settings')
+    ->middleware(['auth', 'role:super_admin,pwd_admin,senior_admin'])->group(function(){
+        Route::controller(AuthorizeEmployeeController::class)->group(function(){
+            Route::get('/', 'index')->name('settings.index');
+            Route::post('/', 'store')->name('settings.store');
+            Route::get('/{id}', 'edit')->name('settings.edit');
+            Route::put('/{id}', 'update')->name('settings.update');
+            Route::delete('/{id}', 'destroy')->name('settings.destroy');
+            Route::put('/{id}/updateStatus', 'updateStatus')->name('settings.updateStatus');
         });
     });

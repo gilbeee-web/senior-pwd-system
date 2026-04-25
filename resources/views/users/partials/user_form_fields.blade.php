@@ -105,6 +105,16 @@
                             Municipal Admin
                         </option>
 
+                        <option value="pwd_admin"
+                            {{ old('role', $user->role ?? '') == 'pwd_admin' ? 'selected' : '' }}>
+                            PWD Admin
+                        </option>
+
+                        <option value="senior_admin"
+                            {{ old('role', $user->role ?? '') == 'senior_admin' ? 'selected' : '' }}>
+                            Senior Admin
+                        </option>
+
                         <option value="barangay_pwd_admin"
                             {{ old('role', $user->role ?? '') == 'barangay_pwd_admin' ? 'selected' : '' }}>
                             Barangay Admin (PWD)
@@ -122,11 +132,11 @@
                 </div>  
 
 
-                <div class="flex flex-col gap-y-1">
+                <div class="flex flex-col gap-y-1 hidden" id="barangay-wrapper">
 
                     <label for="">Barangay:</label>
-                    <select name="barangay_id" id="role"
-                        class="border rounded-md p-2 bg-[#F5F5F5] @error('role') border-red-500 @enderror"
+                    <select name="barangay_id"
+                        class="border rounded-md p-2 bg-[#F5F5F5] @error('barangay_id') border-red-500 @enderror"
                     >
                         <option value="" disabled selected hidden>Select</option>
                         @foreach($barangays as $brgy)

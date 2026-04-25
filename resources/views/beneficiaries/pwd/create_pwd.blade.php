@@ -6,13 +6,13 @@
 
     <div class="w-full flex flex-col justify-center shadow-lg rounded-lg bg-white">
 
-        @if ($errors->any())
+        {{-- @if ($errors->any())
             <div class="bg-red-200 p-3 mb-4">
                 @foreach ($errors->all() as $error)
                     <p>{{ $error }}</p>
                 @endforeach
             </div>
-        @endif
+        @endif --}}
 
         <div class="w-full flex justify-between items-center px-5">
             <span class="font-bold text-2xl text-[#172373]"><u>Register PWD</u></span>
@@ -42,10 +42,9 @@
                 </a>
 
                 <button 
-                    class="p-3 bg-[#FF9793] text-white rounded-md cursor-not-allowed shadow-lg" 
+                    class="p-3 bg-blue-500 text-white rounded-md cursor-pointer shadow-lg" 
                     type="submit"
                     id="submitBtn"
-                    disabled
                 >
                     Submit
                 </button>

@@ -5,75 +5,124 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const pwdTable = document.getElementById('pwd-table-wrapper');
     const seniorTable = document.getElementById('senior-table-wrapper');
+
     const pwdFilter = document.getElementById('disabilityType-filter');
     const seniorFilter = document.getElementById('seniorType-filter');
-    const validateField = document.getElementById('validate-field');
-
 
     const activeTabInput = document.getElementById('active-tab');
+    const filterForm = document.getElementById('filter-form');
 
-    if (pwdBtn) {
-        pwdBtn.addEventListener('click', () => {
+    function setActiveButton(tab) {
+        if (!pwdBtn || !seniorBtn) return;
 
-            if(validateField) validateField.classList.remove('hidden');
-
-            if (pwdTable) pwdTable.classList.remove('hidden');
-            if (pwdFilter) pwdFilter.classList.remove('hidden');
-
-            if (seniorTable) seniorTable.classList.add('hidden');
-            if (seniorFilter) seniorFilter.classList.add('hidden');
-
-            document.querySelectorAll('.senior-action-btn').forEach(button => {
-                button.classList.add('hidden');
-            });
-
-            document.querySelectorAll('.pwd-action-btn').forEach(button => {
-                button.classList.remove('hidden');
-            });
-
+        if (tab === 'pwd') {
             pwdBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
             pwdBtn.classList.remove('text-gray-400');
 
-            if (seniorBtn) {
-                seniorBtn.classList.remove('border-b-[3px]', 'border-red-500');
-                seniorBtn.classList.add('text-gray-400');
-            }
+            seniorBtn.classList.remove('border-b-[3px]', 'border-red-500', 'font-bold');
+            seniorBtn.classList.add('text-gray-400');
+        }
 
-            if (activeTabInput) activeTabInput.value = 'pwd';
+        if (tab === 'senior') {
+            seniorBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
+            seniorBtn.classList.remove('text-gray-400');
+
+            pwdBtn.classList.remove('border-b-[3px]', 'border-red-500', 'font-bold');
+            pwdBtn.classList.add('text-gray-400');
+        }
+    }
+
+    function setTab(tab) {
+        if (activeTabInput) {
+            activeTabInput.value = tab;
+        }
+    }
+
+    if (pwdBtn) {
+        pwdBtn.addEventListener('click', (e) => {
+            setTab('pwd');
+            setActiveButton('pwd');
+            filterForm.submit(); 
         });
     }
 
     if (seniorBtn) {
-        seniorBtn.addEventListener('click', () => {
-
-            
-
-            if (seniorTable) seniorTable.classList.remove('hidden');
-            if (seniorFilter) seniorFilter.classList.remove('hidden');
-
-            if(validateField) validateField.classList.add('hidden');
-            if (pwdTable) pwdTable.classList.add('hidden');
-            if (pwdFilter) pwdFilter.classList.add('hidden');
-
-            document.querySelectorAll('.pwd-action-btn').forEach(button => {
-                button.classList.add('hidden');
-            });
-
-            document.querySelectorAll('.senior-action-btn').forEach(button => {
-                button.classList.remove('hidden');
-            });
-
-            seniorBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
-            seniorBtn.classList.remove('text-gray-400');
-
-            if (pwdBtn) {
-                pwdBtn.classList.remove('border-b-[3px]', 'border-red-500');
-                pwdBtn.classList.add('text-gray-400');
-            }
-
-            if (activeTabInput) activeTabInput.value = 'senior';
+        seniorBtn.addEventListener('click', (e) => {
+            setTab('senior');
+            setActiveButton('senior');
+            filterForm.submit(); 
         });
     }
+   
+
+    // if (pwdBtn) {
+    //     pwdBtn.addEventListener('click', () => {
+
+    //         clearSelection('senior');
+
+    //         if (pwdTable) pwdTable.classList.remove('hidden');
+    //         if (pwdFilter) pwdFilter.classList.remove('hidden');
+
+    //         if (seniorTable) seniorTable.classList.add('hidden');
+    //         if (seniorFilter) seniorFilter.classList.add('hidden');
+
+    //         document.querySelectorAll('.senior-action-btn').forEach(button => {
+    //             button.classList.add('hidden');
+    //         });
+
+    //         document.querySelectorAll('.pwd-action-btn').forEach(button => {
+    //             button.classList.remove('hidden');
+    //         });
+
+    //         document.getElementById('pwd-rows-pagination').classList.remove('hidden');
+    //         document.getElementById('senior-rows-pagination').classList.add('hidden');
+
+    //         pwdBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
+    //         pwdBtn.classList.remove('text-gray-400');
+
+    //         if (seniorBtn) {
+    //             seniorBtn.classList.remove('border-b-[3px]', 'border-red-500');
+    //             seniorBtn.classList.add('text-gray-400');
+    //         }
+
+    //         if (activeTabInput) activeTabInput.value = 'pwd';
+    //     });
+    // }
+
+    // if (seniorBtn) {
+    //     seniorBtn.addEventListener('click', () => {
+
+    //         clearSelection('pwd');
+
+    //         if (seniorTable) seniorTable.classList.remove('hidden');
+    //         if (seniorFilter) seniorFilter.classList.remove('hidden');
+
+    //         // if(selectedPwdAction) selectedPwdAction.classList.add('hidden');
+    //         if (pwdTable) pwdTable.classList.add('hidden');
+    //         if (pwdFilter) pwdFilter.classList.add('hidden');
+
+    //         document.querySelectorAll('.pwd-action-btn').forEach(button => {
+    //             button.classList.add('hidden');
+    //         });
+
+    //         document.querySelectorAll('.senior-action-btn').forEach(button => {
+    //             button.classList.remove('hidden');
+    //         });
+
+    //         document.getElementById('pwd-rows-pagination').classList.add('hidden');
+    //         document.getElementById('senior-rows-pagination').classList.remove('hidden');
+
+    //         seniorBtn.classList.add('border-b-[3px]', 'border-red-500', 'font-bold');
+    //         seniorBtn.classList.remove('text-gray-400');
+
+    //         if (pwdBtn) {
+    //             pwdBtn.classList.remove('border-b-[3px]', 'border-red-500');
+    //             pwdBtn.classList.add('text-gray-400');
+    //         }
+
+    //         if (activeTabInput) activeTabInput.value = 'senior';
+    //     });
+    // }
 
 
     const addBeneficiarybtn = document.getElementById("addBeneficiary-btn");
@@ -155,49 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
-
-    // const importPwdBtn = document.getElementById('importPwdBtn');
-    // const filePwdInput = document.getElementById('pwdFileInput');
-    // const pwdForm = document.getElementById('importPwdForm');
-
-    // if(importPwdBtn){
-    //     importPwdBtn.addEventListener('click', () => {
-    //         filePwdInput.click();
-    //     });
-    // }
-    
-    // if(filePwdInput){
-    //     filePwdInput.addEventListener('change', () => {
-    //         if(filePwdInput.files.length > 0){
-                
-    //             importPwdBtn.textContent = "Importing...";
-
-    //             setTimeout(()=>{
-    //                 pwdForm.submit();
-    //                 importPwdBtn.textContent = "Import PWD";
-    //             }, 3000);
-
-                
-    //         }
-    //     });
-    // }
-    
-
-    // function populatePwdView(data){
-
-    //     Object.keys(data).forEach(key => {
-
-    //         const element = document.querySelector(`[data-field="${key}"]`);
-
-    //         if(element){
-    //             element.textContent = data[key] ?? "";
-    //         }
-
-    //     });
-
-    // }
-
     function populateView(type, data) {
 
         Object.keys(data).forEach(key => {
@@ -248,17 +254,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // const show_pwdWrapper = document.getElementById('show-pwd-wrapper');
-
-    // function togglePwdView() {
-
-    //     if (!show_pwdWrapper){
-    //         return;
-    //     } 
-
-    //     show_pwdWrapper.classList.toggle('hidden');
-    // }
-
     function toggleView(type) {
         const wrapper = document.getElementById(`show-${type}-wrapper`);
 
@@ -268,12 +263,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
-    // const closePwdModalButton = document.getElementById("close-pwd-modal-btn");
-    
-    // if(closePwdModalButton){
-    //     closePwdModalButton.addEventListener("click", togglePwdView);
-    // } 
 
     //close modal based on the type (pwd or senior) defined in the button
     function setupCloseButtons() {
@@ -331,115 +320,127 @@ document.addEventListener("DOMContentLoaded", function () {
     setupCloseButtons();
 
 
-
-
-
-
-    // document.querySelectorAll('.view-pwd-btn').forEach(button => {
-    //     button.addEventListener('click', async function () {
-
-    //         console.log("View button clicked");
-
-    //         const pwdId = this.dataset.pwdId;
-
-    //         if(!pwdId){
-    //             alert("no PWD selected");
-    //         }
-
-    //         try {
-                
-    //             const showUrl = this.dataset.showUrl;
-
-    //             const response = await fetch(showUrl + pwdId);
-                
-    //             if(!response.ok){
-    //                 console.log("Failed to fetch pwd");
-    //                 throw new Error('Failed to fetch pwd');
-    //             }
-
-    //             const pwd_details = await response.json();
-    //             console.log("Pwd details: ", pwd_details);
-
-    //             populatePwdView(pwd_details);
-
-                
-    //             togglePwdView();
-
-    //         } catch (error) {
-    //             console.log("Failed to fetch the pwd details: ", error);
-    //         }
-
-    //     });
-    // });
-
-
-    const selectAll = document.getElementById('select-all'); //select all button checkbox
+    
     const bulkBtn = document.getElementById('bulk-update-btn');
     const bulkUpdate_modal = document.getElementById('bulkUpdate-modal');
     const closeBulkModalBtn = document.getElementById('close-bulk-modal-btn');
     const bulkForm = document.getElementById('bulk-update-form');
-    const selectedCountText = document.getElementById('selected-count');
 
-    if(selectAll){
-        selectAll.addEventListener('change', function () {
-            document.querySelectorAll('.row-checkbox').forEach(cb => {
-                cb.checked = this.checked;
+
+    const selectAllCheckBoxes = document.querySelectorAll('.select-all'); //select all button checkbox
+
+    const generateIdForm = document.querySelectorAll('.generate-id-form'); // class
+
+    if(selectAllCheckBoxes){
+
+        selectAllCheckBoxes.forEach(selectAllCb => {
+            selectAllCb.addEventListener('change', function(){
+                const type = this.dataset.type;
+
+                document.querySelectorAll(`.row-checkbox[data-type="${type}"]`)
+                    .forEach(cb => {
+                        cb.checked = this.checked;
+                    });
+
+                updateBtnCnt(type);
             });
-            updateBtnCnt();
         });
     }
 
     document.addEventListener('change', function (e) {
         if (e.target.classList.contains('row-checkbox')) {
-            updateBtnCnt();
+            updateBtnCnt(e.target.dataset.type);
         }
     });
 
     //update Button and count
-    function updateBtnCnt() {
-        const selected = document.querySelectorAll('.row-checkbox:checked');
+    function updateBtnCnt(type) {
 
-        // Update count
-        selectedCountText.textContent = selected.length + " selected";
+        console.log("UpdateBtnCtn");
 
-        // Enable / Disable button
-        if (selected.length > 0) {
-            bulkBtn.disabled = false;
-            bulkBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-            bulkBtn.classList.add('bg-blue-500');
-        } else {
-            selectedCountText.textContent = "";
-            bulkBtn.disabled = true;
-            bulkBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-            bulkBtn.classList.remove('bg-blue-500');
+        const selected = document.querySelectorAll(
+            `.row-checkbox[data-type="${type}"]:checked`
+        );
+
+        const countText = document.querySelector(
+            `.selected-count[data-type="${type}"]`
+        );
+
+        // const actionField = document.querySelector(
+        //     `.selected-${type}-action-field`
+        // );
+
+        const actionField = document.querySelector(`.selected-${type}-action-field`);
+
+        // update count text
+        if (countText) {
+            countText.textContent = selected.length
+                ? `${selected.length} selected`
+                : '';
+        }
+
+        console.log("Action Field: ", actionField, "type: ", type);
+
+        // show/hide action buttons
+        if (actionField) {
+            console.log("Action Field: ", actionField);
+            if (selected.length > 0) {
+                actionField.classList.remove('hidden');
+            } else {
+                actionField.classList.add('hidden');
+            }
+
         }
     }
+
+
+    //clear selected pwds or seniors
+    function clearSelection(type) {
+        
+        // uncheck all checkboxes of that type
+        document.querySelectorAll(`.row-checkbox[data-type="${type}"]`)
+            .forEach(cb => cb.checked = false);
+
+
+        // reset select-all checkbox
+        const selectAll = document.querySelector(`.select-all[data-type="${type}"]`);
+        if (selectAll){
+            selectAll.checked = false;
+        } 
+
+        // reset UI (count + buttons)
+        updateBtnCnt(type);
+    }
+
     
-    //open modal function
+
+    
+    //open modal function to update or validate
     if(bulkBtn){
         bulkBtn.addEventListener('click', function(){
-            const selected = document.querySelectorAll('.row-checkbox:checked');
+            const selected = document.querySelectorAll('.row-checkbox[data-type="pwd"]:checked');
 
-            // if (selected.length === 0) {
-            //     alert("Please select at least one record.");
-            //     return;
-            // }
+            if (selected.length === 0) {
+                alert("Please select at least one record.");
+                return;
+            }
 
             bulkUpdate_modal.classList.remove('hidden');
         });
     } 
     
+    //close modal function to update or validate
     if(closeBulkModalBtn){
         closeBulkModalBtn.addEventListener('click', function(){
             bulkUpdate_modal.classList.add('hidden');
         });
     }
 
-    //form submit handler
+    //form submit handler of form to validate field
     if(bulkForm){
         bulkForm.addEventListener('submit', function(e){
 
-            const selected = document.querySelectorAll('.row-checkbox:checked');
+            const selected = document.querySelectorAll('.row-checkbox[data-type="pwd"]:checked');
 
             if (selected.length === 0) {
                 e.preventDefault(); // not to refresh entire page
@@ -474,16 +475,72 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    document.addEventListener('submit', function(e){
 
-    
-    
+        const form = e.target;
 
+        if (!form.classList.contains('generate-id-form')) return; 
 
+        e.preventDefault();
 
-    
+        const type = form.dataset.type;
 
+        const selected = document.querySelectorAll(
+            `.row-checkbox[data-type="${type}"]:checked`
+        );
 
+        if (selected.length === 0) {
+            alert("No records selected.");
+            return;
+        }
 
+        // remove old inputs
+        form.querySelectorAll('.bulk-id-input').forEach(el => el.remove());
+
+        // dynamic name based on type
+        const inputName = `selected_${type}s[]`;
+
+        selected.forEach(cb => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = inputName; // either senior or pwd
+            input.value = cb.value;
+            input.classList.add('bulk-id-input');
+            form.appendChild(input);
+        });
+
+        form.submit();
+
+    });
+
+    function setupDropdown(buttonClass, wrapperClass) {
+        const buttons = document.querySelectorAll(buttonClass); // get the button class 
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.stopPropagation();
+
+                // close all dropdowns
+                document.querySelectorAll('.pwd-more-action-wrapper, .senior-more-action-wrapper')
+                    .forEach(menu => menu.classList.add('hidden'));
+
+                const wrapper = btn.nextElementSibling;
+                wrapper.classList.toggle('hidden');
+            });
+        });
+    }
+
+    // initialize the function
+    setupDropdown('.pwd-more-action-btn', '.pwd-more-action-wrapper');
+    setupDropdown('.senior-more-action-btn', '.senior-more-action-wrapper');
+
+    // single global listener for hiding when clicking outside the field
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.pwd-more-action-wrapper, .senior-more-action-wrapper')
+            .forEach(menu => menu.classList.add('hidden'));
+    });
+
+        
     
 
 

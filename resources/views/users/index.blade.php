@@ -6,13 +6,14 @@
 
     <div class="flex justify-between items-center">
 
-        <h1 class="font-bold text-3xl">List of Users</h1>
+       
+        <h1 class="font-bold text-3xl border-b-[3px] border-red-500">List of Users</h1>
 
         <button 
-            class="p-2 bg-blue-500 text-white rounded-lg cursor-pointer"
+            class="p-2 bg-blue-500 text-white rounded-lg flex gap-x-3 items-center cursor-pointer"
             id="addUser-btn"
         >
-            Add User
+            <span class="object-contain w-6 h-6"><img src="{{asset('/images/icons/add-user.svg')}}" alt=""></span>Add User
         </button>
 
     </div>
@@ -21,15 +22,14 @@
     @include('users.create_user')
 
 
-    <div class="overflow-y-auto mt-5">
-        <table class="w-full text-sm border text-center boder-gray-300">
-            <thead class="bg-[#98D172]">
-                <tr>
-                    <th class="px-4 py-2 border">#</th>
-                    <th class="px-4 py-2 border">Name</th>
-                    <th class="px-4 py-2 border">Username</th>
-                    <th class="px-4 py-2 border">Role</th>
-                    <th class="px-4 py-2 border">Actions</th>
+    <div class="mt-5">
+        <table class="w-full text-sm text-left border-collapse bg-[#F0F0F0] shadow-md">
+            <thead class="text-gray-600 uppercase text-xs border-b">
+                <tr class="bg-gray-50">
+                    <th class="p-3">FULL NAME</th>
+                    <th class="p-3">USERNAME</th>
+                    <th class="p-3">ROLE</th>
+                    <th class="p-3">ACTIONS</th>
                 </tr>
             </thead>
             <tbody class="bg-[#F0F0F0]">

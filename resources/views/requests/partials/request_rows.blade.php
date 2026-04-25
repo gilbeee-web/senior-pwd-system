@@ -1,51 +1,54 @@
 @forelse($requests as $request)
-    <tr>
-        <td class="px-4 py-2 text-gray-800 border">{{ $request->id }}</td>
-        <td class="px-4 py-2 text-gray-800 border">{{ ucfirst($request->type) }}</td>
+    <tr class="border-b hover:bg-gray-200">
 
-        {{-- Model Type --}}
-        <td class="px-4 py-2 text-gray-800 border">
-            @if($request->model_type === App\Models\SeniorDetail::class)
-                Senior
-            @elseif($request->model_type === App\Models\PwdDetail::class)
-                PWD
-            @else
-                Unknown
-            @endif
-        </td>
-
-        {{-- Record Name --}}
-        <td class="px-4 py-2 text-gray-800 border">
-            @php
+        <td class="p-3">
+            <h1 class="uppercase font-semibold">
+                @php
                 $model = $request->model_type::find($request->model_id);
-            @endphp
-            @if($model)
-                {{ $model->beneficiary->last_name ?? ' ' }} {{ $model->beneficiary->first_name ?? ' ' }} {{ $model->beneficiary->middle_name ?? ' ' }}
-            @else
-                N/A
-            @endif
+                @endphp
+                @if($model && $request->type === 'update')
+                    {{ $model->beneficiary->last_name ?? ' ' }} {{ $model->beneficiary->first_name ?? ' ' }} {{ $model->beneficiary->middle_name ?? ' ' }}
+                @elseif($request->type ==='archive')
+                    {{ $request->payload['beneficiary_name'] ?? 'N/A' }}
+                @else
+                    N/A
+                @endif
+            </h1>
+
+            <p>
+                @if($request->model_type === App\Models\SeniorDetail::class)
+                    Senior
+                @elseif($request->model_type === App\Models\PwdDetail::class)
+                    PWD
+                @else
+                    Unknown
+                @endif
+            </p>
         </td>
+
+        <td class="p-3 uppercase">{{ ucfirst($request->type) }}</td>
 
         {{-- Requested By --}}
-        <td class="px-4 py-2 text-gray-800 border">
-            {{ $request->requester->name ?? 'Unknown' }}
-        </td>
-
-        {{-- Date --}}
-        <td class="px-4 py-2 text-gray-800 border">
-            {{ $request->created_at->format('M d, Y H:i') }}
+        <td class="p-3">
+            <h1 class="uppercase font-semibold">{{ $request->requester->name ?? 'Unknown' }}</h1>
+            <p>{{ ucwords(str_replace('_', ' ', $request->requester->role)) }}</p>
         </td>
 
         {{-- Status --}}
-        <td class="px-4 py-2 text-gray-800 border capitalize">
+        <td class="p-3 uppercase">
             {{ $request->status }}
         </td>
 
+        {{-- Date --}}
+        <td class="p-3">
+            {{ \Carbon\Carbon::parse($request->created_at)->format('m-d-Y') }}
+        </td>
+
         {{-- Actions --}}
-        <td class="px-4 py-2 text-gray-800 border">
+        <td class="p-3">
             @if($request->status === 'pending')
                 <button 
-                    class="action-btn text-blue-600 hover:underline"
+                    class="action-btn text-green-600 hover:underline cursor-pointer"
                     data-id="{{$request->id}}"
                     data-type="{{$request->type}}"
                     data-old='@json($request->model)'
@@ -55,7 +58,7 @@
                 </a>
             @else
                 <button 
-                    class="action-btn text-gray-500 hover:underline"
+                    class="action-btn text-gray-500 hover:underline cursor-pointer"
                     data-id="{{$request->id}}"
                     data-type="{{$request->type}}"
                 >

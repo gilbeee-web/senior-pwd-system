@@ -18,9 +18,10 @@ class UserController extends Controller
 
         $current_user = Auth::user();
 
-        $users = User::join('barangays', 'users.barangay_id', '=', 'barangays.id')
-        ->select('barangays.name AS barangay', 'users.*')
-        ->where('users.id', '!=', $current_user->id)->get();
+        $users = User::leftJoin('barangays', 'users.barangay_id', '=', 'barangays.id')
+            ->select('barangays.name AS barangay', 'users.*')
+            ->where('users.id', '!=', $current_user->id)
+            ->get();
 
         $barangays = Barangay::all();
 

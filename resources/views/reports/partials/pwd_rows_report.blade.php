@@ -1,20 +1,28 @@
 
 @forelse($pwd_beneficiaries as $pwd)
-    <tr>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$pwd->pwd_id_number}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$pwd->beneficiary->last_name}} {{$pwd->beneficiary->first_name}} </td>
-        {{-- <td class="px-4 py-2 text-sm text-gray-800 border">{{ \Carbon\Carbon::parse($pwd->beneficiary->birthdate)->format('F d, Y') }}</td> --}}
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$pwd->beneficiary->gender}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$pwd->disability_type}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">
-            {{$pwd->beneficiary->address->street->name}} 
+    <tr class="border-b hover:bg-gray-200">
+        <td class="p-3">
+            <h1>{{$pwd->pwd_id_number}}</h1>
+            <p class="uppercase">{{$pwd->disability_type}}</p>
         </td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">
-            {{$pwd->beneficiary->address->street->barangay->name}}
+        <td class="p-3 uppercase">
+            <h1>{{$pwd->beneficiary->first_name}} {{$pwd->beneficiary->middle_name ?? ' '}} {{$pwd->beneficiary->last_name}} </h1>
+            <p>{{$pwd->beneficiary->gender}}</p> 
         </td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$pwd->beneficiary->employment_status}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$pwd->beneficiary->civil_status}}</td>
-        <td class="px-4 py-2 text-sm text-gray-800 border">{{$pwd->educational_attainment}}</td>
+        <td class="p-3 uppercase">
+            {{ \Carbon\Carbon::parse($pwd->beneficiary->birthdate)->format('m-d-Y') }}
+        </td>
+
+        <td class="p-3">
+            <h1 class="uppercase">{{$pwd->beneficiary->address->street->barangay->name}}</h1>
+            <p>{{$pwd->beneficiary->address->street->name}} </p>
+            
+        </td>
+        <td class="p-3 uppercase">
+            <h1>{{$pwd->beneficiary->civil_status}}</h1>
+            <p>{{$pwd->beneficiary->employment_status ?? 'N/A'}}</p>
+        </td>
+        <td class="p-3 uppercase">{{$pwd->educational_attainment}}</td>
     </tr>
 @empty
     <tr>

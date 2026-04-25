@@ -6,6 +6,7 @@ use App\Http\Requests\StorePwdRequest;
 use App\Http\Requests\UpdatePwdRequest;
 use App\Imports\PwdImport;
 use App\Models\ActionRequest;
+use App\Models\AuthorizeEmployee;
 use App\Models\Barangay;
 use App\Models\PwdDetail;
 use App\Models\Street;
@@ -60,6 +61,7 @@ class PwdController extends Controller
                     'educational_attainment' => $request->educational_attainment,
                     'date_id_issued' => $request->date_id_issued ?? today(),
                     'date_id_expiration' => Carbon::parse($request->date_id_issued)->addYears(5),
+                    'qr_link' => $request->qr_link,
                     'is_middleclass' => $request->boolean('is_middleclass') ?? false
                 ]);
             });
@@ -67,10 +69,7 @@ class PwdController extends Controller
             return redirect()->route('beneficiary.index', ['tab' => 'pwd'])->with('success', 'PWD added successfully!');
 
         }catch(\Exception $e){
-            dd('PWD Registration Failed: ' . $e->getMessage());
-            
-            return back()->withInput()->with('error', 'Something went wrong. Please try again');
-
+            return back()->withInput()->with('error', 'Something went wrong. Please try again: ' . $e->getMessage());
         }
     }
 
@@ -88,6 +87,7 @@ class PwdController extends Controller
             ? Street::where('barangay_id', $currentBarangayId)->get()
             : collect();
         
+        // dd($pwd->educational_attainment);
 
         return view('beneficiaries/pwd/edit_pwd', [
             'barangays' => $barangays,
@@ -97,6 +97,9 @@ class PwdController extends Controller
     }
 
     public function update(UpdatePwdRequest $request, $id, UpdatePwdService $updatePwdService){
+
+        // dd($request->all());
+
         $pwd = PwdDetail::findOrFail($id);
         $validated = $request->validated();
 
@@ -129,11 +132,12 @@ class PwdController extends Controller
                 'blood_type' => $validated['blood_type'] ?? null,
                 'educational_attainment' => $validated['educational_attainment'] ?? null,
                 'date_id_issued' => $validated['date_id_issued'] ?? null,
-                'date_id_expiration' => Carbon::parse($validated['date_id_issued'] )->addYears(5)
+                'date_id_expiration' => Carbon::parse($validated['date_id_issued'] )->addYears(5),
+                'qr_link' => $validated['qr_link'] ?? null
             ]
         ];
 
-        if($withinGracePeriod || $this->currentUserRole === 'superadmin'){
+        if($withinGracePeriod || $this->currentUserRole === 'super_admin'){
             // DB::transaction(function() use ($pwd, $payload) {
 
             //     // Update beneficiary
@@ -145,6 +149,8 @@ class PwdController extends Controller
             //     // Update senior
             //     $pwd->update($payload['pwd']);
             // });
+
+            // dd($payload);
 
             $updatePwdService->update($pwd, $payload);
 
@@ -211,12 +217,20 @@ class PwdController extends Controller
                 ->with('success', 'PWD record archived successfully.');
         }
 
+        $beneficiary = $pwd->beneficiary;
+
+        $fullName = $beneficiary
+            ? trim("{$beneficiary->last_name} {$beneficiary->first_name} {$beneficiary->middle_name}")
+            : 'N/A';
+
         ActionRequest::create([
             'type' => 'archive',
             'model_type' => PwdDetail::class,
             'model_id' => $pwd->id,
             'requested_by' => Auth::id(),
-            'payload' => null,
+            'payload' => json_encode([
+                'beneficiary_name' => $fullName,
+            ]),
             'status' => 'pending',
         ]);
 
@@ -369,6 +383,27 @@ class PwdController extends Controller
 
         return back()->with('success', 'Validated successfully.');
 
+    }
+
+
+    public function printPwd(Request $request){
+
+        // dd($request->all());
+
+        // $pwd = PwdDetail::with('beneficiary.address')->where('id', $id)->get();
+
+        $pwd_ids = $request->selected_pwds;
+
+        if (!$pwd_ids || count($pwd_ids) === 0) {
+            return back()->with('error', 'No records selected.');
+        }
+
+        $pwds = PwdDetail::with('beneficiary')->whereIn('id', $pwd_ids)->get();
+        $mayor = AuthorizeEmployee::where('role', 'mayor')->where('is_active', true)->first();
+
+        // dd($pwd);
+
+        return view('beneficiaries/pwd/print_pwd', ['pwd' => $pwds, 'mayor' => $mayor]);
     }
 
 

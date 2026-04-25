@@ -38,14 +38,14 @@
         
     <div class="mt-10">
 
-        <form action="" class="flex gap-x-5 items-center">
+        <form action="{{route('request.index')}}" class="flex gap-x-5 items-center">
 
             <div>
                 <select 
-                    name="request_type" 
+                    name="type" 
                     class="border rounded-md py-2 px-8 bg-[#F5F5F5]"
                 >
-                    <option value="" disabled selected hidden>Select</option>
+                    <option value="" disabled selected hidden>Select Type</option>
                     <option value="">All</option>
                     <option value="update">Update</option>
                     <option value="archive">Archive</option>
@@ -54,10 +54,10 @@
 
             <div>
                 <select 
-                    name="model" 
+                    name="model_type" 
                     class="border rounded-md py-2 px-8 bg-[#F5F5F5]"
                 >
-                    <option value="" disabled selected hidden>Select</option>
+                    <option value="" disabled selected hidden>Select Model</option>
                     <option value="">All</option>
                     <option value="senior">Senior</option>
                     <option value="pwd">PWD</option>
@@ -66,13 +66,18 @@
 
             <div class="flex gap-x-3 items-center">
                 <label class="font-semibold">Date Range:</label>
-                <input type="date" name="from" class="border rounded px-3 py-2">
+                <input type="date" name="start_date" class="border rounded px-3 py-2 bg-white">
                 <span>to</span>
-                <input type="date" name="to" class="border rounded px-3 py-2">
+                <input type="date" name="end_date" class="border rounded px-3 py-2 bg-white">
             </div>
 
             <div>
-                <button class="px-5 py-2 bg-green-500 rounded-lg text-white cursor-pointer">Apply Filter</button>
+                <button class="px-5 py-2 bg-blue-500 rounded-lg text-white cursor-pointer flex gap-x-2 items-center">
+                    <span>
+                        <img src="{{asset('/images/icons/filter.svg')}}" alt="Filter" class="w-6 h-6 object-contain">
+                    </span>
+                    Apply Filter
+                </button>
             </div>
 
         </form>
@@ -81,20 +86,19 @@
     </div>
 
     <div class="mt-5">
-        <table class="w-full text-sm text-center border">
-            <thead class="bg-[#98D172]">
-                <tr>
-                    <th class="px-4 py-2 border">ID</th>
-                    <th class="px-4 py-2 border">Type</th>
-                    <th class="px-4 py-2 border">Model</th>
-                    <th class="px-4 py-2 border">Name</th>
-                    <th class="px-4 py-2 border">Requested By</th>
-                    <th class="px-4 py-2 border">Date</th>
-                    <th class="px-4 py-2 border">Status</th>
-                    <th class="px-4 py-2 border">Action</th>
+
+        <table class="w-full text-sm text-left border-collapse bg-[#F0F0F0] shadow-md">
+            <thead class="text-gray-600 uppercase text-xs border-b">
+                <tr class="bg-gray-50">
+                    <th class="p-3">FULL NAME</th>
+                    <th class="p-3">REQUEST TYPE</th>
+                    <th class="p-3">REQUESTED BY</th>
+                    <th class="p-3">STATUS</th>
+                    <th class="p-3">DATE</th>
+                    <th class="p-3">ACTION</th>
                 </tr>
             </thead>
-            <tbody class="bg-[#F0F0F0]">
+            <tbody>
                 @include('requests.partials.request_rows')
             </tbody>
         </table>
