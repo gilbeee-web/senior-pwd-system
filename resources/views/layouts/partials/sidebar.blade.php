@@ -79,13 +79,13 @@
                 href="{{route('beneficiary.index')}}" 
                 class="
                     block p-2 rounded hover:bg-gray-100 flex gap-x-3 items-center
-                    @if(request()->routeIs('beneficiary.*') || request()->routeIs('pwd.*') || request()->routeIs('senior.*')  ) 
+                    @if(request()->routeIs('beneficiary.*') || request()->routeIs('pwd.*') || request()->routeIs('senior.*')) 
                         bg-red-500 text-white hover:bg-red-400 
                     @endif
                 " 
             >
                 <span>
-                    <img src="{{ request()->routeIs('beneficiary.*') 
+                    <img src="{{ request()->routeIs('beneficiary.*') || request()->routeIs('pwd.*') || request()->routeIs('senior.*')
                             ? asset('/images/icons/beneficiaries-alt.svg') 
                             : asset('/images/icons/beneficiaries.svg') }}" class="h-6 w-6 object-contain" alt="">
                 </span> 
@@ -107,7 +107,7 @@
                 "
             >
                <span>
-                    <img src="{{ request()->routeIs('beneficiary.*') 
+                    <img src="{{ request()->routeIs('beneficiary.*') || request()->routeIs('pwd.*') || request()->routeIs('senior.*')
                         ? asset('/images/icons/beneficiaries-alt.svg') 
                         : asset('/images/icons/beneficiaries.svg') }}" class="h-6 w-6 object-contain" alt=""
                     >

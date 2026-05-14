@@ -35,10 +35,11 @@
             </div>
         @endif
 
-        <div class="flex gap-x-5 mr-5 items-center">
+        
 
-            @if($current_user->role === 'barangay_pwd_admin' || $current_user->role === 'super_admin' || $current_user->role === 'pwd_admin')
+        @if($current_user->role === 'barangay_pwd_admin' || $current_user->role === 'super_admin' || $current_user->role === 'pwd_admin')
 
+            <div class="flex gap-x-5 items-center {{ $tab === 'pwd' ? '' : 'hidden' }}">
                 <div class="pwd-action-btn">
                     <a
                         href="{{route('pwd.create')}}"
@@ -70,7 +71,7 @@
                     </form>
                 </div>
                 
-                @if($current_user->role === 'super_admin' || $current_user->role === 'pwd_admin')
+                @if($current_user->role !== 'barangay_pwd_admin')
                     <div class="pwd-action-btn">
                         <a
                             href="{{route('beneficiary.getArchive', "pwd")}}"
@@ -83,12 +84,12 @@
                         </a>
                     </div>
                 @endif
-                
-            @endif
+            </div>
+        @endif
 
-            @if($current_user->role === 'barangay_senior_admin' || $current_user->role === 'senior_admin' || $current_user->role === 'super_admin')
-
-                <div class="senior-action-btn hidden">
+        @if($current_user->role === 'barangay_senior_admin' || $current_user->role === 'senior_admin' || $current_user->role === 'super_admin')
+            <div class="flex gap-x-5 items-center {{ $tab === 'senior' ? '' : 'hidden' }}">
+                <div class="senior-action-btn">
                     <a
                         href="{{route('senior.create')}}"
                         class="p-2 bg-blue-500 text-white rounded-lg cursor-pointer flex gap-x-3 items-center"
@@ -100,7 +101,7 @@
                     </a>
                 </div>
                 
-                <div class="senior-action-btn hidden">
+                <div class="senior-action-btn">
                     <form action="{{ route('senior.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
                         @csrf
                         <input type="file" name="senior_file" class="file-input hidden" accept=".xlsx,.xls,.csv">
@@ -115,11 +116,11 @@
                     </form>
                 </div>
                 
-                @if($current_user->role === 'super_admin' || $current_user->role === 'senior_admin')
-                    <div class="senior-action-btn hidden">
+                @if($current_user->role !== 'barangay_senior_admin')
+                    <div class="senior-action-btn">
                         <a
                             href="{{route('beneficiary.getArchive', "senior")}}"
-                            class="archive-btn p-2 bg-green-500 text-white rounded-lg cursor-pointer flex gap-x-3 items-center"
+                            class="p-2 bg-gray-400 text-white rounded-lg cursor-pointer flex gap-x-3 items-center"
                         >
                             <span class="">
                                 <img src="{{asset('/images/icons/archive-alt.svg')}}" alt="" class="h-5 w-5 object-contain">
@@ -128,11 +129,11 @@
                         </a>
                     </div>
                 @endif
-                
-            @endif
+            </div>
+            
+        @endif
 
-           
-        </div>
+    
 
         
     </div>
@@ -155,8 +156,9 @@
                     >
                     <button 
                         type="submit" 
-                        class="px-3 py-2 border bg-[#FF9793] font-bold text-md rounded-xl cursor-pointer"
+                        class="px-3 py-2 bg-green-500 font-bold text-md rounded-xl cursor-pointer flex items-center text-white"
                     >
+                        <img src="{{asset('/images/icons/search.svg')}}" alt="Search icon" class="object-contain w-5 h-5">
                         Search
                     </button>
                 </div>
@@ -374,6 +376,7 @@
                             <th class="p-3">DISABILITY TYPE</th>
                             <th class="p-3">DATE ID ISSUE</th>
                             <th class="p-3">DATE ID EXPIRATION</th>
+                            <th class="p-3">STATUS</th>
                             <th class="p-3">ACTIONS</th>
                         </tr>
                     </thead>
@@ -388,17 +391,6 @@
                     <span class="selected-count text-gray-600 text-sm font-semibold" data-type="pwd"></span>
 
                     <div class="selected-pwd-action-field mt-2 flex gap-x-3 items-center hidden">
-                        <button 
-                            type="button" 
-                            id="bulk-update-btn"
-                            class="bg-blue-500 text-white rounded-lg p-2 cursor-pointer flex gap-x-3 items-center"
-                        >
-                            <span>
-                                <img src="{{asset('/images/icons/validate.svg')}}" alt="validate">
-                            </span>
-                            Validate
-                        </button>
-
                         <form action="{{route('pwd.print')}}" class="generate-id-form" data-type="pwd" method="POST">
                             @csrf
                             <button 
@@ -412,16 +404,29 @@
                             </button>
 
                         </form>
+
+                        <button 
+                            type="button" 
+                            data-type="pwd"
+                            class="bulk-update-btn bg-blue-500 text-white rounded-lg p-2 cursor-pointer flex gap-x-3 items-center"
+                        >
+                            <span>
+                                <img src="{{asset('/images/icons/validate.svg')}}" alt="validate">
+                            </span>
+                            Validate
+                        </button>
                     </div>
 
-                    <div id="bulkUpdate-modal" class="hidden">
-                        @include('beneficiaries.pwd.partials.bulkUpdate_modal')
+                    <div class="bulkUpdate-modal hidden" data-type="pwd">
+                        @include('beneficiaries.pwd.partials.pwd_bulkUpdate_modal')
                     </div>
                    
                 </div>
 
                 <div id="pwd-rows-pagination">
-                    @include('pagination.pwd_pagination')
+                    @if($pwd_beneficiaries)
+                        @include('pagination.pwd_pagination')
+                    @endif
                 </div>
             </div>
 
@@ -451,6 +456,7 @@
                             <th class="p-3">BIRTHDATE</th>
                             <th class="p-3">ADDRESS</th>
                             <th class="p-3">DATE ID ISSUE</th>
+                            <th class="p-3">STATUS</th>
                             <th class="p-3">ACTIONS</th>
                         </tr>
                     </thead>
@@ -479,13 +485,30 @@
                                 Generate ID
                             </button>
                         </form>
+
+                        <button 
+                            type="button" 
+                            data-type="senior"
+                            class="bulk-update-btn bg-blue-500 text-white rounded-lg p-2 cursor-pointer flex gap-x-3 items-center"
+                        >
+                            <span>
+                                <img src="{{asset('/images/icons/validate.svg')}}" alt="validate">
+                            </span>
+                            Validate
+                        </button>
                     </div>
+                </div>
+
+                <div class="bulkUpdate-modal hidden" data-type="senior">
+                    @include('beneficiaries.senior.partials.senior_bulkUpdate_modal')
                 </div>
                 
 
 
                 <div id="senior-rows-pagination">
-                    @include('pagination.senior_pagination')
+                    @if($senior_beneficiaries)
+                        @include('pagination.senior_pagination')
+                    @endif
                 </div>
             </div>
 

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSeniorRequest;
 use App\Http\Requests\UpdateSeniorRequest;
 use App\Imports\SeniorImport;
 use App\Models\ActionRequest;
+use App\Models\AuthorizeEmployee;
 use App\Models\Barangay;
 use App\Models\SeniorDetail;
 use App\Models\SeniorFamilyMember;
@@ -31,15 +32,26 @@ class SeniorController extends Controller
         $this->beneficiaryService = $beneficiaryService;
         $current_user = Auth::user();
 
-        $currentUserRole = $current_user->role;
+        $this->currentUserRole = $current_user->role;
     }
 
 
     public function create(){
 
         $barangays = Barangay::all();
+        $current_user = Auth::user();
+        $current_user_brgy = null;
 
-        return view('beneficiaries/senior/create_senior', ['barangays' => $barangays]);
+        if($current_user->role === 'barangay_senior_admin'){
+            $current_user_brgy = Barangay::findOrFail($current_user->barangay_id);
+        }
+        
+
+        return view('beneficiaries/senior/create_senior', [
+            'barangays' => $barangays,
+            'current_user' => $current_user,
+            'current_user_brgy' => $current_user_brgy
+        ]);
     }
 
     public function store(StoreSeniorRequest $request){
@@ -127,6 +139,7 @@ class SeniorController extends Controller
             'barangays' => $barangays,
             'senior' => $senior,
             'streets' => $streets,
+            'current_user' => Auth::user(),
             'family_members' => $senior->familyMembers ?? []
         ]);
     }
@@ -391,13 +404,15 @@ class SeniorController extends Controller
 
     public function archive(SeniorDetail $senior)
     {
+        // dd($this->currentUserRole);
+
         $gracePeriodDays = 1;
         $withinGracePeriod = $senior->created_at->diffInDays(now()) <= $gracePeriodDays;
 
-        if($withinGracePeriod || $this->currentUserRole === 'super_admin' ){
+        if($withinGracePeriod || $this->currentUserRole === 'super_admin' || $this->currentUserRole === 'senior_admin' ){
             $senior->delete();
 
-            return redirect()->route('beneficiary.index')
+            return redirect()->route('beneficiary.index', ['tab' => 'senior'])
                 ->with('success', 'Senior record archived successfully.');
         }
 
@@ -410,8 +425,7 @@ class SeniorController extends Controller
             'status' => 'pending',
         ]);
 
-         return redirect()->route('beneficiary.index')
-                ->with('success', 'Archive request submitted.');
+        return redirect()->route('beneficiary.index', ['tab' => 'senior'])->with('success', 'Archive request submitted.');
     }
 
     public function restore($id)
@@ -424,8 +438,8 @@ class SeniorController extends Controller
 
     public function destroy($id)
     {
-        if($this->currentUserRole !== 'super_admin'){
-            return redirect()->back()->with('error', 'Only super admin could permanently delete data.');
+        if($this->currentUserRole !== 'super_admin' || $this->currentUserRole !== 'senior_admin'){
+            return redirect()->back()->with('error', 'You are not allowed to perform this action.');
         }
 
         $senior = SeniorDetail::withTrashed()->findOrFail($id);
@@ -451,6 +465,8 @@ class SeniorController extends Controller
 
         // dd($request->all());
         $senior_ids = $request->selected_seniors;
+        $mayor = AuthorizeEmployee::where('role', 'mayor')->where('is_active', true)->first();
+        $senior_chairman = AuthorizeEmployee::where('role', 'senior_chairman')->where('is_active', true)->first();
 
         if (!$senior_ids || count($senior_ids) === 0) {
             return back()->with('error', 'No records selected.');
@@ -460,7 +476,48 @@ class SeniorController extends Controller
 
         // dd($seniors);
 
-        return view('beneficiaries/senior/print_senior', ['senior' => $seniors]);
+        return view('beneficiaries/senior/print_senior', ['senior' => $seniors, 'mayor' => $mayor, 'senior_chairman' => $senior_chairman]);
+    }
+
+    public function bulkUpdateValidate(Request $request){
+        // dd($request->all());
+
+        $senior_ids = $request->selected_seniors;
+
+        if (!$senior_ids || count($senior_ids) === 0) {
+            return back()->with('error', 'No records selected.');
+        }
+
+        //actions to apply
+        $residentAction = $request->resident_action;
+        $statusAction = $request->status_action;
+
+        $seniors = SeniorDetail::with('beneficiary')->whereIn('id', $senior_ids)->get();
+
+
+        foreach($seniors as $senior ){
+            $beneficiary = $senior->beneficiary;
+
+            if($residentAction === 'active'){
+                $beneficiary->residence_status = 'active';
+            }elseif($residentAction === 'inactive'){
+                $beneficiary->residence_status = 'inactive';
+            }
+
+            if($statusAction === 'alive'){
+                $beneficiary->life_status = 'alive';
+            }elseif($statusAction ==='deceased'){
+                $beneficiary->life_status = 'deceased';
+            }
+
+            $beneficiary->save();
+            $senior->save();
+
+
+        }
+
+        return back()->with('success', 'Validated successfully.');
+
     }
 
 

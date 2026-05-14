@@ -27,7 +27,8 @@
             </table>
         </div>
 
-        <div class="w-full mt-10 flex justify-end items-center">
+        
+        <div class="w-full mt-10 flex justify-end items-center" id="approve-submit-field">
             <div class="flex gap-x-5">
                 <button
                     class="close-modal-btn p-3 bg-[#DFDFDF] text-[#787878] rounded-md cursor-pointer shadow-lg" 

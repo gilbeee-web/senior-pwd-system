@@ -90,10 +90,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function resetForm(tab) {
+        filterForm.querySelectorAll('input, select').forEach(el => {
+            if (el.type === 'checkbox' || el.type === 'radio') {
+                el.checked = false;
+            } else {
+                el.value = '';
+            }
+        });
+
+        // keep tab value
+        document.getElementById('activeReport-tab').value = tab;
+    }
+
     if (pwdBtn) {
         pwdBtn.addEventListener('click', (e) => {
             setTab('pwd');
             setActiveButton('pwd');
+
+            resetForm('pwd');
             filterForm.submit(); 
         });
     }
@@ -102,44 +117,87 @@ document.addEventListener('DOMContentLoaded', function () {
         seniorBtn.addEventListener('click', (e) => {
             setTab('senior');
             setActiveButton('senior');
+
+            resetForm('senior');
             filterForm.submit(); 
         });
     }
 
+    document.querySelectorAll('.modal').forEach(modal => {
 
+        const selectAll = modal.querySelector('.select-all');
+        const checkboxes = modal.querySelectorAll('input[name="columns[]"]');
 
-    document.querySelectorAll('.column-wrapper').forEach(wrapper => {
+        if (!selectAll) return;
 
-        const button = wrapper.querySelector('.column-btn');
-        const dropdown = wrapper.querySelector('.column-dropdown');
-        const selectAll = wrapper.querySelector('.select-all');
-
-        // Toggle dropdown
-        button.addEventListener('click', function (e) {
-            e.stopPropagation();
-
-            // close all other dropdowns first
-            document.querySelectorAll('.column-dropdown').forEach(d => {
-                if (d !== dropdown) d.classList.add('hidden');
-            });
-
-            dropdown.classList.toggle('hidden');
-        });
-
-        // Select all
-        selectAll.addEventListener('click', function () {
-            const checkboxes = dropdown.querySelectorAll('input[name="columns[]"]');
+        // Select All
+        selectAll.addEventListener('change', function () {
             checkboxes.forEach(cb => cb.checked = this.checked);
         });
+
+        // Individual
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const allChecked = [...checkboxes].every(c => c.checked);
+                selectAll.checked = allChecked;
+            });
+        });
+
     });
 
 
-    // // Close when clicking outside
-    // document.addEventListener('click', function () {
-    //     document.querySelectorAll('.column-dropdown').forEach(d => {
-    //         d.classList.add('hidden');
-    //     });
-    // });
+    function toggleModal(modalId, show = true) {
+        const modal = document.getElementById(modalId);
+
+        if (!modal) return;
+
+        if (show) {
+            modal.classList.remove('hidden');
+        } else {
+            modal.classList.add('hidden');
+        }
+    }
+
+    document.querySelectorAll('.open-export-modal').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const target = this.dataset.target;
+            toggleModal(target, true);
+        });
+    });
+
+    document.querySelectorAll('.close-export-modal').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const modal = this.closest('.modal');
+            toggleModal(modal.id, false);
+        });
+    });
+
+    document.querySelectorAll('.export-form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+
+            const button = form.querySelector('.export-btn');
+
+            const checked = form.querySelectorAll('input[name="columns[]"]:checked');
+            
+            if (checked.length < 3) {
+                e.preventDefault();
+                alert('Please select at least 3 columns to export.');
+                return;
+            }
+
+            if (button) {
+                button.textContent = 'Exporting...';
+                button.disabled = true;
+                button.classList.add('opacity-50', 'cursor-not-allowed');
+
+                 setTimeout(() => {
+                    button.textContent = 'Export Excel';
+                    button.disabled = false;
+                    button.classList.remove('opacity-50', 'cursor-not-allowed');
+                }, 3000);
+            }
+        });
+    });
 
 
 });

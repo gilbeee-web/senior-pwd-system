@@ -87,7 +87,7 @@
 
     <div class="mt-5">
 
-        <table class="w-full text-sm text-left border-collapse bg-[#F0F0F0] shadow-md">
+        <table class="w-full text-sm text-left border-collapse bg-[#F0F0F0]">
             <thead class="text-gray-600 uppercase text-xs border-b">
                 <tr class="bg-gray-50">
                     <th class="p-3">FULL NAME</th>
@@ -102,6 +102,11 @@
                 @include('requests.partials.request_rows')
             </tbody>
         </table>
+ 
+        <div class="mt-3">
+            @include('pagination.request_pagination')
+        </div>
+
     </div>
 
     <div class="hidden" id="review-changes-wrapper">

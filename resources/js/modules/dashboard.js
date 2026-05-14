@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function(){
             labels,
             values,
             'Seniors',
-            'Senior Citizens per Barangay'
         );
     }
 

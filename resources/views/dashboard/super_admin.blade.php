@@ -58,7 +58,7 @@
     <div class="mt-6">
         <h1 class="text-xl font-bold">Recently Added</h1>
 
-        <table class="w-full text-sm text-center border-collapse bg-[#F0F0F0] shadow-md mt-2">
+        <table class="w-full text-sm text-left border-collapse bg-[#F0F0F0] shadow-md mt-2">
             <thead class="text-gray-600 uppercase text-xs border-b">
                 <tr class="bg-gray-50">
                     <th class="p-3">NAME</th>
@@ -71,16 +71,23 @@
                 
                 @forelse($recent_activities as $activity)
                     <tr class="border-b hover:bg-gray-200">
-                        <td class="p-3">{{$activity->last_name}}</td>
-                        <td class="p-3">
+                        <td class="p-3 uppercase">
+                            {{$activity->last_name}} {{$activity->first_name}} {{$activity->middle_name}}
+                        </td>
+                        <td class="p-3 uppercase">
                             @if($activity->type === 'pwd')
                                 PWD
                             @elseif($activity->type === 'senior')
                                 Senior
                             @endif               
                         </td>
-                        <td class="p-3">{{$activity->creator->name}}</td>
-                        <td class="p-3">{{ \Carbon\Carbon::parse($activity->created_at)->format('F d, Y \a\t g:ia') }}</td>
+                        <td class="p-3 ">
+                           <h1 class="uppercase">{{$activity->creator->name}}</h1> 
+                           <p>{{ ucwords(str_replace('_', ' ', $activity->creator->role)) }}</p>
+                        </td>
+                        <td class="p-3">
+                            {{ \Carbon\Carbon::parse($activity->created_at)->format('m-d-Y') }}
+                        </td>
                     </tr>
                 @empty
                     <tr>

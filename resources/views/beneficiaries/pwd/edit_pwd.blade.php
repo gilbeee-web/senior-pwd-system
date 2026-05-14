@@ -24,7 +24,7 @@
             </span>
         </div>
 
-        <form id="pwd_form" action="{{route('pwd.update', $pwd->id)}}" method="POST" class="flex flex-col gap-y-5 mb-5">
+        <form id="pwd_form"  data-form-type="update" action="{{route('pwd.update', $pwd->id)}}" method="POST" class="flex flex-col gap-y-5 mb-5">
             
             @csrf
             @method('put')
@@ -43,10 +43,8 @@
                 </a>
 
                 <button 
-                    class="p-3 bg-[#FF9793] text-white rounded-md cursor-not-allowed shadow-lg" 
+                    class="p-3 bg-blue-500 text-white rounded-md cursor-pointer shadow-lg" 
                     type="submit"
-                    id="submitBtn"
-                    disabled
                 >
                     Update
                 </button>

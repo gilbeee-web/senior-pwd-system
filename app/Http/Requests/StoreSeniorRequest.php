@@ -40,7 +40,7 @@ class StoreSeniorRequest extends BaseBeneficiaryRequest
     public function rules(): array
     {
         return array_merge($this->baseRules(), [
-            'osca_id_number' => 'required|string',
+            'osca_id_number' => 'required|string|unique:senior_details,osca_id_number',
             'ncsc_registration_number' => 'nullable|string',
             'place_of_birth' => 'required|string',
             'occupation' => 'required|string',
@@ -53,5 +53,13 @@ class StoreSeniorRequest extends BaseBeneficiaryRequest
             'family.*.civil_status' => 'nullable|string',
             'family.*.income' => 'nullable|numeric'
         ]);
+    }
+
+    public function messages(): array
+    {
+        return [
+            'osca_id_number.required' => 'OSCA ID number is required.',
+            'osca_id_number.unique' => 'This OSCA ID number is already registered.',
+        ];
     }
 }

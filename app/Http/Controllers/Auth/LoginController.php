@@ -45,15 +45,15 @@ class LoginController extends Controller
         // dd($user->role);
         switch($user->role){
             case 'super_admin':
-                return redirect()->route('super_admin.dashboard')->with(['success' => 'Welcome super admin!']);
+                return redirect()->route('super_admin.dashboard');
             case 'barangay_pwd_admin':
-                return redirect()->route('pwd_admin.dashboard')->with(['success' => 'Welcome PWD Admin!']);
+                return redirect()->route('pwd_admin.dashboard');
             case 'pwd_admin':
-                return redirect()->route('pwd_admin.dashboard')->with(['success' => 'Welcome PWD Admin!']);
+                return redirect()->route('pwd_admin.dashboard');
             case 'senior_admin':
-                return redirect()->route('senior_admin.dashboard')->with(['success' => 'Welcome Senior Admin!']);
+                return redirect()->route('senior_admin.dashboard');
             case 'barangay_senior_admin':
-                return redirect()->route('senior_admin.dashboard')->with(['success' => 'Welcome Senior Admin!']);
+                return redirect()->route('senior_admin.dashboard');
             default:
                 Auth::logout();
                 return redirect()->route('index')->with('error', 'Unauthorized role');
@@ -67,7 +67,7 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect()->route('index')->with(['success' => 'Successfully Logged Out!']);
+        return redirect()->route('index');
         
     }
 

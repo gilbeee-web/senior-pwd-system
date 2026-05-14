@@ -15,7 +15,7 @@
         <span class="text-white text-xl font-bold">Personal information</span>
     </div>
 
-    <div class="flex gap-x-10 items-center px-5">
+    <div class="grid grid-cols-5 gap-6 px-5">
 
         <div class="flex flex-col gap-y-1">
 
@@ -24,12 +24,12 @@
                 type="text" 
                 placeholder="" 
                 name="last_name" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('last_name', $senior->beneficiary->last_name ?? '') }}"
                 required
             >
             @error('last_name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>    
@@ -40,12 +40,12 @@
             <input 
                 type="text" placeholder="" 
                 name="first_name" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('first_name', $senior->beneficiary->first_name ?? '') }}"
                 required
             >
             @error('first_name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
@@ -57,11 +57,11 @@
                 type="text" 
                 placeholder="" 
                 name="middle_name" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('middle_name', $senior->beneficiary->middle_name ?? '') }}"
             >
             @error('middle_name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
@@ -71,11 +71,11 @@
             <label for="">Suffix:</label>
             <input 
                 type="text" placeholder="" 
-                name="extension" class="border rounded-md p-2 bg-[#F5F5F5]"
+                name="extension" class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('extension', $senior->beneficiary->extension ?? '') }}"
             >
             @error('extension')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
@@ -86,17 +86,17 @@
             <input 
                 type="date" placeholder="" 
                 name="birthdate" class="border rounded-md p-2 bg-[#F5F5F5]"
-                value="{{ old('birthdate', \Carbon\Carbon::parse($senior->beneficiary->birthdate)->format('Y-m-d')) }}"
+                value="{{ old('birthdate', isset($senior) ? \Carbon\Carbon::parse($senior->beneficiary->birthdate)->format('Y-m-d') : '') }}"
                 required
             >
             @error('birthdate')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
     </div>
 
-    <div class="flex gap-x-10 items-center px-5">
+    <div class="grid grid-cols-5 gap-6 px-5">
 
         <div class="flex flex-col gap-y-1">
             <label for="contact_number">Contact Number:<span class="text-red-500">*</span></label>
@@ -108,7 +108,7 @@
                 required
             >
             @error('contact_number')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
@@ -132,7 +132,7 @@
                 </option>
             </select>
             @error('gender')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
@@ -140,7 +140,7 @@
         <div class="flex flex-col gap-y-1">
             <label for="civil_status">Civil Status:<span class="text-red-500">*</span></label>
 
-            <select name="civil_status" id="" class="border rounded-md p-2 bg-[#F5F5F5]" required>
+            <select name="civil_status" id="" class="border rounded-md p-2 bg-[#F5F5F5] uppercase" required>
                 <option value="" disabled selected hidden>Select</option>
                 <option 
                     value="Single" 
@@ -174,7 +174,7 @@
                 </option>
             </select>
             @error('civil_status')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
@@ -205,7 +205,7 @@
 
             </select>
             @error('employment_status')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
@@ -234,7 +234,7 @@
             </select>
 
             @error('educational_attainment')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div> --}}
     </div>
@@ -246,53 +246,70 @@
         <span class="text-white text-xl font-bold">Address Information</span>
     </div>
 
-    <div class="flex gap-x-10 items-center px-5">
+    <div class="grid grid-cols-5 gap-6 px-5">
 
         <div class="flex flex-col gap-y-1">
             <label for="house_num">House Number:<span class="text-red-500">*</span></label>
             <input 
                 type="text" 
                 name="house_num" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('house_num', $senior->beneficiary->address->house_num ?? '') }}"
                 required
             >
             @error('house_num')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
             <label for="barangay_id">Barangay:<span class="text-red-500">*</span></label>
-            <select 
-                name="barangay_id"
-                id="barangay"
-                class="border rounded-md py-2 px-6 bg-[#F5F5F5]"
-                data-street-url="{{ url('beneficiary/streets') }}/"
-                required
-            >
-                <option value="" disabled selected hidden>Select</option>
-
-                @foreach($barangays as $brgy)
+            @if($current_user->role === 'barangay_senior_admin')
+                <select 
+                    name="barangay_id"
+                    id="senior_barangay"
+                    class="border rounded-md py-2 px-6 bg-[#F5F5F5]"
+                    data-street-url="{{ url('beneficiary/streets') }}/"
+                    required
+                >
+                    <option value="" disabled hidden>Select</option>
                     <option 
-                        value="{{ $brgy->id }}"
-                        {{ 
-                            old('barangay_id', $senior->beneficiary->address->street->barangay->id ?? '') == $brgy->id ? 'selected' : '' 
-                        }}
+                        value="{{ $current_user_brgy->id }}"
                     >
-                        {{ $brgy->name }}
+                        {{ $current_user_brgy->name }}
                     </option>
-                @endforeach
-            </select>
+                </select>
+            @else
+                <select 
+                    name="barangay_id"
+                    id="senior_barangay"
+                    class="border rounded-md py-2 px-6 bg-[#F5F5F5]"
+                    data-street-url="{{ url('beneficiary/streets') }}/"
+                    required
+                >
+                    <option value="" disabled selected hidden>Select</option>
+
+                    @foreach($barangays as $brgy)
+                        <option 
+                            value="{{ $brgy->id }}"
+                            {{ 
+                                old('barangay_id', $senior->beneficiary->address->street->barangay->id ?? '') == $brgy->id ? 'selected' : '' 
+                            }}
+                        >
+                            {{ $brgy->name }}
+                        </option>
+                    @endforeach
+                </select>
+            @endif
             @error('barangay_id')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="flex flex-col gap-y-1">
 
             <label for="street_id">Street:<span class="text-red-500">*</span></label>
-            <select name="street_id" id="street" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
+            <select name="street_id" id="senior_street" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
 
                 {{-- pre define the street if editing mode  --}}
@@ -312,7 +329,7 @@
             </select>
 
             @error('street_id')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
 
         </div>
@@ -325,7 +342,7 @@
         <span class="text-white text-xl font-bold">Senior Information</span>
     </div>
 
-    <div class="flex gap-x-10 items-center px-5">
+    <div class="grid grid-cols-5 gap-6 px-5">
 
         <div class="flex flex-col gap-y-1">
             <label for="osca_id_number">OSCA ID Number:<span class="text-red-500">*</span></label>
@@ -333,13 +350,13 @@
             <input 
                 type="text" 
                 name="osca_id_number" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('osca_id_number', $senior->osca_id_number ?? '') }}"
                 required
             >
 
             @error('osca_id_number')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
@@ -349,12 +366,12 @@
             <input 
                 type="text" 
                 name="ncsc_registration_number" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('ncsc_registration_number', $senior->ncsc_registration_number ?? '') }}"
             >
 
             @error('ncsc_registration_number')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
@@ -364,12 +381,12 @@
             <input 
                 type="text" 
                 name="place_of_birth" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('place_of_birth', $senior->place_of_birth ?? '') }}"
                 required
             >
             @error('place_of_birth')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
@@ -378,12 +395,12 @@
             <input 
                 type="text" 
                 name="occupation" 
-                class="border rounded-md p-2 bg-[#F5F5F5]"
+                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                 value="{{ old('occupation', $senior->occupation ?? '') }}"
                 required
             >
             @error('occupation')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
 
@@ -404,13 +421,13 @@
         <div class="flex flex-col gap-y-1 w-[15%] hidden" id="pensionAmount-wrapper">
             <label for="pension_amount">Pension Amount:</label>
             <input 
-                type="text" 
+                type="number" 
                 name="pension_amount" 
                 class="border rounded-md p-2 bg-[#F5F5F5]"
                 value="{{ old('pension_amount', $senior->pension_amount ?? '') }}"
             >
             @error('pension_amount')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
         </div>
     </div>
@@ -432,7 +449,7 @@
 
                     <!-- REMOVE BUTTON -->
                     <button type="button"
-                        class="remove-family absolute top-2 right-2 text-red-500 font-bold text-lg">
+                        class="remove-family cursor-pointer absolute top-2 right-2 text-red-500 font-bold text-lg">
                         ✕
                     </button>
 
@@ -442,7 +459,7 @@
                     <div class="flex flex-col gap-y-1">
                         <label>Full Name:<span class="text-red-500">*</span></label>
                         <input type="text"
-                            class="border rounded-md p-2 bg-[#F5F5F5]"
+                            class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                             data-name="full_name"
                             required>
                     </div>
@@ -451,7 +468,7 @@
                     <div class="flex flex-col gap-y-1">
                         <label>Relationship:<span class="text-red-500">*</span></label>
                         <input type="text"
-                            class="border rounded-md p-2 bg-[#F5F5F5]"
+                            class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                             data-name="relationship"
                             required>
                     </div>
@@ -469,7 +486,7 @@
                     <div class="flex flex-col gap-y-1">
                         <label>Occupation:<span class="text-red-500">*</span></label>
                         <input type="text"
-                            class="border rounded-md p-2 bg-[#F5F5F5]"
+                            class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
                             data-name="occupation"
                             required>
                     </div>

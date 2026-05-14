@@ -196,17 +196,39 @@
                             @endforeach
                         </select>
                     </div>
-
-                    @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_senior_admin' || $current_user->role === 'senior_admin')
-                        <div class="senior_filter flex gap-x-3 items-center mr-5 {{$tab === 'senior' ? '' : 'hidden' }}">
-                            <input type="checkbox" class="h-7 w-7" name="isBday" value="1" {{ request('isBday') == 1 ? 'checked' : '' }}>
-                            <label>Birthday Today</label>
-                        </div>
-                    @endif
                 </div>
                 
                 <div class="flex justify-between items-center mr-5">
-                    <span class="{{$tab === 'senior' ? '' : 'hidden' }}"></span>
+
+                    @if($current_user->role === 'super_admin' || $current_user->role === 'barangay_senior_admin' || $current_user->role === 'senior_admin')
+
+                        <div class="{{$tab === 'senior' ? '' : 'hidden' }} flex gap-x-5 items-center">
+
+                            <div>
+                                <select 
+                                    name="status" 
+                                    id="status"
+                                    class="border rounded-md py-2 px-1 bg-[#F5F5F5]"
+                                >
+                                    <option value="" disabled selected hidden>Select Status</option>
+                                    <option value="">All</option>
+                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="deceased" {{ request('status') == 'deceased' ? 'selected' : '' }}>Deceased</option>
+                                    <option value="transferred" {{ request('status') == 'transferred' ? 'selected' : '' }}>Transferred</option>
+
+                                </select>
+                            </div>
+
+                            <div class="senior_filter flex gap-x-3 items-center mr-5 {{$tab === 'senior' ? '' : 'hidden' }}">
+                                <input type="checkbox" class="h-7 w-7" name="isBday" value="1" {{ request('isBday') == 1 ? 'checked' : '' }}>
+                                <label>Birthday Today</label>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                    @endif
+                    {{-- <span class="{{$tab === 'senior' ? '' : 'hidden' }}"></span> --}}
                     @if(
                         $current_user->role === 'super_admin' || 
                         $current_user->role === 'barangay_pwd_admin' || 
@@ -266,7 +288,22 @@
                                     placeholder="Max"
                                     min="0"
                                 >
-                            </div>                            
+                            </div>
+                            
+                            <div>
+                                <select 
+                                    name="eligibility_status" 
+                                    id="eligibility_status"
+                                    class="border rounded-md py-2 px-1 bg-[#F5F5F5]"
+                                >
+                                    <option value="" disabled selected hidden>Select Status</option>
+                                    <option value="">All</option>
+                                    <option value="eligible" {{ request('eligibility_status') == 'eligible' ? 'selected' : '' }}>Eligible</option>
+                                    <option value="not_eligible" {{ request('eligibility_status') == 'not_eligible' ? 'selected' : '' }}>Not Eligible</option>
+
+                                </select>
+                            </div>
+
                         </div>
                     @endif
 
@@ -294,96 +331,19 @@
     )
         <div class="w-full mt-5 {{$tab === 'pwd' ? '' : 'hidden' }}">
             <div class="w-full flex justify-end" id="pwd_export_settings">
-            
-                <form action="{{ route('report.pwd.export') }}" method="GET">
-                    <input type="hidden" name="barangay" value="{{ request('barangay') }}">
-                    <input type="hidden" name="disability_type" value="{{ request('disability_type') }}">
-                    <input type="hidden" name="gender" value="{{ request('gender') }}">
-                    <input type="hidden" name="civil_status" value="{{ request('civil_status') }}">
-                    <input type="hidden" name="educational_attainment" value="{{ request('educational_attainment') }}">
-                    <input type="hidden" name="employment_status" value="{{ request('employment_status') }}">
-                    <input type="hidden" name="min_age" value="{{ request('min_age') }}">
-                    <input type="hidden" name="max_age" value="{{ request('max_age') }}">
+                <button 
+                    class="open-export-modal p-2 cursor-pointer bg-green-500 hover:bg-green-300 text-white rounded-md flex gap-x-2 items-center" 
+                    data-target="pwdModal"
+                >
+                    <span>
+                        <img src="{{asset('/images/icons/export.svg')}}" alt="Export" class="object-contain w-4 h-4">
+                    </span>
+                    Export Excel
+                </button>
+            </div>
 
-                    <!-- DROPDOWN BUTTON -->
-                    <div class="relative inline-block text-left column-wrapper">
-                        <button 
-                            type="button"
-                            class="column-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 flex gap-x-2 items-center"
-                        >
-                            Select Columns 
-                            <span>
-                                <img src="{{asset('/images/icons/arrow-down.svg')}}" alt="Arrow down" class="object-contain w-5 h-5">
-                            </span>
-                        </button>
-
-                        <!-- DROPDOWN CONTENT -->
-                        <div
-                            class="column-dropdown hidden absolute right-0 mt-2 w-56 bg-white border rounded shadow-lg z-50 p-3 space-y-2"
-                        >
-                            <!-- SELECT ALL -->
-                            <div class="border-b pb-2">
-                                <label class="flex items-center gap-2 font-semibold">
-                                    <input type="checkbox" class="select-all">
-                                    Select All
-                                </label>
-                            </div>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="pwd_id_number" checked>
-                                ID Number
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="name" checked>
-                                Name
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="birthdate" checked>
-                                Birthdate
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="disability_type" checked>
-                                Disability Type
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="gender" checked>
-                                Gender
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="street" checked>
-                                Street
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="barangay" checked>
-                                Barangay
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="civil_status">
-                                Civil Status
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="employment_status">
-                                Employment Status
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="educational_attainment">
-                                Educational Attainment
-                            </label>
-                        </div>
-                    </div>
-
-
-                    <button type="submit" class="hover:underline hover:text-green-500 cursor-pointer">Export Excel</button>
-                </form>
+            <div id="pwdModal" class="modal hidden">
+                @include('reports.partials.pwd_export_modal')
             </div>
 
             <div class="mt-2" id="pwd-report-table-wrapper">
@@ -396,6 +356,7 @@
                             <th class="p-3">ADDRESS</th>
                             <th class="p-3">CIVIL & EMPLOYMENT STATUS</th>
                             <th class="p-3">EDUCATIONAL ATTAINMENT</th>
+                            <th class="p-3">STATUS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -404,7 +365,9 @@
                 </table>
 
                 <div class="mt-1">
-                    @include('pagination.pwd_pagination')
+                    @if($pwd_beneficiaries)
+                        @include('pagination.pwd_pagination')
+                    @endif
                 </div>
             </div>
 
@@ -420,95 +383,21 @@
 
         <div class="w-full mt-5 {{$tab === 'senior' ? '' : 'hidden' }}">
             <div class="w-full flex justify-end" id="senior_export_settings">
-            
-                <form action="{{ route('report.senior.export') }}" method="GET">
-                    <input type="hidden" name="barangay" value="{{ request('barangay') }}">
-                    <input type="hidden" name="senior_type" value="{{ request('senior_type') }}">
-                    <input type="hidden" name="gender" value="{{ request('gender') }}">
-                    <input type="hidden" name="civil_status" value="{{ request('civil_status') }}">
-                    <input type="hidden" name="employment_status" value="{{ request('employment_status') }}">
-
-
-                    <!-- DROPDOWN BUTTON -->
-                    <div class="relative inline-block text-left column-wrapper">
-                        <button 
-                            type="button"
-                            class="column-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 flex gap-x-2 items-center"
-                        >
-                            Select Columns 
-                            <span>
-                                <img src="{{asset('/images/icons/arrow-down.svg')}}" alt="Arrow down" class="object-contain w-5 h-5">
-                            </span>
-                        </button>
-
-                        <!-- DROPDOWN CONTENT -->
-                        <div
-                            class="column-dropdown hidden absolute right-0 mt-2 w-56 bg-white border rounded shadow-lg z-50 p-3 space-y-2"
-                        >
-
-                            <!-- SELECT ALL -->
-                            <div class="border-b pb-2">
-                                <label class="flex items-center gap-2 font-semibold">
-                                    <input type="checkbox" class="select-all">
-                                    Select All
-                                </label>
-                            </div>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="osca_id_number" checked>
-                                ID Number
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="name" checked>
-                                Name
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="gender" checked>
-                                Gender
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="birthdate" checked>
-                                Birthdate
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="age" checked>
-                                Age
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="street" checked>
-                                Street
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="barangay" checked>
-                                Barangay
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="civil_status">
-                                Civil Status
-                            </label>
-
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="columns[]" value="employment_status">
-                                Employment Status
-                            </label>
-
-                            
-                        </div>
-                    </div>
-
-                    <button type="submit" class="hover:underline hover:text-green-500 cursor-pointer">
-                        Export Excel
-                    </button>
-                </form>
+                <button 
+                    class="open-export-modal p-2 cursor-pointer bg-green-500 hover:bg-green-300 text-white rounded-md flex gap-x-2 items-center" 
+                    data-target="seniorModal"
+                >
+                    <span>
+                        <img src="{{asset('/images/icons/export.svg')}}" alt="Export" class="object-contain w-4 h-4">
+                    </span>
+                    Export Excel
+                </button>
             </div>
 
+            <div id="seniorModal" class="modal hidden">
+                @include('reports.partials.senior_export_modal')
+            </div>
+            
             <div class="mt-2" id="senior-report-table-wrapper">
                 <table class="w-full text-sm text-left border-collapse bg-white shadow-md">
                     <thead class="text-gray-600 uppercase text-xs border-b">
@@ -520,6 +409,7 @@
                             <th class="p-3">GENDER</th>
                             <th class="p-3">ADDRESS</th>
                             <th class="p-3">CIVIL & EMPLOYMENT STATUS</th>
+                            <th class="p-3">STATUS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -528,7 +418,9 @@
                 </table>
 
                 <div class="mt-1">
-                    @include('pagination.senior_pagination')
+                    @if($senior_beneficiaries)
+                        @include('pagination.senior_pagination')
+                    @endif
                 </div>
                 
                 

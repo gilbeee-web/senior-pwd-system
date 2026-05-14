@@ -146,14 +146,18 @@
 
         <div class="no-print p-4 flex justify-between items-center">
 
-            <div>
+            <div class="flex gap-x-3 items-center">
                 <a 
-                    href="{{route('beneficiary.index', ['tab' => 'senior'])}}"
-                    class="bg-gray-600 text-white px-4 py-2 rounded">
-                    Back
+                    href="{{route('beneficiary.index', ['tab' => 'pwd'])}}"
+                    class="">
+                    <span>
+                        <img src="{{asset('/images/icons/back.svg')}}" alt="" class="object-contain w-10 h-10">
+                    </span>
                 </a>
-            </div>
 
+                <h1 class="text-2xl font-bold border-b-[3px] border-red-500">Print PWD ID</h1>
+            </div>
+            
             <div class="flex gap-2 items-center">
                 <button class="bg-green-600 text-white px-4 py-2 rounded" id="print-btn">
                     Print
@@ -424,9 +428,11 @@
                                         <div class="w-2/6 text-center">
                                             <div class="qr print:ml-[-15px]">
                                                 {{-- Qr code  --}}
-                                                <div class="qr-container">
-                                                    {!! QrCode::size(150)->generate($item->qr_link) !!}
-                                                </div>
+                                                @if($item->qr_link)
+                                                    <div class="qr-container">
+                                                        {!! QrCode::size(150)->generate($item->qr_link) !!}
+                                                    </div>
+                                                @endif
                                             </div>
 
                                             <p class="text-[10px] print:text-[6pt] print:mt-[-1px]">

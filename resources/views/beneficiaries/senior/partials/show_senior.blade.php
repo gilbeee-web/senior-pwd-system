@@ -22,32 +22,32 @@
 
                 <div class="flex flex-col gap-y-1 lg:col-span-3">
                     <label>Full Name:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="full_name"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="full_name"></span>
                 </div> 
 
                 <div class="flex flex-col gap-y-1">
                     <label>Date of Birth:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="birthdate"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] font-semibold" data-type="senior" data-field="birthdate"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Contact Number:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="contact_number"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="contact_number"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Gender:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="gender"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="gender"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Civil Status:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="civil_status"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="civil_status"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Employment Status:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="employment_status"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="employment_status"></span>
                 </div>  
             </div>
         </div>
@@ -64,17 +64,17 @@
 
                 <div class="flex flex-col gap-y-1">
                     <label>House Number:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="house_num"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="house_num"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Barangay:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="barangay"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="barangay"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Street:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="street"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="street"></span>
                 </div>  
 
             </div>
@@ -91,32 +91,32 @@
 
                 <div class="flex flex-col gap-y-1">
                     <label>OSCA ID Number:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="osca_id_number"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="osca_id_number"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>NCSC Registration Number:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="ncsc_registration_number">N/A</span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="ncsc_registration_number">N/A</span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Place of birth:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="place_of_birth"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="place_of_birth"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Occupation:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="occupation"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="occupation"></span>
                 </div>  
 
                 <div class="flex flex-col gap-y-1">
                     <label>Pension Amount:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="pension_amount"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] uppercase font-semibold" data-type="senior" data-field="pension_amount"></span>
                 </div> 
 
                 <div class="flex flex-col gap-y-1">
                     <label>Date ID issued:</label>
-                    <span class="rounded-md p-2 bg-[#F5F5F5]" data-type="senior" data-field="date_id_issued"></span>
+                    <span class="rounded-md p-2 bg-[#F5F5F5] font-semibold" data-type="senior" data-field="date_id_issued"></span>
                 </div> 
 
             </div>
@@ -130,17 +130,17 @@
             </div>
 
             <div class="px-5">
-                <table class="w-full text-sm text-center border border-gray-300">
-                    <thead class="bg-gray-200">
-                        <tr>
-                            <th class="border px-3 py-2">Full Name</th>
-                            <th class="border px-3 py-2">Relationship</th>
-                            <th class="border px-3 py-2">Birthdate</th>
-                            <th class="border px-3 py-2">Civil Status</th>
-                            <th class="border px-3 py-2">Occupation</th>
+                <table class="w-full text-sm text-left border-collapse bg-white shadow-md">
+                    <thead class="text-gray-600 uppercase text-xs bg-[#F0F0F0] border-b">
+                        <tr class="bg-gray-50">
+                            <th class="p-3">FULL NAME</th>
+                            <th class="p-3">RELATIONSHIP</th>
+                            <th class="p-3">BIRTHDATE</th>
+                            <th class="p-3">CIVIL STATUS</th>
+                            <th class="p-3">OCCUPATION</th>
                         </tr>
                     </thead>
-                    <tbody id="family-members-container">
+                    <tbody id="family-members-container" class="uppercase">
                         <!-- JS will insert rows here -->
                     </tbody>
                 </table>

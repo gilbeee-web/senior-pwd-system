@@ -84,10 +84,12 @@
 
             <label for="birthdate">Date of birth: <span class="text-red-500">*</span></label>
             <input 
-                type="date" placeholder="" 
+                type="date"
                 name="birthdate" 
-                class="border rounded-md p-2 bg-[#F5F5F5] uppercase"
-                value="{{ old('birthdate', \Carbon\Carbon::parse($pwd->beneficiary->birthdate ?? '')->format('Y-m-d')) }}"
+                class="border rounded-md p-2 bg-[#F5F5F5]"
+                value="{{ old('birthdate', isset($pwd->beneficiary->birthdate) 
+                    ? \Carbon\Carbon::parse($pwd->beneficiary->birthdate)->format('Y-m-d') 
+                    : '') }}"
                 required
             >
             @error('birthdate')
@@ -119,15 +121,15 @@
             <select name="gender" id="" class="border rounded-md py-2 px-5 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 <option 
-                    value="Male" 
-                    {{ old('gender', $pwd->beneficiary->gender ?? '') == 'Male' ? 'selected' : '' }}
+                    value="male" 
+                    {{ old('gender', $pwd->beneficiary->gender ?? '') == 'male' ? 'selected' : '' }}
                 >
                     Male
                 </option>
 
                 <option 
-                    value="Female" 
-                    {{ old('gender', $pwd->beneficiary->gender ?? '') == 'Female' ? 'selected' : '' }}
+                    value="female" 
+                    {{ old('gender', $pwd->beneficiary->gender ?? '') == 'female' ? 'selected' : '' }}
                 >
                     Female
                 </option>
@@ -144,32 +146,32 @@
             <select name="civil_status" id="" class="border rounded-md p-2 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 <option 
-                    value="Single" 
-                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'Single' ? 'selected' : '' }}
+                    value="single" 
+                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'single' ? 'selected' : '' }}
                 >
                    Single
                 </option>
                 <option 
-                    value="Married" 
-                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'Married' ? 'selected' : '' }}
+                    value="married" 
+                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'married' ? 'selected' : '' }}
                 >
                    Married
                 </option>
                 <option 
-                    value="Widow/er" 
-                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'Widow/er' ? 'selected' : '' }}
+                    value="widowed" 
+                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'widowed' ? 'selected' : '' }}
                 >
                    Widow/er
                 </option>
                 <option 
-                    value="Separated" 
-                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'Separated' ? 'selected' : '' }}
+                    value="separated" 
+                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'separated' ? 'selected' : '' }}
                 >
                    Separated
                 </option>
                 <option 
-                    value="Cohabitation (live-in)" 
-                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'Cohabitation (live-in)' ? 'selected' : '' }}
+                    value="cohabitation (live-in)" 
+                    {{ old('civil_status', $pwd->beneficiary->civil_status ?? '') == 'cohabitation (live-in)' ? 'selected' : '' }}
                 >
                    Cohabitation (live-in)
                 </option>
@@ -184,22 +186,22 @@
             <select name="employment_status" id="" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 <option 
-                    value="Employed" 
-                    {{ old('employment_status', $pwd->beneficiary->employment_status ?? '') == 'Employed' ? 'selected' : '' }}
+                    value="employed" 
+                    {{ old('employment_status', $pwd->beneficiary->employment_status ?? '') == 'employed' ? 'selected' : '' }}
                 >
                    Employed
                 </option>
 
                 <option 
-                    value="Unemployed" 
-                    {{ old('employment_status', $pwd->beneficiary->employment_status ?? '') == 'Unemployed' ? 'selected' : '' }}
+                    value="unemployed" 
+                    {{ old('employment_status', $pwd->beneficiary->employment_status ?? '') == 'unemployed' ? 'selected' : '' }}
                 >
                    Unemployed
                 </option>
 
                 <option 
-                    value="Self-employed" 
-                    {{ old('employment_status', $pwd->beneficiary->employment_status ?? '') == 'Self-employed' ? 'selected' : '' }}
+                    value="self_employed" 
+                    {{ old('employment_status', $pwd->beneficiary->employment_status ?? '') == 'self_employed' ? 'selected' : '' }}
                 >
                    Self-employed
                 </option>
@@ -266,26 +268,40 @@
 
         <div class="flex flex-col gap-y-1">
             <label for="barangay_id">Barangay: <span class="text-red-500">*</span></label>
-            <select 
-                name="barangay_id"
-                id="barangay"
-                class="border rounded-md py-2 px-6 bg-[#F5F5F5]"
-                data-street-url="{{ url('beneficiary/streets') }}/"
-                required
-            >
-                <option value="" disabled selected hidden>Select</option>
 
-                @foreach($barangays as $brgy)
-                    <option 
-                        value="{{ $brgy->id }}"
-                        {{ 
-                            old('barangay_id', $pwd->beneficiary->address->street->barangay->id ?? '') == $brgy->id ? 'selected' : '' 
-                        }}
-                    >
-                        {{ $brgy->name }}
-                    </option>
-                @endforeach
-            </select>
+            @if($current_user->role === 'barangay_pwd_admin')
+                <select 
+                    name="barangay_id"
+                    id="pwd_barangay"
+                    class="border rounded-md py-2 px-6 bg-[#F5F5F5]"
+                    data-street-url="{{ url('beneficiary/streets') }}/"
+                    required
+                >
+                    <option value="" disabled hidden>Select</option>
+                    <option value="{{$current_user_brgy->id}}">{{ $current_user_brgy->name }}</option>
+                </select>
+            @else
+                <select 
+                    name="barangay_id"
+                    id="pwd_barangay"
+                    class="border rounded-md py-2 px-6 bg-[#F5F5F5]"
+                    data-street-url="{{ url('beneficiary/streets') }}/"
+                    required
+                >
+                    <option value="" disabled selected hidden>Select</option>
+
+                    @foreach($barangays as $brgy)
+                        <option 
+                            value="{{ $brgy->id }}"
+                            {{ 
+                                old('barangay_id', $pwd->beneficiary->address->street->barangay->id ?? '') == $brgy->id ? 'selected' : '' 
+                            }}
+                        >
+                            {{ $brgy->name }}
+                        </option>
+                    @endforeach
+                </select>
+            @endif
             @error('barangay_id')
                 <p class="text-red-500 text-sm min-h-[1.25rem]">{{ $message }}</p>
             @enderror
@@ -294,7 +310,7 @@
         <div class="flex flex-col gap-y-1">
 
             <label for="street_id">Street: <span class="text-red-500">*</span></label>
-            <select name="street_id" id="street" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
+            <select name="street_id" id="pwd_street" class="border rounded-md py-2 px-6 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 @if($isEditingPwd)
                     @foreach($streets as $street)
@@ -396,13 +412,13 @@
             <select name="blood_type" id="blood_type" class="border rounded-md py-2 px-3 bg-[#F5F5F5]" required>
                 <option value="" disabled selected hidden>Select</option>
                 @foreach([
-                    'O+',
+                    'O',
                     'O-',
-                    'A+',
+                    'A',
                     'A-',
-                    'B+',
+                    'B',
                     'B-',
-                    'AB+',
+                    'AB',
                     'AB-',
                     'Unknown'
                 ] as $blood_type)

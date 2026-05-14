@@ -25,7 +25,7 @@
             </span>
         </div>
 
-        <form id="senior_form" action="{{route('senior.store')}}" method="POST" class="flex flex-col gap-y-5 mb-5">
+        <form id="senior_form" data-form-type="create" action="{{route('senior.store')}}" method="POST" class="flex flex-col gap-y-5 mb-5">
             
             @csrf
 

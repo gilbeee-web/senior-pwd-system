@@ -171,12 +171,16 @@
 
         <div class="no-print p-4 flex justify-between">
 
-            <div>
+            <div class="flex gap-x-3 items-center">
                 <a 
                     href="{{route('beneficiary.index', ['tab' => 'senior'])}}"
-                    class="bg-gray-600 text-white px-4 py-2 rounded">
-                    Back
+                    class="">
+                    <span>
+                        <img src="{{asset('/images/icons/back.svg')}}" alt="" class="object-contain w-10 h-10">
+                    </span>
                 </a>
+
+                <h1 class="text-2xl font-bold border-b-[3px] border-red-500">Print Senior Citizen ID</h1>
             </div>
             
             <div class="flex gap-2">
@@ -401,12 +405,12 @@
 
                                 <div class="flex justify-between px-5 mt-8">
                                     <div class="text-center">
-                                        <h1 class="font-bold print:text-[8.5pt]">EDGARDO P. FAJARDO</h1>
+                                        <h1 class="font-bold print:text-[8.5pt] uppercase">{{$senior_chairman->full_name}}</h1>
                                         <p class="text-sm font-semibold print:text-[7pt]">OSCA Chairman</p>
                                     </div>
 
                                     <div class="text-center">
-                                        <h1 class="font-bold print:text-[8.5pt]">SHERRY ANN D. BOLISAY</h1>
+                                        <h1 class="font-bold print:text-[8.5pt] uppercase">{{$mayor->full_name}}</h1>
                                         <p class="text-sm font-semibold print:text-[7pt]">Municipal Mayor</p>
                                     </div>
                                 </div>

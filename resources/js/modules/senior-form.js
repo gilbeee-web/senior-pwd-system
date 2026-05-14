@@ -1,5 +1,60 @@
 document.addEventListener('DOMContentLoaded', function(){
 
+
+    //fetch street
+    const senior_barangay = document.getElementById('senior_barangay');
+    const senior_streetSelect = document.getElementById('senior_street');
+
+    async function loadStreets(barangayId) {
+        senior_streetSelect.innerHTML = '<option value="">Loading...</option>';
+
+        if (!barangayId) {
+            senior_streetSelect.innerHTML = '<option value="" disabled hidden selected>Select Street</option>';
+            return;
+        }
+
+        try {
+            const streetUrl = senior_barangay.dataset.streetUrl;
+
+            const response = await fetch(streetUrl + barangayId);
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch streets');
+            }
+
+            const streets = await response.json();
+
+            console.log("Streets: ", streets);
+
+            senior_streetSelect.innerHTML = '<option value="" disabled hidden>Select Street</option>';
+
+            streets.forEach(street => {
+                const option = document.createElement('option');
+                option.value = street.id;
+                option.textContent = street.name;
+                senior_streetSelect.appendChild(option);
+            });
+
+        } catch (error) {
+            console.log("Failed to fetch the streets: ", error);
+            senior_streetSelect.innerHTML = '<option value="">Error loading streets</option>';
+        }
+    }
+
+    if (senior_barangay) {
+
+        //load street after changing the value of barangay
+        senior_barangay.addEventListener('change', function () {
+            loadStreets(this.value);
+        });
+
+       //initial load for streets if the barangay is pre-defined
+        if (senior_barangay.value) {
+            loadStreets(senior_barangay.value);
+        }
+    }
+
+
     const has_pension_cb = document.getElementById('has_pension');
     const pensionWrapper = document.getElementById('pensionAmount-wrapper');
     const pensionInput = document.querySelector('input[name="pension_amount"]');
@@ -96,6 +151,86 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
     
+    const archiveForm = document.querySelectorAll('.senior-archive-form');
+
+    if(archiveForm){
+        archiveForm.forEach(form => {
+
+            form.addEventListener('submit', function(e){
+
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Archive Record?',
+                    text: 'This Senior Citizen beneficiary will be archived.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Archive'
+                }).then((result) => {
+
+                    if(result.isConfirmed){
+                        form.submit();
+                    }
+
+                });
+
+            });
+
+        });
+    }
+
+
+    const seniorForm = document.getElementById('senior_form');
+
+    if (seniorForm) {
+
+        seniorForm.addEventListener('submit', function (e) {
+
+            e.preventDefault();
+
+            const formType = this.dataset.formType;
+
+            let swalTitle = '';
+            let swalText = '';
+            let swalIcon = '';
+            let confirmBtnText = '';
+
+            if (formType === 'create') {
+
+                swalTitle = 'Review Information';
+                swalText = 'Please review all entered information before submitting.';
+                swalIcon = 'question';
+                confirmBtnText = 'Submit';
+
+            } else if (formType === 'update') {
+
+                swalTitle = 'Update Record?';
+                swalText = 'Are you sure you want to update this beneficiary information?';
+                swalIcon = 'warning';
+                confirmBtnText = 'Update';
+            }
+
+            Swal.fire({
+                title: swalTitle,
+                text: swalText,
+                icon: swalIcon,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: confirmBtnText
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    seniorForm.submit();
+                }
+
+            });
+
+        });
+
+    }
 
 
 

@@ -34,7 +34,7 @@ Route::prefix('user')
         Route::controller(UserController::class)->group(function () {
             Route::get('/', 'index')->name('user.index');
             Route::post('/', 'store')->name('user.store');
-            Route::post('/{id}/reset-password', 'resetPassword')->name('user.resetPassword');
+            Route::put('/{id}/reset-password', 'resetPassword')->name('user.resetPassword');
         });
     });
 
@@ -86,6 +86,8 @@ Route::prefix('senior')
             Route::delete('/{senior}', 'destroy')->name('senior.destroy');
             Route::delete('/delete-all', 'destroyAll')->name('senior.destroyAll');
             Route::post('/print', 'printSenior')->name('senior.print');
+            Route::post('/validate/update', 'bulkUpdateValidate')->name('senior.validate');
+            
 
         });
     });

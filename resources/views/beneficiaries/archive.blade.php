@@ -7,11 +7,19 @@
     <div class="w-full flex justify-between items-center">
 
         <div class="flex gap-x-3 items-center">
-            <a href="{{route('beneficiary.index')}}">
-                <span>
-                    <img src="{{asset('/images/icons/back.svg')}}" alt="">
-                </span>
-            </a>
+            @if($type === 'pwd')
+                <a href="{{route('beneficiary.index', ['tab' => 'pwd'])}}">
+                    <span>
+                        <img src="{{asset('/images/icons/back.svg')}}" alt="">
+                    </span>
+                </a>
+            @elseif($type === 'senior')
+                <a href="{{route('beneficiary.index', ['tab' => 'senior'])}}">
+                    <span>
+                        <img src="{{asset('/images/icons/back.svg')}}" alt="">
+                    </span>
+                </a>
+            @endif
 
             <h1 class="text-2xl font-bold border-b-[3px] border-red-500 inline-block">
                 Archived {{ $type === 'pwd' ? 'PWD' : 'Senior Citizen' }}

@@ -37,9 +37,22 @@ class PwdController extends Controller
 
     public function create(){
 
-        $barangays = Barangay::all();
+        // dd("ajajja");
 
-        return view('beneficiaries/pwd/create_pwd', ['barangays' => $barangays]);
+        $barangays = Barangay::all();
+        $current_user = Auth::user();
+        $current_user_brgy = null;
+        
+        if($current_user->role === 'barangay_pwd_admin'){
+            $current_user_brgy = Barangay::findOrFail($current_user->barangay_id);
+        }
+        
+
+        return view('beneficiaries.pwd.create_pwd', [
+            'barangays' => $barangays,
+            'current_user_brgy' => $current_user_brgy,
+            'current_user' => $current_user
+        ]);
     }
 
     public function store(StorePwdRequest $request){
@@ -92,7 +105,8 @@ class PwdController extends Controller
         return view('beneficiaries/pwd/edit_pwd', [
             'barangays' => $barangays,
             'pwd' => $pwd,
-            'streets' => $streets
+            'streets' => $streets,
+            'current_user' => Auth::user()
         ]);
     }
 
@@ -210,10 +224,10 @@ class PwdController extends Controller
         $gracePeriodMinutes = 1; 
         $withinGracePeriod = $pwd->created_at->diffInMinutes(now()) <= $gracePeriodMinutes;
 
-        if($withinGracePeriod || $this->currentUserRole === 'super_admin'){
+        if($withinGracePeriod || $this->currentUserRole === 'super_admin' || $this->currentUserRole === 'pwd_admin'){
             $pwd->delete();
 
-            return redirect()->route('beneficiary.index')
+            return redirect()->route('beneficiary.index', ['tab' => 'pwd'])
                 ->with('success', 'PWD record archived successfully.');
         }
 
@@ -234,15 +248,15 @@ class PwdController extends Controller
             'status' => 'pending',
         ]);
 
-         return redirect()->route('beneficiary.index')
-                ->with('success', 'Archive request submitted.');
+        return redirect()->route('beneficiary.index', ['tab' => 'pwd'])
+            ->with('success', 'Archive request submitted.');
        
     }
     
 
     public function destroy($id)
     {
-        if($this->currentUserRole !== 'super_admin'){
+        if($this->currentUserRole !== 'super_admin' || $this->currentUserRole !== 'pwd_admin'){
             return redirect()->back()->with('error', 'Only super admin could permanently delete data.');
         }
 
@@ -358,9 +372,9 @@ class PwdController extends Controller
             $beneficiary = $pwd->beneficiary;
 
             if($residentAction === 'active'){
-                $beneficiary->resident_status = 'active';
+                $beneficiary->residence_status = 'active';
             }elseif($residentAction === 'inactive'){
-                $beneficiary->resident_status = 'inactive';
+                $beneficiary->residence_status = 'inactive';
             }
 
             if($statusAction === 'alive'){

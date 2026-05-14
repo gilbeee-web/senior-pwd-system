@@ -1,4 +1,4 @@
-@forelse($senior_beneficiaries as $senior)
+@forelse($senior_beneficiaries ?? [] as $senior)
     <tr class="border-b hover:bg-gray-200">
         <td class="p-3">{{$senior->osca_id_number}}</td>
         <td class="p-3 uppercase">{{$senior->beneficiary->last_name}} {{$senior->beneficiary->first_name}} </td>
@@ -20,6 +20,30 @@
             <h1>{{$senior->beneficiary->civil_status}}</h1>
             <p>{{$senior->beneficiary->employment_status ?? 'N/A'}}</p>
         </td>
+
+        @if($senior->beneficiary->life_status === 'deceased' || $senior->beneficiary->residence_status === 'transferred')
+            <td class="p-3 space-y-1 flex flex-col">
+
+                {{-- Life Status --}}
+                @if($senior->beneficiary->life_status === 'deceased')
+                    <span class="px-2 py-1 text-xs rounded bg-gray-500 text-white">
+                        Deceased
+                    </span>                
+                @endif
+
+                {{-- Residency Status --}}
+                @if($senior->beneficiary->residence_status === 'transferred')
+                    <span class="px-2 py-1 text-xs rounded bg-yellow-500 text-yellow-700">
+                        Transferred
+                    </span>    
+                @endif
+            
+            </td>
+        @else
+            <td class="p-3">
+                <span class="text-green-500">Active</span>
+            </td>
+        @endif
     </tr>
 @empty
     <tr>

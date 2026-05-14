@@ -48,7 +48,7 @@
         <td class="p-3">
             @if($request->status === 'pending')
                 <button 
-                    class="action-btn text-green-600 hover:underline cursor-pointer"
+                    class="action-btn bg-green-500 text-white rounded-lg p-2 border hover:bg-green-400 cursor-pointer"
                     data-id="{{$request->id}}"
                     data-type="{{$request->type}}"
                     data-old='@json($request->model)'
@@ -58,9 +58,11 @@
                 </a>
             @else
                 <button 
-                    class="action-btn text-gray-500 hover:underline cursor-pointer"
+                    class="action-btn bg-gray-500 p-2 hover:underline cursor-pointer"
                     data-id="{{$request->id}}"
-                    data-type="{{$request->type}}"
+                    data-old='@json($request->model)'
+                    data-new='@json($request->payload)'
+                    data-type="view"
                 >
                     View
                 </a>

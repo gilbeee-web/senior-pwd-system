@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateSeniorRequest extends StoreSeniorRequest
 {
@@ -22,7 +23,11 @@ class UpdateSeniorRequest extends StoreSeniorRequest
     public function rules(): array
     {
         return array_merge($this->baseRules(), [
-            'osca_id_number' => 'sometimes|string',
+            'osca_id_number' => [
+                'required',
+                'string',
+                Rule::unique('senior_details', 'osca_id_number')->ignore($this->route('senior'))
+            ],
             'ncsc_registration_number' => 'nullable|string',
             'place_of_birth' => 'sometimes|string',
             'occupation' => 'sometimes|string',

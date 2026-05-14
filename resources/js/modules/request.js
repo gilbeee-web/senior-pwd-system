@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function(){
             
 
 
-            if(actionType === 'update'){
+            if(actionType === 'update' || actionType === 'view'){
 
                 const oldData = JSON.parse(this.dataset.old);
                 const newData = JSON.parse(this.dataset.new);
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 currentNewData = newData;
 
 
-                showUpdateModal(oldData, newData);
+                showUpdateModal(oldData, newData, actionType);
 
                 return;
             }
@@ -67,11 +67,36 @@ document.addEventListener('DOMContentLoaded', function(){
 
     function formatLabel(key) {
         return key
-            .replaceAll('.', ' → ')
-            .replaceAll('_', ' ')
+            .replace(/_/g, ' ')
             .replace(/\b\w/g, c => c.toUpperCase());
     }
 
+    function formatValue(value) {
+        if (value === null || value === undefined || value === '') {
+            return '-';
+        }
+
+        // format date
+        if (!isNaN(Date.parse(value)) && value.includes('-')) {
+            const date = new Date(value);
+            if (!isNaN(date.getTime())) {
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: '2-digit'
+                });
+            }
+        }
+
+        // format snake_case to normal words
+        if (typeof value === 'string') {
+            return value
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        return value;
+    }
 
     function generateChanges(oldData, newData, parentKey = '') {
 
@@ -100,13 +125,13 @@ document.addEventListener('DOMContentLoaded', function(){
                 rows += `
                     <tr>
                         <td class="border px-3 py-2 font-medium text-gray-700">
-                            ${formatLabel(fullKey)}
+                            ${formatLabel(key)}
                         </td>
                         <td class="border px-3 py-2 text-red-500 line-through">
-                            ${oldVal ?? '-'}
+                            ${formatValue(oldVal) ?? '-'}
                         </td>
                         <td class="border px-3 py-2 text-green-600 font-semibold">
-                            ${newVal}
+                            ${formatValue(newVal)}
                         </td>
                     </tr>
                 `;
@@ -118,10 +143,16 @@ document.addEventListener('DOMContentLoaded', function(){
 
     const reviewChangesWrapper = document.getElementById('review-changes-wrapper');
 
-    function showUpdateModal(oldData, newData){
+    function showUpdateModal(oldData, newData, actionType){
 
         if(!reviewChangesWrapper){
             return;
+        }
+        
+        const approveSubmitField = document.getElementById('approve-submit-field');
+
+        if(actionType === 'view'){
+            approveSubmitField.classList.add('hidden');
         }
 
         reviewChangesWrapper.classList.remove('hidden');

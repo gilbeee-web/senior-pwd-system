@@ -43,17 +43,24 @@
                     </a>
                 </div>
                 
-
-                <button 
-                    type="button"
-                    class="reset-password-btn w-full text-left p-2 text-sm hover:bg-gray-100 flex gap-x-3 items-center cursor-pointer"
-                    data-id="{{ $user->id }}"
+                <form 
+                    id="reset-password-form-{{ $user->id }}" 
+                    action="{{ route('user.resetPassword', $user->id) }}" 
+                    method="POST"
                 >
-                    <span>
-                        <img src="{{asset('/images/icons/reset.svg')}}" alt="" class="object-contain w-4 h-4">
-                    </span>
-                    Reset Password
-                </button>
+                    @csrf
+                    @method('PUT')
+                    <button 
+                        type="button"
+                        class="reset-password-btn w-full text-left p-2 text-sm hover:bg-gray-100 flex gap-x-3 items-center cursor-pointer"
+                        data-id="{{ $user->id }}"
+                    >
+                        <span>
+                            <img src="{{asset('/images/icons/reset.svg')}}" alt="" class="object-contain w-4 h-4">
+                        </span>
+                        Reset Password
+                    </button>
+                </form>
 
                 <form action="" method="POST" onsubmit="return confirm('Delete this user?')">
                     @csrf

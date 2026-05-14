@@ -42,7 +42,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
 
         <!-- Barangay Chart -->
-        <div class="bg-white p-4 rounded-xl shadow-md">
+        <div class="bg-white p-4 rounded-xl text-center shadow-md">
             @if($current_user->role === 'senior_admin')
                 <h1 class="text-gray-500 font-bold text-xs">
                     Senior Citizen per Barangay
@@ -66,7 +66,7 @@
     <div class="mt-6">
         <h1 class="text-xl font-bold">Recently Added</h1>
 
-        <table class="w-full text-sm text-center border-collapse bg-[#F0F0F0] shadow-md mt-2">
+        <table class="w-full text-sm text-left border-collapse bg-[#F0F0F0] shadow-md mt-2">
             <thead class="text-gray-600 uppercase text-xs border-b">
                 <tr class="bg-gray-50">
                     <th class="p-3">NAME</th>
@@ -78,7 +78,7 @@
                 
                 @forelse($data['recent_activities'] as $activity)
                     <tr class="border-b hover:bg-gray-200">
-                        <td class="p-3">{{$activity->last_name}}</td>
+                        <td class="p-3">{{$activity->last_name}} {{$activity->first_name}} {{$activity->middle_name}}</td>
                         <td class="p-3">{{$activity->creator->name}}</td>
                         <td class="p-3">{{ \Carbon\Carbon::parse($activity->created_at)->format('F d, Y \a\t g:ia') }}</td>
                     </tr>

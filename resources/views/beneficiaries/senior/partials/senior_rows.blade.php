@@ -1,5 +1,5 @@
 
-@forelse($senior_beneficiaries as $senior)
+@forelse($senior_beneficiaries ?? [] as $senior)
     <tr class="border-b hover:bg-gray-100">
         <td class="h-10 p-3">
             <input 
@@ -27,6 +27,35 @@
             {{ \Carbon\Carbon::parse($senior->date_id_issued)->format('m-d-Y') }}
         </td>
 
+        <td class="p-3 space-y-1 flex flex-col">
+
+            {{-- Life Status --}}
+            @if($senior->beneficiary->life_status === 'alive')
+                <p class="px-2 py-1 text-xs rounded text-green-700">
+                    Alive
+                </p>
+            @else
+                <span class="px-2 py-1 text-xs rounded bg-gray-500 text-white">
+                    Deceased
+                </span>
+            @endif
+
+
+            {{-- Residency Status --}}
+            @if($senior->beneficiary->residence_status === 'active')
+                <p class="px-2 py-1 text-xs rounded text-blue-700">
+                    Active Resident
+                </p>
+            @else
+                <span class="px-2 py-1 text-xs rounded bg-yellow-500 text-yellow-700">
+                    Transferred
+                </span>
+            @endif
+         
+         
+
+        </td>
+
         <td class="p-3 text-sm relative">
 
             <!-- Button -->
@@ -35,11 +64,11 @@
             </button>
 
             <!-- Dropdown -->
-            <div class="senior-more-action-wrapper hidden absolute right-1 top-10 w-30 bg-white rounded-lg shadow-lg z-50">
+            <div class="senior-more-action-wrapper hidden absolute right-1 top-12 w-30 bg-white rounded-lg shadow-lg z-50">
 
-                <div>
+                <div class="hover:bg-gray-100 ">
                     <button 
-                        class="view-btn block p-2 text-sm hover:bg-gray-100 flex gap-x-3 items-center"
+                        class="view-btn block p-2 text-sm flex gap-x-3 items-center cursor-pointer"
                         data-id="{{ $senior->id }}"
                         data-type="senior"
                         data-show-url="{{ url('senior/') }}/"
@@ -58,7 +87,7 @@
                     Edit
                 </a>
                 
-                <form action="{{route('senior.archive', $senior->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this Senior Citizen member?')">
+                <form action="{{route('senior.archive', $senior->id)}}" method="POST" class="senior-archive-form">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="w-full text-left p-2 text-sm text-red-500 flex gap-x-3 items-center hover:bg-gray-100 cursor-pointer">
@@ -67,35 +96,8 @@
                         </span>
                         Archive
                     </button>
-                </form>
-
-
-                {{-- <button 
-                    class="view-btn text-blue-500 hover:underline mr-2"
-                    data-id="{{ $senior->id }}"
-                    data-type="senior"
-                    data-show-url="{{ url('senior/') }}/"
-                >
-                    View
-                </button>
-
-                <a href="{{route('senior.edit', $senior->id)}}" class="text-blue-500 hover:underline mr-2">
-                    Edit
-                </a>
-                
-                <form action="{{route('pwd.archive', $senior->id)}}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this Senior Citizen member?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-red-500 hover:underline">
-                        Archive
-                    </button>
-                </form> --}}
-            
+                </form>            
             </div>
-
-            
-
-            
 
 
         </td>

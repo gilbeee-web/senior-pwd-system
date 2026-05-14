@@ -27,7 +27,16 @@ class RequestController extends Controller
 
     public function index(Request $request){
 
-        $query = ActionRequest::with(['requester', 'model.beneficiary']);
+        $query = ActionRequest::with([
+            'requester',
+            'model' => function ($morphTo) {
+                $morphTo->morphWith([
+                    PwdDetail::class => ['beneficiary'],
+                    SeniorDetail::class => ['beneficiary'],
+                ]);
+            }
+        ]);
+
         $tab_status = $request->status ?? 'pending';
 
         
@@ -68,7 +77,7 @@ class RequestController extends Controller
             $query->where('created_at', '<=', Carbon::parse($request->end_date)->endOfDay());
         }
 
-        $requests = $query->latest()->paginate(10);
+        $requests = $query->latest()->paginate(5);
         
         // dd($requests);
     

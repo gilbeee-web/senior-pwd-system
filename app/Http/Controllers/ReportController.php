@@ -21,12 +21,17 @@ class ReportController extends Controller
 
         $tab = $request->tab ?? 'pwd';
 
-        $pwd = collect();
-        $senior = collect();
+        $pwd = null;
+        $senior = null;
 
         if($current_user->role === 'super_admin'){
-            $pwd = $service->getPwdQuery($request, $current_user)->paginate(5);
+
+            if($tab === 'pwd'){
+                $pwd = $service->getPwdQuery($request, $current_user)->paginate(5);
+            }
+
             $senior = $service->getSeniorQuery($request, $current_user)->paginate(5);
+
         }elseif($current_user->role === 'barangay_pwd_admin' || $current_user->role === 'pwd_admin'){
             $pwd = $service->getPwdQuery($request, $current_user)->paginate(5);
         }elseif($current_user->role === 'barangay_senior_admin' || $current_user->role === 'senior_admin'){

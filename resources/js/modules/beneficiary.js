@@ -179,17 +179,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // when file selected then submit form
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length > 0) {
-
-                const originalText = button.textContent;
                 button.textContent = "Importing...";
                 button.disabled = true;
-
                 form.submit();
-
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.disabled = false;
-                }, 3000);
             }
         });
 
@@ -229,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!members || members.length === 0) {
             container.innerHTML = `
                 <tr>
-                    <td colspan="5" class="text-gray-500 py-3">
+                    <td colspan="5" class="text-gray-500 py-3 text-lg text-center font-bold">
                         No family members found.
                     </td>
                 </tr>
@@ -321,10 +313,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     
-    const bulkBtn = document.getElementById('bulk-update-btn');
-    const bulkUpdate_modal = document.getElementById('bulkUpdate-modal');
-    const closeBulkModalBtn = document.getElementById('close-bulk-modal-btn');
-    const bulkForm = document.getElementById('bulk-update-form');
+    // const bulkBtn = document.getElementById('bulk-update-btn');
+    // const bulkUpdate_modal = document.getElementById('bulkUpdate-modal');
+    // const closeBulkModalBtn = document.getElementById('close-bulk-modal-btn');
+    // const bulkForm = document.getElementById('bulk-update-form');
 
 
     const selectAllCheckBoxes = document.querySelectorAll('.select-all'); //select all button checkbox
@@ -416,43 +408,84 @@ document.addEventListener("DOMContentLoaded", function () {
 
     
     //open modal function to update or validate
-    if(bulkBtn){
-        bulkBtn.addEventListener('click', function(){
-            const selected = document.querySelectorAll('.row-checkbox[data-type="pwd"]:checked');
+    // OPEN MODAL
+    document.querySelectorAll('.bulk-update-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const type = this.dataset.type;
+
+            const selected = document.querySelectorAll(`.row-checkbox[data-type="${type}"]:checked`);
 
             if (selected.length === 0) {
                 alert("Please select at least one record.");
                 return;
             }
 
-            bulkUpdate_modal.classList.remove('hidden');
+            const modal = document.querySelector(`.bulkUpdate-modal[data-type="${type}"]`);
+            modal.classList.remove('hidden');
         });
-    } 
+    });
+
+    // if(bulkBtn){
+    //     bulkBtn.addEventListener('click', function(){
+    //         const selected = document.querySelectorAll('.row-checkbox[data-type="pwd"]:checked');
+
+    //         if (selected.length === 0) {
+    //             alert("Please select at least one record.");
+    //             return;
+    //         }
+
+    //         bulkUpdate_modal.classList.remove('hidden');
+    //     });
+    // } 
     
     //close modal function to update or validate
-    if(closeBulkModalBtn){
-        closeBulkModalBtn.addEventListener('click', function(){
-            bulkUpdate_modal.classList.add('hidden');
+    document.querySelectorAll('.close-bulk-modal-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            const modal = this.closest('.bulkUpdate-modal');
+            const form = modal.querySelector('.bulk-update-form');
+
+            if (form) {
+                form.reset();
+            }
+
+            // remove hidden inputs
+            modal.querySelectorAll('.bulk-id-input').forEach(el => el.remove());
+
+            modal.classList.add('hidden');
         });
-    }
+    });
+    // if(closeBulkModalBtn){
+    //     closeBulkModalBtn.addEventListener('click', function(){
+
+    //         if (bulkForm) {
+    //             bulkForm.reset();
+    //         }
+
+    //         bulkUpdate_modal.classList.add('hidden');
+    //     });
+    // }
 
     //form submit handler of form to validate field
-    if(bulkForm){
-        bulkForm.addEventListener('submit', function(e){
+    document.querySelectorAll('.bulk-update-form').forEach(form => {
+        form.addEventListener('submit', function (e) {
 
-            const selected = document.querySelectorAll('.row-checkbox[data-type="pwd"]:checked');
+            const type = this.dataset.type;
+
+            const selected = document.querySelectorAll(`.row-checkbox[data-type="${type}"]:checked`);
 
             if (selected.length === 0) {
-                e.preventDefault(); // not to refresh entire page
+                e.preventDefault();
                 alert("No records selected.");
                 return;
             }
-            
 
-            //check if no action selected to apply 
-            const resident = document.querySelector('input[name="resident_action"]:checked');
-            const status = document.querySelector('input[name="status_action"]:checked');
-            const income = document.querySelector('input[name="income_action"]:checked');
+            // scoped query (IMPORTANT: inside modal only)
+            const modal = this.closest('.bulkUpdate-modal');
+
+            const resident = modal.querySelector('input[name="resident_action"]:checked');
+            const status = modal.querySelector('input[name="status_action"]:checked');
+            const income = modal.querySelector('input[name="income_action"]:checked');
 
             if (!resident && !status && !income) {
                 e.preventDefault();
@@ -460,20 +493,58 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            //remove old id input para pag binuksan ulit modal naka fresh id ma-rrender
-            document.querySelectorAll('.bulk-id-input').forEach(el => el.remove());
+            // remove old inputs
+            modal.querySelectorAll('.bulk-id-input').forEach(el => el.remove());
 
-            //loop to the checkbox and add some attributes especially the name to submit in the controller
+            // append selected IDs
             selected.forEach(cb => {
                 const input = document.createElement('input');
                 input.type = 'hidden';
-                input.name = 'selected_pwds[]';
+                input.name = `selected_${type}s[]`; // dynamic name
                 input.value = cb.value;
                 input.classList.add('bulk-id-input');
-                bulkForm.appendChild(input);
+                form.appendChild(input);
             });
         });
-    }
+    });
+
+    // if(bulkForm){
+    //     bulkForm.addEventListener('submit', function(e){
+
+    //         const selected = document.querySelectorAll('.row-checkbox[data-type="pwd"]:checked');
+
+    //         if (selected.length === 0) {
+    //             e.preventDefault(); // not to refresh entire page
+    //             alert("No records selected.");
+    //             return;
+    //         }
+            
+
+    //         //check if no action selected to apply 
+    //         const resident = document.querySelector('input[name="resident_action"]:checked');
+    //         const status = document.querySelector('input[name="status_action"]:checked');
+    //         const income = document.querySelector('input[name="income_action"]:checked');
+
+    //         if (!resident && !status && !income) {
+    //             e.preventDefault();
+    //             alert("Please select at least one action to apply.");
+    //             return;
+    //         }
+
+    //         //remove old id input para pag binuksan ulit modal naka fresh id ma-rrender
+    //         document.querySelectorAll('.bulk-id-input').forEach(el => el.remove());
+
+    //         //loop to the checkbox and add some attributes especially the name to submit in the controller
+    //         selected.forEach(cb => {
+    //             const input = document.createElement('input');
+    //             input.type = 'hidden';
+    //             input.name = 'selected_pwds[]';
+    //             input.value = cb.value;
+    //             input.classList.add('bulk-id-input');
+    //             bulkForm.appendChild(input);
+    //         });
+    //     });
+    // }
 
     document.addEventListener('submit', function(e){
 

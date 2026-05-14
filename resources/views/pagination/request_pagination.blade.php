@@ -2,14 +2,14 @@
 
     {{-- Showing X to Y of Z --}}
     <div class="text-gray-600">
-        Showing {{ $pwd_beneficiaries->firstItem() }} to {{ $pwd_beneficiaries->lastItem() }} of {{ $pwd_beneficiaries->total() }} results
+        Showing {{ $requests->firstItem() }} to {{ $requests->lastItem() }} of {{ $requests->total() }} results
     </div>
 
     <div class="flex justify-center space-x-2 items-center">
 
         {{-- First (<<) --}}
-        @if ($pwd_beneficiaries->currentPage() > 1)
-            <a href="{{ $pwd_beneficiaries->url(1) }}"
+        @if ($requests->currentPage() > 1)
+            <a href="{{ $requests->url(1) }}"
             class="px-3 py-1 border rounded hover:bg-gray-100">
                 &laquo;
             </a>
@@ -18,10 +18,10 @@
         @endif
 
         {{-- Previous (<) --}}
-        @if ($pwd_beneficiaries->onFirstPage())
+        @if ($requests->onFirstPage())
             <span class="px-3 py-1 border rounded text-gray-400">&lsaquo;</span>
         @else
-            <a href="{{ $pwd_beneficiaries->previousPageUrl() }}"
+            <a href="{{ $requests->previousPageUrl() }}"
             class="px-3 py-1 border rounded hover:bg-gray-100 font-bold">
                 &lsaquo;
             </a>
@@ -29,12 +29,12 @@
 
         {{-- Current Page --}}
         <span class="px-4 py-1 border rounded bg-green-700 text-white">
-            Page {{ $pwd_beneficiaries->currentPage() }} of {{ $pwd_beneficiaries->lastPage() }}
+            Page {{ $requests->currentPage() }} of {{ $requests->lastPage() }}
         </span>
 
         {{-- Next (>) --}}
-        @if ($pwd_beneficiaries->hasMorePages())
-            <a href="{{ $pwd_beneficiaries->nextPageUrl() }}"
+        @if ($requests->hasMorePages())
+            <a href="{{ $requests->nextPageUrl() }}"
             class="px-3 py-1 border rounded hover:bg-gray-100">
                 &rsaquo;
             </a>
@@ -43,8 +43,8 @@
         @endif
 
         {{-- Last (>>) --}}
-        @if ($pwd_beneficiaries->currentPage() < $pwd_beneficiaries->lastPage())
-            <a href="{{ $pwd_beneficiaries->url($pwd_beneficiaries->lastPage()) }}"
+        @if ($requests->currentPage() < $requests->lastPage())
+            <a href="{{ $requests->url($requests->lastPage()) }}"
             class="px-3 py-1 border rounded hover:bg-gray-100">
                 &raquo;
             </a>

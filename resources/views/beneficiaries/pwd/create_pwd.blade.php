@@ -24,7 +24,7 @@
             </span>
         </div>
 
-        <form id="pwd_form" action="{{route('pwd.store')}}" method="POST" class="flex flex-col gap-y-5 mb-5">
+        <form id="pwd_form"  data-form-type="create" action="{{route('pwd.store')}}" method="POST" class="flex flex-col gap-y-5 mb-5">
             
             @csrf
 
@@ -44,7 +44,7 @@
                 <button 
                     class="p-3 bg-blue-500 text-white rounded-md cursor-pointer shadow-lg" 
                     type="submit"
-                    id="submitBtn"
+                    id="pwd_formSubmitBtn"
                 >
                     Submit
                 </button>
