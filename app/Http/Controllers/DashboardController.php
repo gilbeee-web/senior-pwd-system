@@ -205,6 +205,8 @@ class DashboardController extends Controller
         $total_senior = SeniorDetail::count();
         $total_pwd = PwdDetail::count();
         $total_beneficiaries = $total_senior + $total_pwd;
+        $barangay_chart = null;
+        $registration_chart = null;
 
         $data = Barangay::leftJoin('streets', 'barangays.id', '=', 'streets.barangay_id')
             ->leftJoin('beneficiary_addresses', 'streets.id', '=', 'beneficiary_addresses.street_id')

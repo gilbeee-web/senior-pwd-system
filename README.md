@@ -1,59 +1,174 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Web-Based Centralized Senior Citizen and PWD Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A web-based management system designed to centralize and streamline the registration, management, monitoring, and reporting of Senior Citizen and Persons with Disabilities (PWD) records for the Municipal Social Welfare and Development Office (MSWDO).
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The Web-Based Centralized Senior Citizen and PWD Management System was developed to help the Municipal Social Welfare and Development Office manage Senior Citizen and PWD records in a centralized platform.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The system provides authorized personnel with tools for managing beneficiary records, organizing data by barangay, generating reports, managing identification records, and processing administrative requests.
 
-## Learning Laravel
+The system was developed during my On-the-Job Training (OJT) at the Persons with Disability Affairs Office (PDAO) / Office for Senior Citizens Affairs (OSCA).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Key Features
 
-## Laravel Sponsors
+### Senior Citizen Management
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Register Senior Citizen records
+- Update beneficiary information
+- Search and filter records
+- Manage Senior Citizen records by barangay
+- Generate Senior Citizen reports
+- Manage identification records
 
-### Premium Partners
+### PWD Management
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Register PWD records
+- Update beneficiary information
+- Search and filter records
+- Manage PWD records by barangay
+- Generate PWD reports
+- Manage identification records
 
-## Contributing
+### Role-Based Access Control
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The system provides different roles based on administrative responsibilities.
 
-## Code of Conduct
+Roles include:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Super Administrator
+- PWD Administrator
+- Senior Citizen Administrator
+- Barangay PWD Administrator
+- Barangay Senior Citizen Administrator
 
-## Security Vulnerabilities
+Each role is provided with access appropriate to its responsibilities.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Reports
 
-## License
+The system provides centralized reporting capabilities for administrative use.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Reports can be generated based on available beneficiary information and administrative criteria.
+
+### Excel Export
+
+The system supports exporting records and reports to Excel format for administrative and reporting purposes.
+
+### Identification Management
+
+The system provides functionality for managing beneficiary identification records.
+
+Features include:
+
+- ID record management
+- QR code generation
+- Identification information
+- Signatory management
+
+---
+
+## Screenshots
+
+### Student
+
+![Dashboard](docs/screenshots/dashboard.png)
+![PWD List](docs/screenshots/pwd-list.png)
+![PWD ID](docs/screenshots/pwd-id-front.png)
+![PWD ID](docs/screenshots/pwd-id-back.png)
+![Senior ID](docs/screenshots/senior-id-back.png)
+![Senior ID](docs/screenshots/senior-id-back.png)
+![View Details](docs/screenshots/view.png)
+
+
+## Tech Stack
+
+### Backend
+
+- Laravel
+- PHP
+- MySQL
+
+### Frontend
+
+- Laravel Blade
+- Tailwind CSS
+- JavaScript
+
+---
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/gilbeee-web/senior-pwd-system.git
+cd senior-pwd-system
+```
+
+### 2. Install PHP dependencies
+
+```bash
+composer install
+```
+
+### 3. Install JavaScript dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure environment
+
+Create a `.env` file from the example:
+
+```bash
+cp .env.example .env
+```
+
+Then configure your database connection in the `.env` file.
+
+### 5. Generate application key
+
+```bash
+php artisan key:generate
+```
+
+### 6. Run database migrations
+
+```bash
+php artisan migrate
+```
+
+### 7. Run database seeders
+
+If seeders are available:
+
+```bash
+php artisan db:seed
+```
+
+### 8. Start the development server
+
+```bash
+php artisan serve
+```
+
+For frontend asset development, run this in a separate terminal:
+
+```bash
+npm run dev
+```
+
+---
+
+## Author
+
+**Gilbert Sta. Maria**
+Junior Full-Stack Web Developer
+
+- Portfolio: [my-portfolio-rust-nu-38.vercel.app](https://my-portfolio-rust-nu-38.vercel.app/)
+- GitHub: [github.com/gilbee-web](https://github.com/gilbee-web)

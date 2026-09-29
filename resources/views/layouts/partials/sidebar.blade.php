@@ -23,7 +23,7 @@
         @if(auth()->user()->role === 'super_admin')
             <a 
                 href="{{ route('super_admin.dashboard') }}" 
-                class="block p-2 rounded flex gap-x-3 items-center
+                class="block p-2 rounded hover:bg-gray-100 flex gap-x-3 items-center
                 {{ request()->routeIs('super_admin.dashboard') 
                     ? 'bg-red-500 text-white hover:bg-red-400' 
                     : 'hover:bg-gray-100' }}"
